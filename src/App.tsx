@@ -1,0 +1,34 @@
+import { Fragment, useState } from "react";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import reactLogo from "./assets/react.svg";
+import DefaultLayout from "./layouts/DefaultLayout";
+import HomeLayout from "./layouts/HomeLayout";
+import HomePage from "./pages/home";
+import { PostAddNewPage } from "./pages/manage";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomeLayout>
+              <HomePage />
+            </HomeLayout>
+          }
+        ></Route>
+        <Route
+          path="/manage/add-post"
+          element={
+            <HomeLayout>
+              <PostAddNewPage />
+            </HomeLayout>
+          }
+        ></Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
