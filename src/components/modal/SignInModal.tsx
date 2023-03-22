@@ -94,9 +94,9 @@ const SignInModal = (props: Props) => {
             margin: "0 auto",
           }}
           type="submit"
-          isLoading={isSubmitting}
+          isloading={String(isSubmitting)}
           disabled={!isValid}
-          classNames={
+          classnames={
             isSubmitting ? "bg-gray-200 text-gray-700 cursor-not-allowed" : ""
           }
         >

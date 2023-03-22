@@ -14,13 +14,14 @@ const Button = ({
   onClick = () => {},
   ...props
 }: ButtonProps) => {
-  const { isLoading, classNames } = props;
+  const { isloading, classnames } = props;
 
-  const child = isLoading ? (
-    <div className="rounded-full w-6 h-6 border-white border-4 border-l-transparent animate-spin"></div>
-  ) : (
-    children
-  );
+  const child =
+    isloading == "true" ? (
+      <div className="rounded-full w-6 h-6 border-white border-4 border-l-transparent animate-spin"></div>
+    ) : (
+      children
+    );
 
   let defaultClassName = `flex justify-center items-center text-base font-semibold text-white bg-primary  rounded-xl transition-all duration-100 ${
     props.heigth || "h-12"
@@ -28,7 +29,7 @@ const Button = ({
 
   return (
     <button
-      className={`${defaultClassName} ${classNames} disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700`}
+      className={`${defaultClassName} ${classnames} disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700`}
       type={type}
       onClick={onClick}
       {...props}

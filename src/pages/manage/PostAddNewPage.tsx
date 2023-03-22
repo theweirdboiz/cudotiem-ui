@@ -16,39 +16,16 @@ import {
 import { postStatus } from "~/config/constant";
 import useUploadImg from "~/hooks/useUploadImg";
 import { PostType } from "~/types/PostType";
+import { CategoryType } from "~/types/CategoryType";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CategoryType } from "~/types/CategoryType";
-import useClickOutSide from "~/hooks/useClickOutside";
+import { toast } from "react-toastify";
 
 const schema = yup.object().shape({
   title: yup.string().required("This field is required"),
   slug: yup.string().required("This field is required"),
 });
-
-// const dropdownData = [
-//   {
-//     id: 1,
-//     value: "teacher",
-//     text: "Teacher",
-//   },
-//   {
-//     id: 2,
-//     value: "developer",
-//     text: "Developer",
-//   },
-//   {
-//     id: 3,
-//     value: "doctor",
-//     text: "Doctor",
-//   },
-//   {
-//     id: 4,
-//     value: "constructor",
-//     text: "Constructor",
-//   },
-// ];
 
 const category = [
   {
@@ -81,19 +58,31 @@ const defaultValues = {
   userId: "",
 };
 const PostAddNewPage = () => {
-  const { control, watch, setValue, handleSubmit, getValues, reset } =
-    useForm<PostType>({
-      defaultValues: defaultValues,
-      mode: "all",
-      resolver: yupResolver(schema),
-    });
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    getValues,
+    reset,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<PostType>({
+    defaultValues: defaultValues,
+    mode: "all",
+    resolver: yupResolver(schema),
+  });
 
-  const { progress, image, onSelectImg, handleDeleteImg } = useUploadImg({
+  const {
+    progress,
+    image,
+    onSelectImg,
+    handleDeleteImg,
+    setImage,
+    setProgress,
+  } = useUploadImg({
     setValue,
     getValues,
   });
-  const dropdownRef = useRef(null);
-  const { open, setOpen } = useClickOutSide(dropdownRef);
 
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [categorySelected, setCategorySelected] = useState<string | null>("");
@@ -107,9 +96,14 @@ const PostAddNewPage = () => {
     const cloneValue = { ...value };
     cloneValue.slug = slugify(value.slug || value.title);
     cloneValue.status = Number(value.status);
+    cloneValue.createAt = new Date().getTime();
+    await new Promise((res) => setTimeout(res, 1000));
     console.log(cloneValue);
-    reset(defaultValues);
+    toast.success("Tạo bài viết thành công, vui lòng đợi duyệt!");
+    setImage("");
+    setProgress(0);
     setCategorySelected(null);
+    reset(defaultValues);
   };
 
   const handleClickOption = (item: any) => {
@@ -214,8 +208,9 @@ const PostAddNewPage = () => {
               </Radio>
             </div>
           </FormGroup>
-
-          <Button type="submit">Add Post</Button>
+          <Button type="submit" isloading={String(isSubmitting)}>
+            Add Post
+          </Button>
         </div>
       </form>
     </section>

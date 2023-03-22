@@ -5,10 +5,10 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { storage } from "../firebase-app/firebase-config";
+import { storage } from "~/firebase-app/firebase-config";
 
 import { UseFormSetValue, UseFormGetValues } from "react-hook-form";
-import { PostType } from "types/PostType";
+import { PostType } from "~/types/PostType";
 
 interface Props {
   setValue: UseFormSetValue<PostType>;
@@ -16,15 +16,17 @@ interface Props {
 }
 
 interface UploadImg {
-  image: string | null;
+  image: string;
+  setImage: React.Dispatch<React.SetStateAction<string>>;
   progress: number;
+  setProgress: React.Dispatch<React.SetStateAction<number>>;
   onSelectImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleDeleteImg: () => void;
 }
 
 const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
   const [progress, setProgress] = useState(0);
-  const [image, setImage] = useState<string | null>("");
+  const [image, setImage] = useState<string>("");
 
   const onSelectImg = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
@@ -39,7 +41,7 @@ const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
     deleteObject(imageRef)
       .then(() => {
         console.log("remove image successfully");
-        setImage(null);
+        setImage("");
         setProgress(0);
       })
       .catch((err) => {
@@ -84,7 +86,9 @@ const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
 
   return {
     image,
+    setImage,
     progress,
+    setProgress,
     onSelectImg,
     handleDeleteImg,
   };

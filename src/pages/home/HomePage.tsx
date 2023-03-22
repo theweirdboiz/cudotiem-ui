@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Post } from "../../components";
-import ModalAdvanced from "../../components/modal/ModalAdvanced";
-import SignInModal from "../../components/modal/SignInModal";
-import { useAuth } from "../../contexts/authContext";
+import { Post } from "~/components";
+import ModalAdvanced from "~/components/modal/ModalAdvanced";
+import SignInModal from "~/components/modal/SignInModal";
+import { useAuth } from "~/contexts/authContext";
+import { autheService } from "~/services";
 
 const HomePage = () => {
   // auth
   const { currentUser } = useAuth();
 
-  const [visible, setVisible] = useState(() => (currentUser ? false : true));
+  // handle event;
+  const handleSignUp = () => {
+    autheService.signUp();
+  };
 
   return (
     <>
@@ -100,19 +104,22 @@ const HomePage = () => {
           <Post />
         </div>
         <div className="box-center mt-5">
-          <button className="px-16 py-1.5 rounded-md border border-current text-blue-500 hover:bg-blue-100 font-medium">
+          <button
+            className="px-16 py-1.5 rounded-md border border-current text-blue-500 hover:bg-blue-100 font-medium"
+            onClick={handleSignUp}
+          >
             Xem thêm
           </button>
         </div>
       </section>
 
-      <ModalAdvanced
+      {/* <ModalAdvanced
         heading="Sign in"
         visible={visible}
         handleClose={() => setVisible(false)}
       >
         <SignInModal />
-      </ModalAdvanced>
+      </ModalAdvanced> */}
     </>
   );
 };
