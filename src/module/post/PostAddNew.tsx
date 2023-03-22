@@ -1,6 +1,4 @@
-// import FormGroup from "components/form-group";
-
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import slugify from "react-slugify";
 import { useForm } from "react-hook-form";
 import {
@@ -13,14 +11,14 @@ import {
   UploadImg,
   Toggle,
 } from "~/components";
-import { postStatus } from "~/config/constant";
 import useUploadImg from "~/hooks/useUploadImg";
-import { PostType } from "~/types/PostType";
-import { CategoryType } from "~/types/CategoryType";
-
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
+import { PostType } from "~/types/PostType";
+import { postStatus } from "~/config/constant";
+import { CategoryType } from "~/types/CategoryType";
+import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 
 const schema = yup.object().shape({
   title: yup.string().required("This field is required"),
@@ -57,7 +55,7 @@ const defaultValues = {
   categoryId: "",
   userId: "",
 };
-const PostAddNewPage = () => {
+const PostAdd = () => {
   const {
     control,
     watch,
@@ -65,24 +63,18 @@ const PostAddNewPage = () => {
     handleSubmit,
     getValues,
     reset,
-    formState: { errors, isValid, isSubmitting },
+    formState: { isSubmitting, isValid },
   } = useForm<PostType>({
     defaultValues: defaultValues,
     mode: "all",
     resolver: yupResolver(schema),
   });
 
-  const {
-    progress,
-    image,
-    onSelectImg,
-    handleDeleteImg,
-    setImage,
-    setProgress,
-  } = useUploadImg({
-    setValue,
-    getValues,
-  });
+  const { progress, image, onSelectImg, handleDeleteImg, handleResetUpload } =
+    useUploadImg({
+      setValue,
+      getValues,
+    });
 
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [categorySelected, setCategorySelected] = useState<string | null>("");
@@ -99,9 +91,8 @@ const PostAddNewPage = () => {
     cloneValue.createAt = new Date().getTime();
     await new Promise((res) => setTimeout(res, 1000));
     console.log(cloneValue);
-    toast.success("Tạo bài viết thành công, vui lòng đợi duyệt!");
-    setImage("");
-    setProgress(0);
+    toast.success("Tạo tin thành công, vui lòng đợi duyệt!");
+    handleResetUpload();
     setCategorySelected(null);
     reset(defaultValues);
   };
@@ -116,9 +107,12 @@ const PostAddNewPage = () => {
     setCategories(category);
   }, []);
 
+  useEffect(() => {
+    document.title = "Cụ Đồ Tiễm - Thêm tin đăng";
+  }, []);
   return (
-    <section className="flex-1 bg-white rounded-xl p-5">
-      <h1 className="mb-5 text-xl font-bold">Add new post</h1>
+    <>
+      <DashboardHeading>Add new post</DashboardHeading>
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-3">
           <FormGroup>
@@ -127,6 +121,7 @@ const PostAddNewPage = () => {
               control={control}
               placeholder="Enter your title"
               name="title"
+              required
             />
           </FormGroup>
           <FormGroup>
@@ -157,10 +152,7 @@ const PostAddNewPage = () => {
               />
               <Dropdown.List>
                 {categories.map((item) => (
-                  <Dropdown.Option
-                    key={item.id}
-                    onClick={() => handleClickOption(item)}
-                  >
+                  <Dropdown.Option onClick={() => handleClickOption(item)}>
                     {item.name}
                   </Dropdown.Option>
                 ))}
@@ -208,13 +200,25 @@ const PostAddNewPage = () => {
               </Radio>
             </div>
           </FormGroup>
-          <Button type="submit" isloading={String(isSubmitting)}>
+          <Button
+            style={{
+              width: "100%",
+              maxWidth: "100%",
+              margin: "0 auto",
+            }}
+            type="submit"
+            isloading={String(isSubmitting)}
+            disabled={!isValid}
+            classnames={
+              isSubmitting ? "bg-gray-200 text-gray-700 cursor-not-allowed" : ""
+            }
+          >
             Add Post
           </Button>
         </div>
       </form>
-    </section>
+    </>
   );
 };
 
-export default PostAddNewPage;
+export default PostAdd;

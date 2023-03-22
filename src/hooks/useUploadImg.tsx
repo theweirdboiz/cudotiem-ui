@@ -5,9 +5,8 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { storage } from "~/firebase-app/firebase-config";
-
 import { UseFormSetValue, UseFormGetValues } from "react-hook-form";
+import { storage } from "~/firebase-app/firebase-config";
 import { PostType } from "~/types/PostType";
 
 interface Props {
@@ -17,11 +16,10 @@ interface Props {
 
 interface UploadImg {
   image: string;
-  setImage: React.Dispatch<React.SetStateAction<string>>;
   progress: number;
-  setProgress: React.Dispatch<React.SetStateAction<number>>;
   onSelectImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleDeleteImg: () => void;
+  handleResetUpload: () => void;
 }
 
 const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
@@ -83,14 +81,16 @@ const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
       }
     );
   };
-
+  const handleResetUpload = () => {
+    setImage("");
+    setProgress(0);
+  };
   return {
     image,
-    setImage,
     progress,
-    setProgress,
     onSelectImg,
     handleDeleteImg,
+    handleResetUpload,
   };
 };
 export default useUploadImg;

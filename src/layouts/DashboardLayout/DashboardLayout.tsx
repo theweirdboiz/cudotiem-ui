@@ -127,7 +127,9 @@ const DashboardLayout = () => {
               ))}
             </Sidebar.SidebarList>
           </Sidebar>
-          <Outlet />
+          <section className="flex-1 bg-white rounded-xl p-5">
+            <Outlet />
+          </section>
         </div>
       </PageWrapper>
     </>

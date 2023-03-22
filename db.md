@@ -10,3 +10,13 @@
 - description
 - userId
 - categoryId
+
+<!-- CATEGORY -->
+
+- id
+- name
+- slug
+- status
+- createdAt
+
+<!-- USER -->

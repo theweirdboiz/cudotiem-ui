@@ -6,7 +6,7 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import HomePage from "../pages/home/HomePage";
 import HomeLayout from "../layouts/HomeLayout";
 import ToyPage from "../pages/toy";
-import { PostAddNewPage } from "../pages/manage";
+import { PostAddNewPage } from "../module";
 
 const publicRoutes: RouteType[] = [
   {

@@ -34,7 +34,7 @@ video {
     height: 10px;
   }
   .custom-radio > div {
-    box-shadow: 0 0 0 5px white;
+    box-shadow: 0 0 0 2.5px rgba(158, 155, 155, 0.673);
   }
   .custom-radio input:checked + div {
     @apply bg-blue-500;
@@ -79,15 +79,15 @@ video {
   .bg-primary {
     @apply bg-blue-500;
   }
-  .hidden-input {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-    white-space: nowrap;
-  }
+  // .hidden-input {
+  //   border: 0;
+  //   clip: rect(0 0 0 0);
+  //   height: 1px;
+  //   margin: -1px;
+  //   overflow: hidden;
+  //   padding: 0;
+  //   position: absolute;
+  //   width: 1px;
+  //   white-space: nowrap;
+  // }
 }
