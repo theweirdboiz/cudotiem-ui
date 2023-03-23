@@ -3,6 +3,7 @@ import HomePage from "./pages/home";
 import HomeLayout from "./layouts/HomeLayout";
 import { CategoryAddNew, PostAddNew } from "./module";
 import DashboardLayout from "./layouts/DashboardLayout";
+import CategoryManage from "./module/category/CategoryManage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/manage/add-post" element={<PostAddNew />} />
           <Route path="/manage/add-category" element={<CategoryAddNew />} />
+          <Route path="/manage/category" element={<CategoryManage />} />
         </Route>
       </Routes>
     </BrowserRouter>

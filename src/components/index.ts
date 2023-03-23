@@ -24,3 +24,14 @@ export { default as Radio } from "./radio/Radio";
 export { default as UploadImg } from "./upload/UploadImg";
 // toggle
 export { default as Toggle } from "./toggle/Toggle";
+// table
+export { default as Table } from "./table/Table";
+
+// label status
+export { default as LabelStatus } from "./label/LabelStatus";
+
+// actions
+
+export { default as ActionEdit } from "./actions/ActionEdit";
+export { default as ActionDelete } from "./actions/ActionDelete";
+export { default as ActionView } from "./actions/ActionView";

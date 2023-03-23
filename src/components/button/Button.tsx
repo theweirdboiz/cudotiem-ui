@@ -23,13 +23,15 @@ const Button = ({
       children
     );
 
-  let defaultClassName = `flex justify-center items-center text-base font-semibold text-white bg-primary  rounded-xl transition-all duration-100 ${
+  let defaultClassName = `flex justify-center items-center text-base font-semibold text-white bg-primary rounded-xl transition-all duration-100 px-3 ${
     props.heigth || "h-12"
   }`;
 
   return (
     <button
-      className={`${defaultClassName} ${classnames} disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700`}
+      className={`${defaultClassName} ${
+        classnames || ""
+      } disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700`}
       type={type}
       onClick={onClick}
       {...props}
