@@ -11,9 +11,9 @@ const HomePage = () => {
   const { currentUser } = useAuth();
 
   // handle event;
-  const handleSignUp = () => {
-    autheService.signUp();
-  };
+  // const handleSignUp = () => {
+  //   autheService.signUp();
+  // };
 
   return (
     <>
@@ -106,7 +106,7 @@ const HomePage = () => {
         <div className="box-center mt-5">
           <button
             className="px-16 py-1.5 rounded-md border border-current text-blue-500 hover:bg-blue-100 font-medium"
-            onClick={handleSignUp}
+            // onClick={handleSignUp}
           >
             Xem thêm
           </button>
