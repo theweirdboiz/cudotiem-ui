@@ -1,12 +1,12 @@
 import { Fragment } from "react";
-import { RouteType } from "../config/routes";
-import PostPage from "../pages/post";
+import { RouteType } from "~/config/routes";
+import PostPage from "~/pages/post";
 
-import DefaultLayout from "../layouts/DefaultLayout";
-import HomePage from "../pages/home/HomePage";
-import HomeLayout from "../layouts/HomeLayout";
-import ToyPage from "../pages/toy";
-import { PostAddNewPage } from "../module";
+import DefaultLayout from "~/layouts/DefaultLayout";
+import HomePage from "~/pages/home/HomePage";
+import HomeLayout from "~/layouts/HomeLayout";
+import ToyPage from "~/pages/toy";
+import { PostAddNew } from "~/module";
 
 const publicRoutes: RouteType[] = [
   {
@@ -29,7 +29,7 @@ const publicRoutes: RouteType[] = [
     child: [
       {
         path: "/manage",
-        element: <PostAddNewPage />,
+        element: <PostAddNew />,
         layout: HomeLayout,
       },
     ],
