@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
 import {
   ActionDelete,
   ActionEdit,
@@ -10,24 +10,20 @@ import {
 import { status } from "~/config";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 
-import { categoriesData } from "~/fake-data/categories";
 import { CategoryType } from "~/types/CategoryType";
 
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { useCategory } from "~/contexts/categoryContext";
 
 type Props = {};
 
 const CategoryManage = (props: Props) => {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setTimeout(() => {}, 1000);
-      setCategories(categoriesData as any);
-    };
-    fetchCategories();
-  }, []);
-
+  const { categories, setCategories } = useCategory();
+  const navigator = useNavigate();
+  const [isPending, startTransition] = useTransition();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterData, setFilterData] = useState<CategoryType[]>([]);
   // handle events
   const handleDeleteCateogry = async (categoryId: number | undefined) => {
     Swal.fire({
@@ -50,13 +46,43 @@ const CategoryManage = (props: Props) => {
     });
   };
 
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    startTransition(() => {
+      setSearchTerm(e.target.value);
+      setFilterData([]);
+    });
+  };
+  const filteredData = categories.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <>
       <DashboardHeading>Categories</DashboardHeading>
-      <div className="flex-center justify-end my-5">
-        <Button>Create category</Button>
+      <div className="flex items-center justify-between">
+        <div className="flex-center border border-gray-200 w-full max-w-xl rounded-lg relative">
+          <img
+            src="https://salt.tikicdn.com/ts/upload/33/d0/37/6fef2e788f00a16dc7d5a1dfc5d0e97a.png"
+            alt="icon-search"
+            className="w-5 h-5 ml-4"
+          />
+          <input
+            type="text"
+            placeholder="Bạn tìm gì hôm nay"
+            className="px-2 outline-none border-none flex-1"
+            onChange={handleSearch}
+          />
+          <button
+            className="flex-center justify-center w-24 h-9 bg-transparent text-blue-600 p-1  relative after:content-['']  after:absolute after:border-l after:border-l-gray-200 after:left-0 after:top-2 after:h-5 hover:bg-blue-100 rounded-r-lg
+    "
+          >
+            Tìm kiếm
+          </button>
+        </div>
+        <div className="flex-center justify-end my-5">
+          <Button>Create category</Button>
+        </div>
       </div>
-      {categories && categories.length > 0 && (
+      {filteredData && filteredData.length > 0 && (
         <Table>
           <thead>
             <tr>
@@ -68,8 +94,8 @@ const CategoryManage = (props: Props) => {
             </tr>
           </thead>
           <tbody>
-            {categories.length > 0 &&
-              categories.map((category) => (
+            {filteredData.length > 0 &&
+              filteredData.map((category) => (
                 <tr key={category?.id}>
                   <td>{category?.id}</td>
                   <td>{category.name}</td>
@@ -92,7 +118,11 @@ const CategoryManage = (props: Props) => {
                   <td>
                     <div className="flex-center gap-x-2.5">
                       <ActionView />
-                      <ActionEdit />
+                      <ActionEdit
+                        onClick={() =>
+                          navigator(`/manage/update-category?id=${category.id}`)
+                        }
+                      />
                       <ActionDelete
                         onClick={() => handleDeleteCateogry(category.id)}
                       />
@@ -103,7 +133,8 @@ const CategoryManage = (props: Props) => {
           </tbody>
         </Table>
       )}
-      {!categories || (categories.length === 0 && <>Not have any category</>)}
+      {!filteredData ||
+        (filteredData.length === 0 && <>Not have any category</>)}
     </>
   );
 };

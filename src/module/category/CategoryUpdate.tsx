@@ -1,28 +1,30 @@
-import React from "react";
+import slugify from "react-slugify";
+import React, { useEffect, useState } from "react";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { CategoryType } from "~/types/CategoryType";
-import { Button, FormGroup, Input, Label, Radio } from "~/components";
-import { categoryStatus } from "~/config/constant";
-import slugify from "react-slugify";
 import { toast } from "react-toastify";
+import { CategoryType } from "~/types/CategoryType";
+import { categoryStatus } from "~/config";
+import { Button, FormGroup, Input, Label, Radio } from "~/components";
+import { useCategory } from "~/contexts/categoryContext";
+
 type Props = {};
 
-const schema = yup.object().shape({
-  name: yup.string().required("This field is required"),
-  // status: yup.string().required("This field is required"),
-});
+const CategoryUpdate = (props: Props) => {
+  const schema = yup.object().shape({
+    name: yup.string().required("This field is required"),
+    // status: yup.string().required("This field is required"),
+  });
 
-const defaultValues = {
-  name: "",
-  slug: "",
-  status: 2,
-  createdAt: new Date().getTime(),
-};
-
-const CategoryAddNew = (props: Props) => {
+  const defaultValues = {
+    name: "",
+    slug: "",
+    status: 2,
+    createdAt: new Date().getTime(),
+  };
   const {
     control,
     watch,
@@ -38,24 +40,48 @@ const CategoryAddNew = (props: Props) => {
   });
 
   const watchStatus = watch("status");
-  // handle submit
+
+  const [params] = useSearchParams();
+  const categoryId = Number(params.get("id"));
+
+  if (!categoryId) return null;
+
+  const { categories, setCategories } = useCategory();
+
+  const [category, setCategory] = useState();
+
+  useEffect(() => {
+    const category = categories.filter((item) => item.id === categoryId);
+    setCategory(category as any);
+    reset(category[0]);
+  }, [categoryId, reset]);
 
   const onSubmit = async (data: any) => {
     const newData = { ...data };
     newData.slug = slugify(data.slug || data.slug);
     newData.status = Number(data.status);
-
-    await new Promise((res) => {
-      setTimeout(res, 1000);
+    const updatedCategories = categories.map((category) => {
+      if (category.id === categoryId) {
+        return {
+          ...category,
+          name: newData.name,
+          slug: newData.slug,
+          status: newData.status,
+        };
+      }
+      return category;
     });
-    console.log(newData);
-    reset(defaultValues);
-    toast.success("Thêm danh mục thành công, vui lòng chờ duyệt");
+
+    await new Promise((res) => setTimeout(res, 1000)).then(() => {
+      toast.success("Update danh mục thành công");
+      setCategories(updatedCategories);
+    });
   };
 
   return (
     <>
-      <DashboardHeading>Add new category</DashboardHeading>
+      <DashboardHeading>Update category</DashboardHeading>
+      <span>Your category id: {categoryId}</span>
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-3">
           <FormGroup>
@@ -123,7 +149,7 @@ const CategoryAddNew = (props: Props) => {
               isSubmitting ? "bg-gray-200 text-gray-700 cursor-not-allowed" : ""
             }
           >
-            Add new category
+            Update category
           </Button>
         </div>
       </form>
@@ -131,4 +157,4 @@ const CategoryAddNew = (props: Props) => {
   );
 };
 
-export default CategoryAddNew;
+export default CategoryUpdate;

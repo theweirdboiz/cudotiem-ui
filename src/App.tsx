@@ -4,6 +4,7 @@ import HomeLayout from "./layouts/HomeLayout";
 import { CategoryAddNew, PostAddNew } from "./module";
 import DashboardLayout from "./layouts/DashboardLayout";
 import CategoryManage from "./module/category/CategoryManage";
+import CategoryUpdate from "./module/category/CategoryUpdate";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/manage/add-post" element={<PostAddNew />} />
           <Route path="/manage/add-category" element={<CategoryAddNew />} />
           <Route path="/manage/category" element={<CategoryManage />} />
+          <Route path="/manage/update-category" element={<CategoryUpdate />} />
         </Route>
       </Routes>
     </BrowserRouter>
