@@ -10,8 +10,8 @@ import { storage } from "~/firebase-app/firebase-config";
 import { PostType } from "~/types/PostType";
 
 interface Props {
-  setValue: UseFormSetValue<PostType>;
-  getValues: UseFormGetValues<PostType>;
+  setValue: UseFormSetValue<any>;
+  getValues: UseFormGetValues<any>;
 }
 
 interface UploadImg {

@@ -7,8 +7,6 @@ type Props = {
 };
 
 const LabelStatus = (props: Props) => {
-  console.log(typeof props.type);
-
   let styleClassnames;
   switch (props.type) {
     case status.APPROVED:

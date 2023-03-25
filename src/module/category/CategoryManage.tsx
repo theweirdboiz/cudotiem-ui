@@ -20,9 +20,12 @@ import ReactPaginate from "react-paginate";
 import httpRequest from "~/ultis/httpRequest";
 
 type Props = {};
+const PER_PAGE = 3;
 
 const CategoryManage = (props: Props) => {
   const { categories, setCategories } = useCategory();
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
   const navigator = useNavigate();
   const [isPending, startTransition] = useTransition();
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,9 +41,17 @@ const CategoryManage = (props: Props) => {
     fetchCategories();
   }, []);
 
-  // handle events
+  // Get current posts
+  const indexOfLast = (currentPage + 1) * PER_PAGE;
+  const indexOfFirst = indexOfLast - PER_PAGE;
 
-  // console.log("current page: ", currentPage);
+  const currentCategories = categories.slice(indexOfFirst, indexOfLast);
+
+  // handle events
+  // Change page
+  const handlePageClick = (data: any) => {
+    setCurrentPage(data.selected);
+  };
 
   const handleDeleteCateogry = async (categoryId: number | undefined) => {
     Swal.fire({
@@ -69,7 +80,7 @@ const CategoryManage = (props: Props) => {
       setFilterData([]);
     });
   };
-  const filteredData = categories.filter((category) =>
+  const filteredData = currentCategories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
@@ -150,6 +161,23 @@ const CategoryManage = (props: Props) => {
           </tbody>
         </Table>
       )}
+      <ReactPaginate
+        previousLabel={"<"}
+        previousClassName="px-3 py-1 rounded border border-gray-200 hover:bg-blue-100 cursor-pointer"
+        pageRangeDisplayed={5}
+        pageLinkClassName={
+          "px-3 py-1 rounded border border-gray-200  hover:bg-blue-100"
+        }
+        pageCount={Math.ceil(categories.length / PER_PAGE)}
+        onPageChange={handlePageClick}
+        nextLabel={">"}
+        nextClassName="px-3 py-1 rounded border border-gray-200 hover:bg-blue-100 cursor-pointer"
+        marginPagesDisplayed={2}
+        containerClassName={"box-center mt-3 gap-x-3"}
+        breakLabel={"..."}
+        breakClassName={"break-me"}
+        activeClassName={"text-blue-400 font-semibold"}
+      />
       {!filteredData ||
         (filteredData.length === 0 && <>Not have any category</>)}
     </>

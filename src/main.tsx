@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { CategoryProvider } from "./contexts/categoryContext";
+import { UserProvider } from "./contexts/userContext";
 
 const client = new QueryClient({
   defaultOptions: {
@@ -26,15 +27,17 @@ const client = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <AuthProvider>
-      <CategoryProvider>
-        <QueryClientProvider client={client}>
-          <SearchProvider>
-            <ToastContainer></ToastContainer>
-            <App />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </SearchProvider>
-        </QueryClientProvider>
-      </CategoryProvider>
+      <UserProvider>
+        <CategoryProvider>
+          <QueryClientProvider client={client}>
+            <SearchProvider>
+              <ToastContainer></ToastContainer>
+              <App />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </SearchProvider>
+          </QueryClientProvider>
+        </CategoryProvider>
+      </UserProvider>
     </AuthProvider>
   </React.StrictMode>
 );

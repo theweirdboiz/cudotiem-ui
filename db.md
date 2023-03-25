@@ -20,3 +20,13 @@
 - createdAt
 
 <!-- USER -->
+
+- id
+- username
+- email
+- password
+- avatar
+- status
+- role
+- permission : ["ADD_POST"]
+- createdAt
