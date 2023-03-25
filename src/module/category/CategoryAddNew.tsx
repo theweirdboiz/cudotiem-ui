@@ -8,6 +8,7 @@ import { Button, FormGroup, Input, Label, Radio } from "~/components";
 import { categoryStatus } from "~/config/constant";
 import slugify from "react-slugify";
 import { toast } from "react-toastify";
+import httpRequest from "~/ultis/httpRequest";
 type Props = {};
 
 const schema = yup.object().shape({
@@ -41,14 +42,9 @@ const CategoryAddNew = (props: Props) => {
   // handle submit
 
   const onSubmit = async (data: any) => {
-    const newData = { ...data };
-    newData.slug = slugify(data.slug || data.slug);
-    newData.status = Number(data.status);
-
-    await new Promise((res) => {
-      setTimeout(res, 1000);
-    });
-    console.log(newData);
+    data.slug = slugify(data.slug || data.name);
+    data.status = Number(data.status);
+    await httpRequest.post("/categories", data);
     reset(defaultValues);
     toast.success("Thêm danh mục thành công, vui lòng chờ duyệt");
   };

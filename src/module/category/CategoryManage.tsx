@@ -16,6 +16,9 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useCategory } from "~/contexts/categoryContext";
 
+import ReactPaginate from "react-paginate";
+import httpRequest from "~/ultis/httpRequest";
+
 type Props = {};
 
 const CategoryManage = (props: Props) => {
@@ -24,7 +27,21 @@ const CategoryManage = (props: Props) => {
   const [isPending, startTransition] = useTransition();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterData, setFilterData] = useState<CategoryType[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categoriesData = await httpRequest.get<CategoryType[]>(
+        "categories"
+      );
+      setCategories(categoriesData);
+    };
+    fetchCategories();
+  }, []);
+
   // handle events
+
+  // console.log("current page: ", currentPage);
+
   const handleDeleteCateogry = async (categoryId: number | undefined) => {
     Swal.fire({
       title: "Khoan đã",

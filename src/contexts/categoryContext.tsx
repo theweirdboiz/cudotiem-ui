@@ -1,12 +1,5 @@
-import React, {
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { createContext } from "vm";
-import { categoriesData } from "~/fake-data/categories";
+import React, { ReactNode, useContext, useState } from "react";
+
 import { CategoryType } from "~/types/CategoryType";
 
 interface CategoryContextType {
@@ -17,14 +10,12 @@ interface CategoryContextType {
 const CategoryContext = React.createContext<CategoryContextType | null>(null);
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
-  const [categories, setCategories] = useState<CategoryType[]>(categoriesData);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
 
   const value = {
     categories,
     setCategories,
   };
-
-  console.log(categories);
 
   return (
     <CategoryContext.Provider value={value}>
