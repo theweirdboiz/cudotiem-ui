@@ -4,19 +4,19 @@ import {
   FormGroup,
   Input,
   Label,
-  Dropdown,
   Radio,
   Button,
   UploadImg,
-  Toggle,
 } from "~/components";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import useUploadImg from "~/hooks/useUploadImg";
+import useToggleValue from "~/hooks/useToggle";
+import UserType from "~/types/UserType";
+import IconEyeToggle from "~/components/icon/IconEyeToggle";
+import httpRequest from "~/ultis/httpRequest";
+import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userRole, userStatus, USER_DEFAULT_VALUE } from "~/config";
-import UserType from "~/types/UserType";
-import httpRequest from "~/ultis/httpRequest";
 import { toast } from "react-toastify";
 
 type Props = {};
@@ -49,6 +49,9 @@ const UserAddNew = (props: Props) => {
       setValue,
       getValues,
     });
+
+  const { value: showPassword, handleToggle } = useToggleValue();
+
   const handleCreateUser = async (data: any) => {
     data.status = Number(data.status);
     data.role = Number(data.role);
@@ -69,10 +72,10 @@ const UserAddNew = (props: Props) => {
       <form action="" onSubmit={handleSubmit(handleCreateUser)}>
         <div className="w-48 h-48 rounded-full mb-10 mx-auto">
           <UploadImg
-            name="image_name"
+            name="image"
             onChange={onSelectImg}
             progress={progress}
-            image={image}
+            imageLink={image}
             handleDeleteImage={handleDeleteImg}
             className="!rounded-full"
             control={control}
@@ -98,10 +101,17 @@ const UserAddNew = (props: Props) => {
           <FormGroup>
             <Label>Password</Label>
             <Input
-              control={control}
+              type={`${showPassword ? "text" : "password"}`}
               name="password"
-              placeholder="Enter your password"
-            ></Input>
+              control={control}
+              placeholder="Create a password"
+              // error={errors?.password?.message as string}
+            >
+              <IconEyeToggle
+                toggle={showPassword}
+                onClick={handleToggle}
+              ></IconEyeToggle>
+            </Input>
           </FormGroup>
           <FormGroup>{}</FormGroup>
           <FormGroup>

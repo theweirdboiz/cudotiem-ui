@@ -7,22 +7,18 @@ import {
   LabelStatus,
   Table,
 } from "~/components";
-import { status } from "~/config";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
-
-import { CategoryType } from "~/types/CategoryType";
-
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-import { useCategory } from "~/contexts/categoryContext";
-
 import ReactPaginate from "react-paginate";
 import httpRequest from "~/ultis/httpRequest";
+import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import { useNavigate } from "react-router-dom";
+import { useCategory } from "~/contexts/categoryContext";
+import { status } from "~/config";
+import { CategoryType } from "~/types/CategoryType";
 
-type Props = {};
 const PER_PAGE = 3;
 
-const CategoryManage = (props: Props) => {
+const CategoryManage = () => {
   const { categories, setCategories } = useCategory();
   const [currentPage, setCurrentPage] = useState<number>(0);
 
@@ -80,6 +76,7 @@ const CategoryManage = (props: Props) => {
       setFilterData([]);
     });
   };
+
   const filteredData = currentCategories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );

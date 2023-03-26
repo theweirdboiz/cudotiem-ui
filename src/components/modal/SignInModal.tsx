@@ -7,7 +7,7 @@ import Label from "../label/Label";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useToggleValue from "../../hooks/useToggle";
+import useToggleValue from "~/hooks/useToggle";
 import IconEyeToggle from "../icon/IconEyeToggle";
 import Button from "../button/Button";
 

@@ -3,7 +3,7 @@ import React, { Fragment } from "react";
 interface Props {
   className?: string;
   progress?: number;
-  imageLink?: string | "";
+  imageLink?: string;
   handleDeleteImage?: () => void;
   [key: string]: any;
 }

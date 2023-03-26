@@ -26,12 +26,13 @@ const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
   const [progress, setProgress] = useState(0);
   const [image, setImage] = useState<string>("");
 
-  const onSelectImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file: File | undefined = e.target.files?.[0];
+  console.log(image);
 
+  const onSelectImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file: File | undefined = e.target.files?.[0];
     if (!file) return;
     setValue("image", file.name);
-    handleUploadImg(file);
+    await handleUploadImg(file);
   };
 
   const handleDeleteImg = () => {
@@ -67,15 +68,14 @@ const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
             break;
           default:
             console.log("nothing at all");
-
             break;
         }
       },
       (err) => {
         console.log(err);
       },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+      async () => {
+        await getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
           setImage(downloadUrl);
           console.log("File available at", downloadUrl);
         });

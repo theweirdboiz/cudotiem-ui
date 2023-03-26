@@ -1,6 +1,6 @@
 interface UserType {
   id: number | null;
-  fullName: string | null;
+  fullName: string | "";
   avatar: string | null | undefined;
   email: string | null;
   password: string | null;
