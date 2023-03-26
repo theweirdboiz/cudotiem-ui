@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { CategoryType } from "~/types/CategoryType";
 import { Button, FormGroup, Input, Label, Radio } from "~/components";
-import { categoryStatus } from "~/config/constant";
+import { categoryStatus, CATEGORY_DEFAULT_VALUE } from "~/config/constant";
 import slugify from "react-slugify";
 import { toast } from "react-toastify";
 import httpRequest from "~/ultis/httpRequest";
@@ -15,13 +15,6 @@ const schema = yup.object().shape({
   name: yup.string().required("This field is required"),
   // status: yup.string().required("This field is required"),
 });
-
-const defaultValues = {
-  name: "",
-  slug: "",
-  status: 2,
-  createdAt: new Date().getTime(),
-};
 
 const CategoryAddNew = (props: Props) => {
   const {
@@ -35,7 +28,7 @@ const CategoryAddNew = (props: Props) => {
   } = useForm<CategoryType>({
     mode: "all",
     resolver: yupResolver(schema),
-    defaultValues: defaultValues,
+    defaultValues: CATEGORY_DEFAULT_VALUE,
   });
 
   const watchStatus = watch("status");
@@ -45,7 +38,7 @@ const CategoryAddNew = (props: Props) => {
     data.slug = slugify(data.slug || data.name);
     data.status = Number(data.status);
     await httpRequest.post("/categories", data);
-    reset(defaultValues);
+    reset(CATEGORY_DEFAULT_VALUE);
     toast.success("Thêm danh mục thành công, vui lòng chờ duyệt");
   };
 

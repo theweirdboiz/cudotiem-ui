@@ -1,19 +1,17 @@
 import React, { Fragment } from "react";
 
 interface Props {
-  name: string;
   className?: string;
   progress?: number;
-  image?: string | null;
+  imageLink?: string | "";
   handleDeleteImage?: () => void;
   [key: string]: any;
 }
 
 const UploadImg: React.FC<Props> = ({
-  name,
   className = "",
   progress = 0,
-  image = "",
+  imageLink = "",
   handleDeleteImage = () => {},
   ...rest
 }) => {
@@ -21,17 +19,11 @@ const UploadImg: React.FC<Props> = ({
     <label
       className={`cursor-pointer flex items-center justify-center border border-dashed border-blue-300 w-full min-h-[200px] rounded-lg ${className} relative overflow-hidden group`}
     >
-      <input
-        type="file"
-        name={name}
-        className="hidden"
-        onChange={() => {}}
-        {...rest}
-      />
-      {progress !== 0 && !image && (
+      <input type="file" className="hidden" onChange={() => {}} {...rest} />
+      {progress !== 0 && !imageLink && (
         <div className="absolute z-10 w-16 h-16 border-8 border-blue-400 rounded-full loading border-t-transparent animate-spin"></div>
       )}
-      {!image && progress === 0 && (
+      {imageLink?.length <= 0 && progress === 0 && (
         <div className="flex flex-col items-center text-center pointer-events-none">
           <img
             src="https://raw.githubusercontent.com/evondev/react-course-projects/master/monkey-blogging/public/img-upload.png"
@@ -41,9 +33,9 @@ const UploadImg: React.FC<Props> = ({
           <p className="font-semibold">Choose photo</p>
         </div>
       )}
-      {image && (
+      {imageLink?.length > 0 && (
         <Fragment>
-          <img src={image} className="object-cover w-full h-full" alt="" />
+          <img src={imageLink} className="object-cover w-full h-full" alt="" />
           <button
             type="button"
             className="absolute z-10 flex items-center justify-center invisible w-16 h-16 text-red-500 transition-all bg-white rounded-full opacity-0 cursor-pointer group-hover:opacity-100 group-hover:visible"
@@ -66,7 +58,7 @@ const UploadImg: React.FC<Props> = ({
           </button>
         </Fragment>
       )}
-      {!image && (
+      {imageLink.length <= 0 && (
         <div
           className="absolute bottom-0 left-0 w-10 h-1 transition-all bg-blue-400 image-upload-progress"
           style={{

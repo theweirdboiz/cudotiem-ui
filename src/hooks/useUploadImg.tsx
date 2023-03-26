@@ -7,7 +7,6 @@ import {
 } from "firebase/storage";
 import { UseFormSetValue, UseFormGetValues } from "react-hook-form";
 import { storage } from "~/firebase-app/firebase-config";
-import { PostType } from "~/types/PostType";
 
 interface Props {
   setValue: UseFormSetValue<any>;
@@ -18,6 +17,7 @@ interface UploadImg {
   image: string;
   progress: number;
   onSelectImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setImage: React.Dispatch<React.SetStateAction<string>>;
   handleDeleteImg: () => void;
   handleResetUpload: () => void;
 }
@@ -30,12 +30,13 @@ const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
     const file: File | undefined = e.target.files?.[0];
 
     if (!file) return;
-    setValue("image_name", file.name);
+    setValue("image", file.name);
     handleUploadImg(file);
   };
 
   const handleDeleteImg = () => {
-    const imageRef = ref(storage, "images/" + getValues("image_name"));
+    const imageRef = ref(storage, "images/" + getValues("image"));
+
     deleteObject(imageRef)
       .then(() => {
         console.log("remove image successfully");
@@ -87,10 +88,12 @@ const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
   };
   return {
     image,
+    setImage,
     progress,
     onSelectImg,
     handleDeleteImg,
     handleResetUpload,
   };
 };
+
 export default useUploadImg;

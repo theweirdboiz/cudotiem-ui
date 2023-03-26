@@ -14,7 +14,7 @@ const Button = ({
   onClick = () => {},
   ...props
 }: ButtonProps) => {
-  const { isloading, classnames } = props;
+  const { isloading, classnames, to } = props;
 
   const child =
     isloading == "true" ? (
@@ -26,7 +26,21 @@ const Button = ({
   let defaultClassName = `flex justify-center items-center text-base font-semibold text-white bg-primary rounded-xl transition-all duration-100 px-3 ${
     props.heigth || "h-12"
   }`;
-
+  if (to) {
+    return (
+      <Link
+        to={to}
+        className={`${defaultClassName} ${
+          classnames || ""
+        } disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700`}
+        type={type}
+        onClick={onClick}
+        {...props}
+      >
+        {child}
+      </Link>
+    );
+  }
   return (
     <button
       className={`${defaultClassName} ${

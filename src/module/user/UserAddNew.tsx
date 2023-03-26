@@ -14,19 +14,18 @@ import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHead
 import useUploadImg from "~/hooks/useUploadImg";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userRole, userStatus } from "~/config";
+import { userRole, userStatus, USER_DEFAULT_VALUE } from "~/config";
 import UserType from "~/types/UserType";
+import httpRequest from "~/ultis/httpRequest";
+import { toast } from "react-toastify";
 
 type Props = {};
-const defaultValues = {
-  fullname: "",
-  email: "",
-  avatar:
-    "https://raw.githubusercontent.com/evondev/react-course-projects/master/monkey-blogging/public/img-upload.png",
-  password: "",
-  status: 2,
-  role: 3,
-};
+
+const schema = yup.object().shape({
+  fullName: yup.string().required("This field is required"),
+  email: yup.string().required("This field is required"),
+});
+
 const UserAddNew = (props: Props) => {
   const {
     control,
@@ -34,10 +33,14 @@ const UserAddNew = (props: Props) => {
     getValues,
     setValue,
     handleSubmit,
+    reset,
     formState: { isSubmitting, isValid },
   } = useForm<UserType>({
-    defaultValues: defaultValues,
+    defaultValues: USER_DEFAULT_VALUE,
+    mode: "all",
+    resolver: yupResolver(schema),
   });
+
   const watchStatus = watch("status");
   const watchRole = watch("role");
 
@@ -46,8 +49,19 @@ const UserAddNew = (props: Props) => {
       setValue,
       getValues,
     });
-  const handleCreateUser = (data: any) => {
-    console.log(data);
+  const handleCreateUser = async (data: any) => {
+    data.status = Number(data.status);
+    data.role = Number(data.role);
+    data.avatar = image;
+    try {
+      await httpRequest.post("/users", data);
+      handleResetUpload();
+      toast.success("Thêm User mới thành công!");
+      reset(USER_DEFAULT_VALUE);
+    } catch (error) {
+      console.log(error);
+      toast.error("Thêm User không thành công, hãy thử lại");
+    }
   };
   return (
     <>
@@ -55,12 +69,13 @@ const UserAddNew = (props: Props) => {
       <form action="" onSubmit={handleSubmit(handleCreateUser)}>
         <div className="w-48 h-48 rounded-full mb-10 mx-auto">
           <UploadImg
-            name="avatar"
+            name="image_name"
             onChange={onSelectImg}
             progress={progress}
             image={image}
             handleDeleteImage={handleDeleteImg}
             className="!rounded-full"
+            control={control}
           ></UploadImg>
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -99,7 +114,7 @@ const UserAddNew = (props: Props) => {
                 value={userStatus.ACTIVED}
                 checked={Number(watchStatus) === Number(userStatus.ACTIVED)}
               >
-                Pending
+                Actived
               </Radio>
               <Radio
                 id="pending"

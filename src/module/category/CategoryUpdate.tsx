@@ -7,7 +7,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { CategoryType } from "~/types/CategoryType";
-import { categoryStatus } from "~/config";
+import { categoryStatus, CATEGORY_DEFAULT_VALUE } from "~/config";
 import { Button, FormGroup, Input, Label, Radio } from "~/components";
 import { useCategory } from "~/contexts/categoryContext";
 
@@ -19,12 +19,6 @@ const CategoryUpdate = (props: Props) => {
     // status: yup.string().required("This field is required"),
   });
 
-  const defaultValues = {
-    name: "",
-    slug: "",
-    status: 2,
-    createdAt: new Date().getTime(),
-  };
   const {
     control,
     watch,
@@ -36,7 +30,7 @@ const CategoryUpdate = (props: Props) => {
   } = useForm<CategoryType>({
     mode: "all",
     resolver: yupResolver(schema),
-    defaultValues: defaultValues,
+    defaultValues: CATEGORY_DEFAULT_VALUE,
   });
 
   const watchStatus = watch("status");
