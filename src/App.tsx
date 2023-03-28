@@ -8,6 +8,7 @@ import {
   UserAddNew,
   UserUpdate,
   PostManage,
+  PostUpdate,
 } from "./module";
 import DashboardLayout from "./layouts/DashboardLayout";
 import CategoryManage from "./module/category/CategoryManage";
@@ -37,6 +38,7 @@ function App() {
           <Route path="/manage/post" element={<PostManage />} />
           <Route path="/:slug" element={<PostDetailPage />} />
           <Route path="/manage/add-post" element={<PostAddNew />} />
+          <Route path="/manage/update-post" element={<PostUpdate />} />
         </Route>
       </Routes>
     </BrowserRouter>

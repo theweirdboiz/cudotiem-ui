@@ -4,7 +4,7 @@ export interface PostType {
   slug: string;
   status: number;
   hot: boolean;
-  image: string;
+  image: string | "";
   categoryId: string;
   userId: string;
   createdAt?: number;

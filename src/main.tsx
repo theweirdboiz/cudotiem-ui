@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <PostProvider>
             <QueryClientProvider client={client}>
               <SearchProvider>
-                <ToastContainer></ToastContainer>
+                <ToastContainer autoClose={1200}></ToastContainer>
                 <App />
                 <ReactQueryDevtools initialIsOpen={false} />
               </SearchProvider>

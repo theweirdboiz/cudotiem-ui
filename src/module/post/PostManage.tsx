@@ -4,7 +4,7 @@ import ReactPaginate from "react-paginate";
 import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
 import httpRequest from "~/ultis/httpRequest";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
-import { userRole, userStatus } from "~/config";
+import { postStatus, userRole, userStatus } from "~/config";
 import { usePost } from "~/contexts/postContext";
 import { useNavigate } from "react-router-dom";
 import { storage } from "~/firebase-app/firebase-config";
@@ -79,27 +79,14 @@ const PostManage = () => {
 
   const renderLabelStatus = (status: number | null) => {
     switch (status) {
-      case userStatus.ACTIVED:
-        return <LabelStatus type={userStatus.ACTIVED}>Actived</LabelStatus>;
-      case userStatus.PENDING:
-        return <LabelStatus type={userStatus.PENDING}>Pending</LabelStatus>;
-      case userStatus.BANED:
-        return <LabelStatus type={userStatus.BANED}>Banned</LabelStatus>;
+      case postStatus.APPROVED:
+        return <LabelStatus type={postStatus.APPROVED}>APPROVED</LabelStatus>;
+      case postStatus.PENDING:
+        return <LabelStatus type={postStatus.PENDING}>Pending</LabelStatus>;
+      case postStatus.REJECTED:
+        return <LabelStatus type={postStatus.REJECTED}>Rejected</LabelStatus>;
       default:
         break;
-    }
-  };
-
-  const renderLabelRole = (status: number | null) => {
-    switch (status) {
-      case userRole.ADMIN:
-        return "ADMIN";
-      case userRole.MOD:
-        return "MODERATER";
-      case userRole.USER:
-        return "USER";
-      default:
-        return "NOT";
     }
   };
 
@@ -163,6 +150,7 @@ const PostManage = () => {
                 <th>Post</th>
                 <th>Category</th>
                 <th>Author</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -190,10 +178,15 @@ const PostManage = () => {
                   </td>
                   <td>{post.categoryId}</td>
                   <td>{post.userId}</td>
+                  <td>{renderLabelStatus(post.status)}</td>
                   <td>
                     <div className="flex-center gap-x-2.5">
                       <ActionView onClick={() => navigator(`/${post.slug}`)} />
-                      <ActionEdit />
+                      <ActionEdit
+                        onClick={() =>
+                          navigator(`/manage/update-post?id=${post.id}`)
+                        }
+                      />
                       <ActionDelete
                         onClick={() => handleDeletePost(post.id as number)}
                       />

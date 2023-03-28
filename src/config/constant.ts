@@ -8,6 +8,7 @@ export const POST_DEFAULT_VALUE = {
   slug: "",
   status: 2,
   hot: false,
+  image: "",
   createdAt: new Date().getTime(),
 };
 

@@ -22,15 +22,6 @@ const Post = (props: Props) => {
           <h4 className=" font-semibold mb-1">
             495.000 <span className="underline">đ</span>
           </h4>
-          <div className="flex items-center gap-x-2 text-[10px] text-gray-600">
-            <img
-              src="https://source.unsplash.com/random"
-              alt=""
-              className="rounded-full w-4 h-4"
-            />
-            <h5>2 phut truoc</h5>
-            <h5>Tp.HCM</h5>
-          </div>
         </div>
       </Link>
     </>

@@ -26,8 +26,6 @@ const useUploadImg = ({ setValue, getValues }: Props): UploadImg => {
   const [progress, setProgress] = useState(0);
   const [image, setImage] = useState<string>("");
 
-  console.log(image);
-
   const onSelectImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
     if (!file) return;

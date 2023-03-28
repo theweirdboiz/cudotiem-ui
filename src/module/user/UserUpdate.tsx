@@ -51,8 +51,8 @@ const UserUpdate = (props: Props) => {
     if (!userId) return;
     const fetchUser = async () => {
       const userData = await httpRequest.get<UserType>(`/users/${userId}`);
-      setImage(userData.avatar as string);
-      reset(userData as any);
+      setImage(userData.avatar);
+      reset(userData);
     };
     fetchUser();
   }, [userId, reset]);
