@@ -7,10 +7,12 @@ import {
   UserManage,
   UserAddNew,
   UserUpdate,
+  PostManage,
 } from "./module";
 import DashboardLayout from "./layouts/DashboardLayout";
 import CategoryManage from "./module/category/CategoryManage";
 import CategoryUpdate from "./module/category/CategoryUpdate";
+import { PostDetailPage } from "./pages/post";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
           <Route path="/manage/update-user" element={<UserUpdate />} />
           <Route path="/manage/add-user" element={<UserAddNew />} />
 
+          <Route path="/manage/post" element={<PostManage />} />
+          <Route path="/:slug" element={<PostDetailPage />} />
           <Route path="/manage/add-post" element={<PostAddNew />} />
         </Route>
       </Routes>

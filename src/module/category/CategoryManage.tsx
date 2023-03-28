@@ -80,6 +80,7 @@ const CategoryManage = () => {
   const filteredData = currentCategories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   return (
     <>
       <DashboardHeading>Categories</DashboardHeading>

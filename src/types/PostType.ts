@@ -1,9 +1,11 @@
 export interface PostType {
+  id?: number;
   title: string;
   slug: string;
   status: number;
   hot: boolean;
-  image_name: string;
+  image: string;
   categoryId: string;
   userId: string;
+  createdAt?: number;
 }

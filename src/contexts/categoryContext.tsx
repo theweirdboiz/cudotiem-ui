@@ -1,13 +1,20 @@
-import React, { ReactNode, useContext, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 
 import { CategoryType } from "~/types/CategoryType";
 
-interface CategoryContextType {
+interface CategoryContextProps {
   categories: CategoryType[];
-  setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
+  setCategories: Dispatch<SetStateAction<CategoryType[]>>;
 }
 
-const CategoryContext = React.createContext<CategoryContextType | null>(null);
+const CategoryContext = createContext<CategoryContextProps | null>(null);
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const [categories, setCategories] = useState<CategoryType[]>([]);

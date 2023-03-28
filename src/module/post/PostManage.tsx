@@ -1,45 +1,42 @@
-import { deleteObject, ref } from "firebase/storage";
-import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
-import ReactPaginate from "react-paginate";
-import { useNavigate } from "react-router-dom";
+import UserType from "~/types/UserType";
 import Swal from "sweetalert2";
+import ReactPaginate from "react-paginate";
+import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
+import httpRequest from "~/ultis/httpRequest";
+import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import { userRole, userStatus } from "~/config";
+import { usePost } from "~/contexts/postContext";
+import { useNavigate } from "react-router-dom";
+import { storage } from "~/firebase-app/firebase-config";
+import { PostType } from "~/types/PostType";
+import { deleteObject, ref } from "firebase/storage";
 import {
   ActionDelete,
   ActionEdit,
+  ActionView,
   Button,
   LabelStatus,
   Table,
 } from "~/components";
-import { userRole, userStatus } from "~/config";
-import { useUser } from "~/contexts/userContext";
-import { storage } from "~/firebase-app/firebase-config";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
-import UserType from "~/types/UserType";
-import httpRequest from "~/ultis/httpRequest";
 
 const PER_PAGE = 3;
 
-const UserManage = () => {
+const PostManage = () => {
   /* A hook that is used to get the users from the context. */
-  const { users, setUsers } = useUser();
+  const { posts, setPosts } = usePost();
 
   /* A hook that is used to navigate to a new location. */
   const navigator = useNavigate();
 
   /* A hook that is used to perform side effects in function components. */
   useEffect(() => {
-    const fetchUsers = async () => {
-      const usersResponse = await httpRequest.get<UserType[]>("/users");
-      setUsers(usersResponse);
+    const fetchPosts = async () => {
+      const postRes = await httpRequest.get<PostType[]>("/posts");
+      setPosts(postRes);
     };
-    fetchUsers();
+    fetchPosts();
   }, []);
 
-  /**
-   * It takes a string as an argument, and if the string is not null, it deletes the image from the
-   * firebase storage.
-   * @param {string} [imgLink] - the link of the image you want to delete
-   */
   const handleDeleteImg = (imgLink?: string) => {
     const imageRef = ref(storage, imgLink);
     deleteObject(imageRef)
@@ -51,10 +48,7 @@ const UserManage = () => {
       });
   };
 
-  /*
-   "I want to delete a user, but before that, I want to delete the user's avatar, and then delete the user."
-   */
-  const handleDeleteUser = async (userId: number | null) => {
+  const handleDeletePost = async (postId: number | null) => {
     Swal.fire({
       title: "Khoan đã",
       text: "Bạn thật sự muốn xóa user này?",
@@ -66,27 +60,23 @@ const UserManage = () => {
       cancelButtonText: "Hủy",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const userData = await httpRequest.get<UserType>(`/users/${userId}`);
-        userData?.avatar && handleDeleteImg(userData.avatar);
-        await httpRequest.delete(`/users/${userId}`).then(async () => {
-          await httpRequest.get<UserType[]>("/users").then((res) => {
-            setUsers(res);
+        const postData = await httpRequest.get<PostType>(`/posts/${postId}`);
+        postData?.image && handleDeleteImg(postData.image);
+        await httpRequest.delete(`/posts/${postId}`).then(async () => {
+          await httpRequest.get<PostType[]>("/posts").then((res) => {
+            setPosts(res);
             /**
              * It takes a number and returns a React component
              * @param {number | null} status - number | null
              * @returns A React component.
              */
-            Swal.fire("Deleted!", "Your user has been deleted.", "success");
+            Swal.fire("Deleted!", "Your posts has been deleted.", "success");
           });
         });
       }
     });
   };
-  /**
-   * It takes a number and returns a React component
-   * @param {number | null} status - number | null
-   * @returns A React component.
-   */
+
   const renderLabelStatus = (status: number | null) => {
     switch (status) {
       case userStatus.ACTIVED:
@@ -99,11 +89,7 @@ const UserManage = () => {
         break;
     }
   };
-  /**
-   * It takes a number and returns a string.
-   * @param {number | null} status - number | null
-   * @returns A function that takes a parameter of type number | null and returns a string.
-   */
+
   const renderLabelRole = (status: number | null) => {
     switch (status) {
       case userRole.ADMIN:
@@ -125,7 +111,7 @@ const UserManage = () => {
   const indexOfLast = (currentPage + 1) * PER_PAGE;
   const indexOfFirst = indexOfLast - PER_PAGE;
 
-  const currentUsers = users.slice(indexOfFirst, indexOfLast);
+  const currentPosts = posts.slice(indexOfFirst, indexOfLast);
 
   const handlePageClick = (data: any) => {
     setCurrentPage(data.selected);
@@ -137,8 +123,8 @@ const UserManage = () => {
     });
   };
 
-  const filteredData = currentUsers.filter((user) =>
-    user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = currentPosts.filter((post) =>
+    post.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -165,55 +151,52 @@ const UserManage = () => {
           </button>
         </div>
         <div className="flex-center justify-end my-5">
-          <Button to="/manage/add-user">Add new user</Button>
+          <Button to="/manage/add-post">Add new post</Button>
         </div>
       </div>
-      {users.length > 0 && (
+      {posts.length > 0 && (
         <>
           <Table>
             <thead>
               <tr>
                 <th>Id</th>
-                <th>Infor</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Role</th>
+                <th>Post</th>
+                <th>Category</th>
+                <th>Author</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
+              {filteredData.map((post) => (
+                <tr key={post.id}>
+                  <td>{post.id}</td>
                   <td>
                     <div className="flex items-center gap-x-2">
                       <img
                         src={
-                          user.avatar ||
+                          post.image ||
                           "https://raw.githubusercontent.com/evondev/react-course-projects/master/monkey-blogging/public/img-upload.png"
                         }
                         className="w-10 h-10 rounded-md"
                         alt=""
                       />
                       <div className="">
-                        <h3 className="whitespace-nowrap">{user.fullName}</h3>
+                        <h3 className="font-semibold">{post.title}</h3>
                         <time className="text-xs text-gray-400">
-                          {user.createdAt}
+                          {post.createdAt}
                         </time>
                       </div>
                     </div>
                   </td>
-                  <td>{user.email}</td>
-                  <td>{renderLabelStatus(user.status)}</td>
-                  <td>{renderLabelRole(user.role)}</td>
+                  <td>{post.categoryId}</td>
+                  <td>{post.userId}</td>
                   <td>
                     <div className="flex-center gap-x-2.5">
-                      <ActionEdit
-                        onClick={() =>
-                          navigator(`/manage/update-user?id=${user.id}`)
-                        }
+                      <ActionView onClick={() => navigator(`/${post.slug}`)} />
+                      <ActionEdit />
+                      <ActionDelete
+                        onClick={() => handleDeletePost(post.id as number)}
                       />
-                      <ActionDelete onClick={() => handleDeleteUser(user.id)} />
                     </div>
                   </td>
                 </tr>
@@ -227,7 +210,7 @@ const UserManage = () => {
             pageLinkClassName={
               "px-3 py-1 rounded border border-gray-200  hover:bg-blue-100"
             }
-            pageCount={Math.ceil(users.length / PER_PAGE)}
+            pageCount={Math.ceil(posts.length / PER_PAGE)}
             onPageChange={handlePageClick}
             nextLabel={">"}
             nextClassName="px-3 py-1 rounded border border-gray-200 hover:bg-blue-100 cursor-pointer"
@@ -245,4 +228,4 @@ const UserManage = () => {
   );
 };
 
-export default UserManage;
+export default PostManage;

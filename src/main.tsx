@@ -11,6 +11,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { CategoryProvider } from "./contexts/categoryContext";
 import { UserProvider } from "./contexts/userContext";
+import { PostProvider } from "./contexts/postContext";
 
 const client = new QueryClient({
   defaultOptions: {
@@ -29,13 +30,15 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <AuthProvider>
       <UserProvider>
         <CategoryProvider>
-          <QueryClientProvider client={client}>
-            <SearchProvider>
-              <ToastContainer></ToastContainer>
-              <App />
-              <ReactQueryDevtools initialIsOpen={false} />
-            </SearchProvider>
-          </QueryClientProvider>
+          <PostProvider>
+            <QueryClientProvider client={client}>
+              <SearchProvider>
+                <ToastContainer></ToastContainer>
+                <App />
+                <ReactQueryDevtools initialIsOpen={false} />
+              </SearchProvider>
+            </QueryClientProvider>
+          </PostProvider>
         </CategoryProvider>
       </UserProvider>
     </AuthProvider>

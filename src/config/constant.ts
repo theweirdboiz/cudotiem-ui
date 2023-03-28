@@ -3,6 +3,14 @@ export const postStatus = {
   PENDING: 2,
   REJECTED: 3,
 };
+export const POST_DEFAULT_VALUE = {
+  title: "",
+  slug: "",
+  status: 2,
+  hot: false,
+  createdAt: new Date().getTime(),
+};
+
 export const CATEGORY_DEFAULT_VALUE = {
   name: "",
   slug: "",

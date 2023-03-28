@@ -16,9 +16,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { PostType } from "~/types/PostType";
-import { postStatus } from "~/config/constant";
+import { postStatus, POST_DEFAULT_VALUE } from "~/config/constant";
 import { CategoryType } from "~/types/CategoryType";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import httpRequest from "~/ultis/httpRequest";
 
 const schema = yup.object().shape({
   title: yup.string().required("This field is required"),
@@ -46,15 +47,6 @@ const category = [
   },
 ];
 
-const defaultValues = {
-  title: "",
-  slug: "",
-  status: 2,
-  hot: false,
-  image_name: "",
-  categoryId: "",
-  userId: "",
-};
 const PostAdd = () => {
   const {
     control,
@@ -65,7 +57,7 @@ const PostAdd = () => {
     reset,
     formState: { isSubmitting, isValid },
   } = useForm<PostType>({
-    defaultValues: defaultValues,
+    defaultValues: POST_DEFAULT_VALUE,
     mode: "all",
     resolver: yupResolver(schema),
   });
@@ -81,20 +73,23 @@ const PostAdd = () => {
 
   const watchStatus = watch("status");
   const watchHot = watch("hot");
-  const wathCategory = watch("categoryId");
 
   // handle event
   const onSubmit = async (value: any) => {
-    const cloneValue = { ...value };
-    cloneValue.slug = slugify(value.slug || value.title);
-    cloneValue.status = Number(value.status);
-    cloneValue.createAt = new Date().getTime();
-    await new Promise((res) => setTimeout(res, 1000));
-    console.log(cloneValue);
-    toast.success("Tạo tin thành công, vui lòng đợi duyệt!");
-    handleResetUpload();
+    const postValue = { ...value };
+    postValue.slug = slugify(value.slug || value.title);
+    postValue.status = Number(value.status);
+    postValue.image = image;
+    try {
+      await httpRequest.post("/posts", postValue);
+      handleResetUpload();
+      toast.success("Thêm Post mới thành công!");
+      reset(POST_DEFAULT_VALUE);
+    } catch (error) {
+      console.log(error);
+      toast.error("Thêm Post không thành công, hãy thử lại");
+    }
     setCategorySelected(null);
-    reset(defaultValues);
   };
 
   const handleClickOption = (item: any) => {
@@ -135,10 +130,10 @@ const PostAdd = () => {
           <FormGroup>
             <Label>Image</Label>
             <UploadImg
-              name="image_name"
+              name="image"
               onChange={onSelectImg}
               progress={progress}
-              image={image}
+              imageLink={image}
               handleDeleteImage={handleDeleteImg}
             ></UploadImg>
           </FormGroup>
@@ -152,7 +147,10 @@ const PostAdd = () => {
               />
               <Dropdown.List>
                 {categories.map((item) => (
-                  <Dropdown.Option onClick={() => handleClickOption(item)}>
+                  <Dropdown.Option
+                    key={item.id}
+                    onClick={() => handleClickOption(item)}
+                  >
                     {item.name}
                   </Dropdown.Option>
                 ))}
