@@ -1,11 +1,9 @@
-import { Fragment } from "react";
-import { RouteType } from "~/config/routes";
-import PostPage from "~/pages/post";
-
-import DefaultLayout from "~/layouts/DefaultLayout";
+import ToyPage from "~/pages/toy";
 import HomePage from "~/pages/home/HomePage";
 import HomeLayout from "~/layouts/HomeLayout";
-import ToyPage from "~/pages/toy";
+import DefaultLayout from "~/layouts/DefaultLayout";
+import { RouteType } from "~/config/routes";
+import { PostPage } from "~/pages/post";
 import { PostAddNew } from "~/module";
 
 const publicRoutes: RouteType[] = [
