@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
+import { useEffect } from "react";
 import {
   ActionDelete,
   ActionEdit,
@@ -8,18 +8,14 @@ import {
   Paginate,
   Table,
 } from "~/components";
-import Swal from "sweetalert2";
-import ReactPaginate from "react-paginate";
 import httpRequest from "~/ultis/httpRequest";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import DashboardSearch from "~/layouts/DashboardLayout/components/DashboardSearch";
+import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import { useSearch, useDeleteData, usePaginate } from "~/hooks";
 import { useNavigate } from "react-router-dom";
 import { useCategory } from "~/contexts/categoryContext";
 import { status } from "~/config";
 import { CategoryType } from "~/types/CategoryType";
-import useDeleteData from "~/hooks/useDeleteData";
-import usePagination from "~/hooks/usePaginate";
-import useSearch from "~/hooks/useSearch";
 
 const PER_PAGE = 3;
 
@@ -28,7 +24,7 @@ const CategoryManage = () => {
   const navigator = useNavigate();
   const { categories, setCategories } = useCategory();
   // handle pagination
-  const { paginatedData, pageCount, handlePageClick } = usePagination({
+  const { paginatedData, pageCount, handlePageClick } = usePaginate({
     data: categories,
     perPage: PER_PAGE,
   });
