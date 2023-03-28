@@ -42,7 +42,7 @@ const DefaultLayout = (props: Props) => {
         } overlay absolute inset-0 z-20 bg-black bg-opacity-50`}
       ></div>
       <main>
-        <div className="">{props.children}</div>
+        <>{props.children}</>
       </main>
     </>
   );

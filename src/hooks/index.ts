@@ -1,4 +1,5 @@
-export { default as useClickOutside } from "./useClickOutside";
-export { default as useToggle } from "./useToggle";
-export { default as useUploadImg } from "./useUploadImg";
-export { default as useFirebaseImage } from "./useFirebaseImage";
+export * from "./useClickOutside";
+export * from "./useToggle";
+export * from "./useUploadImg";
+export * from "./useFirebaseImage";
+export * from "./usePaginate";

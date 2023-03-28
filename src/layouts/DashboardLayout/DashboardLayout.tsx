@@ -112,7 +112,7 @@ const DashboardLayout = () => {
     <>
       <Topbar />
       <PageWrapper>
-        <div className="flex pt-4 gap-x-5">
+        <div className="flex pt-4 gap-x-5 min-h-[600px]">
           <Sidebar width="w-[240px]" shadow="shadow-sm">
             <Sidebar.SidebarList>
               {sidebarLinks.map((item) => (

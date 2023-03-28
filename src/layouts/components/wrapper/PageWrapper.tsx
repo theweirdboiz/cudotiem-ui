@@ -10,7 +10,9 @@ const PageWrapper = ({ children, ...props }: PageWrapperProps) => {
 
   return (
     <main className={`${bg || "bg-gray-100"}`}>
-      <section className="px-6 w-[1280px] mx-auto">{children}</section>
+      <section className="px-6 w-[1280px] min-h-screen mx-auto">
+        {children}
+      </section>
     </main>
   );
 };

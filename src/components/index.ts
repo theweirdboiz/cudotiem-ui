@@ -31,7 +31,12 @@ export { default as Table } from "./table/Table";
 export { default as LabelStatus } from "./label/LabelStatus";
 
 // actions
-
 export { default as ActionEdit } from "./actions/ActionEdit";
 export { default as ActionDelete } from "./actions/ActionDelete";
 export { default as ActionView } from "./actions/ActionView";
+
+// spinner
+export { default as Spinner } from "./spinner/Spinner";
+
+// paginate
+export { default as Paginate } from "./paginate/Paginate";

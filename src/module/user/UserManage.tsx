@@ -8,6 +8,7 @@ import {
   ActionEdit,
   Button,
   LabelStatus,
+  Paginate,
   Table,
 } from "~/components";
 import { userRole, userStatus } from "~/config";
@@ -220,7 +221,7 @@ const UserManage = () => {
               ))}
             </tbody>
           </Table>
-          <ReactPaginate
+          {/* <ReactPaginate
             previousLabel={"<"}
             previousClassName="px-3 py-1 rounded border border-gray-200 hover:bg-blue-100 cursor-pointer"
             pageRangeDisplayed={5}
@@ -236,6 +237,12 @@ const UserManage = () => {
             breakLabel={"..."}
             breakClassName={"break-me"}
             activeClassName={"text-blue-400 font-semibold"}
+          /> */}
+          <Paginate
+            filteredData={filteredData}
+            length={users.length}
+            perPage={PER_PAGE}
+            // onPageChange={handlePageClick}
           />
         </>
       )}

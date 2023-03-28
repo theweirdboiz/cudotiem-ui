@@ -1,14 +1,14 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useSearch } from "~/contexts";
-import { useClickOutside } from "~/hooks";
+import useClickOutSide from "~/hooks/useClickOutside";
 
 type Props = {};
 
 const Search = (props: Props) => {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const { open, setOpen } = useClickOutside(searchInputRef);
+  const { open, setOpen } = useClickOutSide(searchInputRef);
   const { isOpen, setIsOpen } = useSearch();
 
   const handleOpen = () => {

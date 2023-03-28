@@ -1,12 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
-
-interface ButtonProps {
-  type?: "button" | "submit" | "reset";
-  children: React.ReactNode;
-  onClick?: () => void;
-  [key: string]: any;
-}
+import Spinner from "../spinner/Spinner";
+import { ButtonProps } from "./type";
 
 const Button = ({
   type = "button",
@@ -16,14 +10,9 @@ const Button = ({
 }: ButtonProps) => {
   const { isloading, classnames, to } = props;
 
-  const child =
-    isloading == "true" ? (
-      <div className="rounded-full w-6 h-6 border-white border-4 border-l-transparent animate-spin"></div>
-    ) : (
-      children
-    );
+  const child = isloading == "true" ? <Spinner /> : children;
 
-  let defaultClassName = `flex justify-center items-center text-base font-semibold text-white bg-primary rounded-xl transition-all duration-100 px-3 ${
+  let defaultClassName = `flex justify-center items-center text-base font-semibold text-white bg-primary rounded-lg transition-all duration-100 px-3 ${
     props.heigth || "h-12"
   }`;
   if (to) {

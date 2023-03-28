@@ -12,11 +12,11 @@ import {
   UploadImg,
   Toggle,
 } from "~/components";
+import useFirebaseImage from "~/hooks/useFirebaseImage";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useFirebaseImage } from "~/hooks";
 import { toast } from "react-toastify";
 import { PostType } from "~/types/PostType";
 import { postStatus, POST_DEFAULT_VALUE } from "~/config/constant";

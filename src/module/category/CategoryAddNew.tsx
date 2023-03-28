@@ -1,22 +1,19 @@
-import React from "react";
+import slugify from "react-slugify";
+import httpRequest from "~/ultis/httpRequest";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { CategoryType } from "~/types/CategoryType";
-import { Button, FormGroup, Input, Label, Radio } from "~/components";
-import { categoryStatus, CATEGORY_DEFAULT_VALUE } from "~/config/constant";
-import slugify from "react-slugify";
 import { toast } from "react-toastify";
-import httpRequest from "~/ultis/httpRequest";
-type Props = {};
+import { CategoryType } from "~/types/CategoryType";
+import { categoryStatus, CATEGORY_DEFAULT_VALUE } from "~/config/constant";
+import { Button, FormGroup, Input, Label, Radio } from "~/components";
 
 const schema = yup.object().shape({
   name: yup.string().required("This field is required"),
-  // status: yup.string().required("This field is required"),
 });
 
-const CategoryAddNew = (props: Props) => {
+const CategoryAddNew = () => {
   const {
     control,
     watch,
