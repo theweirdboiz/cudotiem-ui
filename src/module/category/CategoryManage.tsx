@@ -19,24 +19,28 @@ import { status } from "~/config";
 import { CategoryType } from "~/types/CategoryType";
 import useDeleteData from "~/hooks/useDeleteData";
 import usePagination from "~/hooks/usePaginate";
+import useSearch from "~/hooks/useSearch";
 
 const PER_PAGE = 3;
 
 const CategoryManage = () => {
-  // context
-  const { categories, setCategories } = useCategory();
-
-  // state
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [filterData, setFilterData] = useState<CategoryType[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-
   // others
   const navigator = useNavigate();
-  const [isPending, startTransition] = useTransition();
+  const { categories, setCategories } = useCategory();
+  // handle pagination
   const { paginatedData, pageCount, handlePageClick } = usePagination({
     data: categories,
     perPage: PER_PAGE,
+  });
+  // handle filter data
+  const { filteredData, handleSearch } = useSearch({
+    data: paginatedData,
+    searchKey: "name",
+  });
+  // handle delete category
+  const { handleDeleteData } = useDeleteData<CategoryType>({
+    data: categories,
+    setData: setCategories,
   });
 
   // side effect
@@ -50,34 +54,6 @@ const CategoryManage = () => {
     fetchCategories();
   }, []);
 
-  // Get current posts
-  // const indexOfLast = (currentPage + 1) * PER_PAGE;
-  // const indexOfFirst = indexOfLast - PER_PAGE;
-
-  // const currentCategories = categories.slice(indexOfFirst, indexOfLast);
-
-  // handle events
-  // Change page
-  // const handlePageClick = (data: any) => {
-  //   setCurrentPage(data.selected);
-  // };
-
-  const { handleDeleteData } = useDeleteData<CategoryType>({
-    data: categories,
-    setData: setCategories,
-  });
-
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    startTransition(() => {
-      setSearchTerm(e.target.value);
-      setFilterData([]);
-    });
-  };
-
-  // const filteredData = currentCategories.filter((category) =>
-  //   category.name.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-
   return (
     <>
       <DashboardHeading>Categories</DashboardHeading>
@@ -87,7 +63,7 @@ const CategoryManage = () => {
           <Button to="/manage/add-category">Create category</Button>
         </div>
       </div>
-      {paginatedData && paginatedData.length > 0 && (
+      {filteredData && filteredData.length > 0 && (
         <Table>
           <thead>
             <tr>
@@ -99,11 +75,11 @@ const CategoryManage = () => {
             </tr>
           </thead>
           <tbody>
-            {paginatedData.length > 0 &&
-              paginatedData.map((category) => (
+            {filteredData.length > 0 &&
+              filteredData.map((category) => (
                 <tr key={category?.id}>
                   <td>{category?.id}</td>
-                  <td>{category.name}</td>
+                  <td className="font-semibold">{category.name}</td>
                   <td>
                     <span className="italic text-gray-400">
                       {category.slug}
