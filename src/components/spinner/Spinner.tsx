@@ -7,7 +7,7 @@ const Spinner = ({
 }: SpinnerProps) => {
   const defaultClass =
     "rounded-full border-4 border-l-transparent animate-spin";
-  return <div style={style} className={`${defaultClass} !${className}`}></div>;
+  return <div style={style} className={`${defaultClass} ${className}`}></div>;
 };
 
 export default Spinner;

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/home";
 import HomeLayout from "./layouts/HomeLayout";
+import PostDetailLayout from "./layouts/PostDetailLayout";
 import {
   CategoryAddNew,
   PostAddNew,
@@ -27,6 +28,14 @@ function App() {
             </HomeLayout>
           }
         />
+        <Route
+          path="/:slug"
+          element={
+            <PostDetailLayout>
+              <PostDetailPage />
+            </PostDetailLayout>
+          }
+        />
         <Route element={<DashboardLayout />}>
           <Route path="/manage/category" element={<CategoryManage />} />
           <Route path="/manage/update-category" element={<CategoryUpdate />} />
@@ -36,7 +45,6 @@ function App() {
           <Route path="/manage/add-user" element={<UserAddNew />} />
 
           <Route path="/manage/post" element={<PostManage />} />
-          <Route path="/:slug" element={<PostDetailPage />} />
           <Route path="/manage/add-post" element={<PostAddNew />} />
           <Route path="/manage/update-post" element={<PostUpdate />} />
         </Route>

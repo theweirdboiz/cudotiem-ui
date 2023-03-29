@@ -4,6 +4,7 @@ export interface PostType {
   slug: string;
   status: number;
   hot: boolean;
+  content?: "";
   image: string | "";
   categoryId: string;
   userId: string;

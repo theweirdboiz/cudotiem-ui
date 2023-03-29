@@ -16,7 +16,7 @@ const useFirebaseImage = (folder: string) => {
     const file: File | undefined = e.target.files?.[0];
     if (!file) return;
     const imageRef = ref(storage, `images/${folder}/${Date.now()}${file.name}`);
-    const uploadTask = uploadBytesResumable(imageRef, file as any);
+    const uploadTask = uploadBytesResumable(imageRef, file);
     uploadTask.on(
       "state_changed",
       (snapshot) => {

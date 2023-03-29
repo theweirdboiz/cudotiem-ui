@@ -55,43 +55,21 @@ const PostUpdate = () => {
     useFirebaseImage("posts");
   const watchStatus = watch("status");
   const watchHot = watch("hot");
-  const category = [
-    {
-      id: 1,
-      name: "category 1",
-      status: 2,
-      slug: "frontedn-a",
-    },
-    {
-      id: 2,
-      name: "category 2",
-      status: 2,
-      slug: "frontedn-22",
-    },
-    {
-      id: 3,
-      name: "category 3",
-      status: 3,
-      slug: "frontedn-a",
-    },
-  ];
 
   // handle events
-  const handleEditorChange = (content: string) => {
-    setContent(content);
-  };
+
   const onSubmit = async (value: any) => {
     const postValue = { ...value };
     postValue.slug = slugify(value.slug || value.title);
     postValue.status = Number(value.status);
     postValue.image = path;
+    postValue.content = content;
     try {
       await httpRequest.put(`/posts/${postId}`, postValue);
-      toast.success("Thêm Post mới thành công!");
-      reset(POST_DEFAULT_VALUE);
+      toast.success("Cập nhật tin đăng thành công!");
     } catch (error) {
       console.log(error);
-      toast.error("Thêm Post không thành công, hãy thử lại");
+      toast.error("Cập nhật tin đăng không thành công, hãy thử lại");
     }
     setCategorySelected(null);
   };
@@ -100,32 +78,49 @@ const PostUpdate = () => {
     setValue("categoryId", String(item.id));
     setCategorySelected(item.name);
   };
-
+  const handleEditorChange = (content: string) => {
+    setContent(content);
+  };
+  const handleImageUpload = async (blobInfo: any) => {
+    const formData = new FormData();
+    formData.append("image", blobInfo.blob());
+    const response = await httpRequest.post<any>(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_KEY}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data.url;
+  };
   // api
   useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await httpRequest.get<CategoryType[]>(`/categories`);
+      setCategories(res);
+    };
+    fetchCategories();
+
     const fetchPostDetail = async () => {
       const res = await httpRequest.get<PostType>(`/posts/${postId}`);
       reset(res);
       setPath(res.image);
       setCategorySelected(res.categoryId);
+      setContent(res.content || "");
     };
     fetchPostDetail();
-  }, [postId]);
-  useEffect(() => {
-    setCategories(category);
-  }, []);
-
-  useEffect(() => {
     document.title = "Cụ Đồ Tiễm - Thêm tin đăng";
-  }, []);
+  }, [postId]);
 
   return (
     <>
-      <DashboardHeading>Update post</DashboardHeading>
+      <DashboardHeading>Cập nhật tin đăng</DashboardHeading>
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-3">
           <FormGroup>
-            <Label>Title</Label>
+            <Label>Tiêu đề</Label>
             <Input
               control={control}
               placeholder="Enter your title"
@@ -142,7 +137,7 @@ const PostUpdate = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Label>Image</Label>
+            <Label>Hình ảnh</Label>
             <UploadImg
               name="image"
               onChange={handleUploadImage}
@@ -153,7 +148,7 @@ const PostUpdate = () => {
             ></UploadImg>
           </FormGroup>
           <FormGroup>
-            <Label>Category</Label>
+            <Label>Danh mục</Label>
             <Dropdown>
               <Dropdown.Select
                 placeholder={
@@ -174,7 +169,7 @@ const PostUpdate = () => {
             </Dropdown>
           </FormGroup>
           <FormGroup>
-            <Label>Is hot?</Label>
+            <Label>Tin nổi bật</Label>
             <Toggle
               name="hot"
               on={String(watchHot)}
@@ -182,7 +177,7 @@ const PostUpdate = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Label>Status</Label>
+            <Label>Trạng thái</Label>
             <div className="flex gap-x-6">
               <Radio
                 id="approved"
@@ -191,7 +186,7 @@ const PostUpdate = () => {
                 value={postStatus.APPROVED}
                 checked={Number(watchStatus) === Number(postStatus.APPROVED)}
               >
-                Approved
+                Đã duyệt
               </Radio>
               <Radio
                 id="pending"
@@ -200,7 +195,7 @@ const PostUpdate = () => {
                 value={postStatus.PENDING}
                 checked={Number(watchStatus) === Number(postStatus.PENDING)}
               >
-                Pending
+                Đang xử lý
               </Radio>
               <Radio
                 id="reject"
@@ -209,32 +204,51 @@ const PostUpdate = () => {
                 value={postStatus.REJECTED}
                 checked={Number(watchStatus) === postStatus.REJECTED}
               >
-                Reject
+                Bị từ chối
               </Radio>
             </div>
           </FormGroup>
         </div>
-        <>
-          <Editor
-            apiKey={import.meta.env.VITE_TINY_MCE_KEY}
-            initialValue="<p>This is the initial content of the editor</p>"
-            init={{
-              height: 500,
-              menubar: true,
-              plugins: [
-                "advlist autolink lists link image",
-                "charmap print preview anchor help",
-                "searchreplace visualblocks code",
-                "insertdatetime media table paste wordcount",
-              ],
-              toolbar:
-                "undo redo | formatselect | bold italic | \
-            alignleft aligncenter alignright | \
-            bullist numlist outdent indent | help",
-            }}
-            onEditorChange={handleEditorChange}
-          />
-        </>
+        <FormGroup>
+          <Label>Thông tin chi tiết</Label>
+        </FormGroup>
+        <FormGroup>
+          <Label>Mô tả sản phẩm</Label>
+
+          <div className="entry-content">
+            <Editor
+              apiKey={import.meta.env.VITE_TINY_MCE_KEY}
+              value={content}
+              init={{
+                height: 500,
+                menubar: true,
+                plugins: [
+                  "advlist",
+                  "autolink",
+                  "lists",
+                  "link",
+                  "image",
+                  "charmap",
+                  "preview",
+                  "anchor",
+                  "searchreplace",
+                  "visualblocks",
+                  "code",
+                  "fullscreen",
+                  "insertdatetime",
+                  "media",
+                  "table",
+                  "editimage",
+                  "wordcount",
+                ],
+                toolbar:
+                  "undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                images_upload_handler: handleImageUpload,
+              }}
+              onEditorChange={handleEditorChange}
+            />
+          </div>
+        </FormGroup>
         <Button
           style={{
             width: "100%",
@@ -242,13 +256,13 @@ const PostUpdate = () => {
             margin: "0 auto",
           }}
           type="submit"
-          isloading={String(isSubmitting)}
+          isloading={isSubmitting}
           disabled={!isValid}
           classnames={
             isSubmitting ? "bg-gray-200 text-gray-700 cursor-not-allowed" : ""
           }
         >
-          Update post
+          Cập nhật tin đăng
         </Button>
       </form>
     </>
