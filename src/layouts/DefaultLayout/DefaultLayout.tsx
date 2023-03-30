@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
-import Topbar from "../components/topbar";
 import { Link, Outlet } from "react-router-dom";
 import { useSearch } from "~/contexts/searchContext";
+import Topbar from "../components/topbar/Topbar";
 
 type Props = {
   children?: ReactNode;
