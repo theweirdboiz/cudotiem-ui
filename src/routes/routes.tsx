@@ -1,4 +1,3 @@
-import ToyPage from "~/pages/toy";
 import HomePage from "~/pages/home/HomePage";
 import HomeLayout from "~/layouts/HomeLayout";
 import DefaultLayout from "~/layouts/DefaultLayout";
@@ -19,18 +18,6 @@ const publicRoutes: RouteType[] = [
     sidebarProps: {
       displayText: "Quản lý tin",
     },
-  },
-  {
-    path: "/",
-    element: <ToyPage />,
-    layout: DefaultLayout,
-    child: [
-      {
-        path: "/manage",
-        element: <PostAddNew />,
-        layout: HomeLayout,
-      },
-    ],
   },
 ];
 
