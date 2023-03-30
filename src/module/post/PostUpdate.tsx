@@ -1,7 +1,3 @@
-import slugify from "react-slugify";
-import React, { useEffect, useState } from "react";
-import httpRequest from "~/ultis/httpRequest";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import {
   FormGroup,
   Input,
@@ -13,13 +9,17 @@ import {
   Toggle,
 } from "~/components";
 import useFirebaseImage from "~/hooks/useFirebaseImage";
+import slugify from "react-slugify";
+import React, { useEffect, useState } from "react";
+import httpRequest from "~/ultis/httpRequest";
+import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { PostType } from "~/types/PostType";
-import { postStatus, POST_DEFAULT_VALUE } from "~/config/constant";
+import { PostStatus, POST_DEFAULT_VALUE } from "~/config/constant";
 import { Editor } from "@tinymce/tinymce-react";
 import { CategoryType } from "~/types/CategoryType";
 
@@ -183,8 +183,8 @@ const PostUpdate = () => {
                 id="approved"
                 control={control}
                 name="status"
-                value={postStatus.APPROVED}
-                checked={Number(watchStatus) === Number(postStatus.APPROVED)}
+                value={PostStatus.APPROVED}
+                checked={Number(watchStatus) === Number(PostStatus.APPROVED)}
               >
                 Đã duyệt
               </Radio>
@@ -192,8 +192,8 @@ const PostUpdate = () => {
                 id="pending"
                 control={control}
                 name="status"
-                value={postStatus.PENDING}
-                checked={Number(watchStatus) === Number(postStatus.PENDING)}
+                value={PostStatus.PENDING}
+                checked={Number(watchStatus) === Number(PostStatus.PENDING)}
               >
                 Đang xử lý
               </Radio>
@@ -201,8 +201,8 @@ const PostUpdate = () => {
                 id="reject"
                 control={control}
                 name="status"
-                value={postStatus.REJECTED}
-                checked={Number(watchStatus) === postStatus.REJECTED}
+                value={PostStatus.REJECTED}
+                checked={Number(watchStatus) === PostStatus.REJECTED}
               >
                 Bị từ chối
               </Radio>
@@ -244,6 +244,7 @@ const PostUpdate = () => {
                 toolbar:
                   "undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
                 images_upload_handler: handleImageUpload,
+                content_css: "",
               }}
               onEditorChange={handleEditorChange}
             />

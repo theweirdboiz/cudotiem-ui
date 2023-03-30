@@ -16,7 +16,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { PostType } from "~/types/PostType";
-import { postStatus, POST_DEFAULT_VALUE } from "~/config/constant";
+import { PostStatus, POST_DEFAULT_VALUE } from "~/config/constant";
 import { CategoryType } from "~/types/CategoryType";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import httpRequest from "~/ultis/httpRequest";
@@ -174,8 +174,8 @@ const PostAdd = () => {
                 id="approved"
                 control={control}
                 name="status"
-                value={postStatus.APPROVED}
-                checked={Number(watchStatus) === Number(postStatus.APPROVED)}
+                value={PostStatus.APPROVED}
+                checked={Number(watchStatus) === Number(PostStatus.APPROVED)}
               >
                 Approved
               </Radio>
@@ -183,8 +183,8 @@ const PostAdd = () => {
                 id="pending"
                 control={control}
                 name="status"
-                value={postStatus.PENDING}
-                checked={Number(watchStatus) === Number(postStatus.PENDING)}
+                value={PostStatus.PENDING}
+                checked={Number(watchStatus) === Number(PostStatus.PENDING)}
               >
                 Pending
               </Radio>
@@ -192,8 +192,8 @@ const PostAdd = () => {
                 id="reject"
                 control={control}
                 name="status"
-                value={postStatus.REJECTED}
-                checked={Number(watchStatus) === postStatus.REJECTED}
+                value={PostStatus.REJECTED}
+                checked={Number(watchStatus) === PostStatus.REJECTED}
               >
                 Reject
               </Radio>

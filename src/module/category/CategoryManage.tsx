@@ -14,7 +14,7 @@ import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHead
 import { useSearch, useDeleteData, usePaginate } from "~/hooks";
 import { useNavigate } from "react-router-dom";
 import { useCategory } from "~/contexts/categoryContext";
-import { status } from "~/config";
+import { CategoryStatus } from "~/config";
 import { CategoryType } from "~/types/CategoryType";
 
 const PER_PAGE = 3;
@@ -83,13 +83,19 @@ const CategoryManage = () => {
                   </td>
                   <td>
                     {category.status === 1 && (
-                      <LabelStatus type={status.APPROVED}>Approved</LabelStatus>
+                      <LabelStatus type={CategoryStatus.APPROVED}>
+                        Approved
+                      </LabelStatus>
                     )}
                     {category.status === 2 && (
-                      <LabelStatus type={status.PENDING}>Pending</LabelStatus>
+                      <LabelStatus type={CategoryStatus.PENDING}>
+                        Pending
+                      </LabelStatus>
                     )}
                     {category.status === 3 && (
-                      <LabelStatus type={status.REJECTED}>Rejected</LabelStatus>
+                      <LabelStatus type={CategoryStatus.REJECTED}>
+                        Rejected
+                      </LabelStatus>
                     )}
                   </td>
                   <td>

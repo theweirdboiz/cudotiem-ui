@@ -12,8 +12,8 @@ const Button = ({
 
   const child = isloading ? <Spinner /> : children;
 
-  let defaultClassName = `flex justify-center items-center text-base font-semibold text-white bg-primary rounded-lg transition-all duration-100 px-3 ${
-    height || "h-12"
+  let defaultClassName = `flex justify-center items-center text-sm border border-current font-medium bg-white rounded-md transition-all duration-100 px-3 ${
+    height || "h-8"
   }`;
   if (to) {
     return (

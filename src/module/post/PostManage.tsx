@@ -4,7 +4,7 @@ import ReactPaginate from "react-paginate";
 import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
 import httpRequest from "~/ultis/httpRequest";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
-import { postStatus, userRole, userStatus } from "~/config";
+import { PostStatus, UserRole, UserStatus } from "~/config";
 import { usePost } from "~/contexts/postContext";
 import { useNavigate } from "react-router-dom";
 import { storage } from "~/firebase-app/firebase-config";
@@ -79,12 +79,12 @@ const PostManage = () => {
 
   const renderLabelStatus = (status: number | null) => {
     switch (status) {
-      case postStatus.APPROVED:
-        return <LabelStatus type={postStatus.APPROVED}>APPROVED</LabelStatus>;
-      case postStatus.PENDING:
-        return <LabelStatus type={postStatus.PENDING}>Pending</LabelStatus>;
-      case postStatus.REJECTED:
-        return <LabelStatus type={postStatus.REJECTED}>Rejected</LabelStatus>;
+      case PostStatus.APPROVED:
+        return <LabelStatus type={PostStatus.APPROVED}>APPROVED</LabelStatus>;
+      case PostStatus.PENDING:
+        return <LabelStatus type={PostStatus.PENDING}>Pending</LabelStatus>;
+      case PostStatus.REJECTED:
+        return <LabelStatus type={PostStatus.REJECTED}>Rejected</LabelStatus>;
       default:
         break;
     }

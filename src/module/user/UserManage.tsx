@@ -11,7 +11,7 @@ import {
   Paginate,
   Table,
 } from "~/components";
-import { userRole, userStatus } from "~/config";
+import { UserRole, UserStatus } from "~/config";
 import { useUser } from "~/contexts/userContext";
 import { storage } from "~/firebase-app/firebase-config";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
@@ -90,12 +90,12 @@ const UserManage = () => {
    */
   const renderLabelStatus = (status: number | null) => {
     switch (status) {
-      case userStatus.ACTIVED:
-        return <LabelStatus type={userStatus.ACTIVED}>Actived</LabelStatus>;
-      case userStatus.PENDING:
-        return <LabelStatus type={userStatus.PENDING}>Pending</LabelStatus>;
-      case userStatus.BANED:
-        return <LabelStatus type={userStatus.BANED}>Banned</LabelStatus>;
+      case UserStatus.ACTIVED:
+        return <LabelStatus type={UserStatus.ACTIVED}>Actived</LabelStatus>;
+      case UserStatus.PENDING:
+        return <LabelStatus type={UserStatus.PENDING}>Pending</LabelStatus>;
+      case UserStatus.BANNED:
+        return <LabelStatus type={UserStatus.BANNED}>Banned</LabelStatus>;
       default:
         break;
     }
@@ -107,11 +107,11 @@ const UserManage = () => {
    */
   const renderLabelRole = (status: number | null) => {
     switch (status) {
-      case userRole.ADMIN:
+      case UserRole.ADMIN:
         return "ADMIN";
-      case userRole.MOD:
+      case UserRole.MOD:
         return "MODERATER";
-      case userRole.USER:
+      case UserRole.USER:
         return "USER";
       default:
         return "NOT";

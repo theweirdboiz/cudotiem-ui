@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { CategoryType } from "~/types/CategoryType";
-import { categoryStatus, CATEGORY_DEFAULT_VALUE } from "~/config";
+import { CategoryStatus, CATEGORY_DEFAULT_VALUE } from "~/config";
 import { Button, FormGroup, Input, Label, Radio } from "~/components";
 import { useCategory } from "~/contexts/categoryContext";
 
@@ -102,8 +102,8 @@ const CategoryUpdate = (props: Props) => {
                 id="approved"
                 control={control}
                 name="status"
-                value={categoryStatus.APPROVED}
-                checked={Number(watchStatus) === categoryStatus.APPROVED}
+                value={CategoryStatus.APPROVED}
+                checked={Number(watchStatus) === CategoryStatus.APPROVED}
               >
                 Approved
               </Radio>
@@ -111,8 +111,8 @@ const CategoryUpdate = (props: Props) => {
                 id="pending"
                 control={control}
                 name="status"
-                value={categoryStatus.PENDING}
-                checked={Number(watchStatus) === categoryStatus.PENDING}
+                value={CategoryStatus.PENDING}
+                checked={Number(watchStatus) === CategoryStatus.PENDING}
               >
                 Pending
               </Radio>
@@ -120,8 +120,8 @@ const CategoryUpdate = (props: Props) => {
                 id="reject"
                 control={control}
                 name="status"
-                value={categoryStatus.REJECTED}
-                checked={Number(watchStatus) === categoryStatus.REJECTED}
+                value={CategoryStatus.REJECTED}
+                checked={Number(watchStatus) === CategoryStatus.REJECTED}
               >
                 Reject
               </Radio>

@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { CategoryType } from "~/types/CategoryType";
-import { categoryStatus, CATEGORY_DEFAULT_VALUE } from "~/config/constant";
+import { CategoryStatus, CATEGORY_DEFAULT_VALUE } from "~/config/constant";
 import { Button, FormGroup, Input, Label, Radio } from "~/components";
 
 const schema = yup.object().shape({
@@ -68,8 +68,8 @@ const CategoryAddNew = () => {
                 id="approved"
                 control={control}
                 name="status"
-                value={categoryStatus.APPROVED}
-                checked={Number(watchStatus) === categoryStatus.APPROVED}
+                value={CategoryStatus.APPROVED}
+                checked={Number(watchStatus) === CategoryStatus.APPROVED}
               >
                 Approved
               </Radio>
@@ -77,8 +77,8 @@ const CategoryAddNew = () => {
                 id="pending"
                 control={control}
                 name="status"
-                value={categoryStatus.PENDING}
-                checked={Number(watchStatus) === categoryStatus.PENDING}
+                value={CategoryStatus.PENDING}
+                checked={Number(watchStatus) === CategoryStatus.PENDING}
               >
                 Pending
               </Radio>
@@ -86,8 +86,8 @@ const CategoryAddNew = () => {
                 id="reject"
                 control={control}
                 name="status"
-                value={categoryStatus.REJECTED}
-                checked={Number(watchStatus) === categoryStatus.REJECTED}
+                value={CategoryStatus.REJECTED}
+                checked={Number(watchStatus) === CategoryStatus.REJECTED}
               >
                 Reject
               </Radio>

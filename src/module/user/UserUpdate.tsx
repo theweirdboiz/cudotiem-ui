@@ -15,7 +15,7 @@ import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHead
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSearchParams } from "react-router-dom";
-import { userRole, userStatus, USER_DEFAULT_VALUE } from "~/config";
+import { UserRole, UserStatus, USER_DEFAULT_VALUE } from "~/config";
 import { toast } from "react-toastify";
 
 type Props = {};
@@ -120,8 +120,8 @@ const UserUpdate = (props: Props) => {
                 id="actived"
                 control={control}
                 name="status"
-                value={userStatus.ACTIVED}
-                checked={Number(watchStatus) === Number(userStatus.ACTIVED)}
+                value={UserStatus.ACTIVED}
+                checked={Number(watchStatus) === Number(UserStatus.ACTIVED)}
               >
                 Actived
               </Radio>
@@ -129,8 +129,8 @@ const UserUpdate = (props: Props) => {
                 id="pending"
                 control={control}
                 name="status"
-                value={userStatus.PENDING}
-                checked={Number(watchStatus) === Number(userStatus.PENDING)}
+                value={UserStatus.PENDING}
+                checked={Number(watchStatus) === Number(UserStatus.PENDING)}
               >
                 Pending
               </Radio>
@@ -138,8 +138,8 @@ const UserUpdate = (props: Props) => {
                 id="baned"
                 control={control}
                 name="status"
-                value={userStatus.BANED}
-                checked={Number(watchStatus) === Number(userStatus.BANED)}
+                value={UserStatus.BANNED}
+                checked={Number(watchStatus) === Number(UserStatus.BANNED)}
               >
                 Baned
               </Radio>
@@ -152,8 +152,8 @@ const UserUpdate = (props: Props) => {
                 id="admin"
                 control={control}
                 name="role"
-                value={userRole.ADMIN}
-                checked={Number(watchRole) === Number(userRole.ADMIN)}
+                value={UserRole.ADMIN}
+                checked={Number(watchRole) === Number(UserRole.ADMIN)}
               >
                 ADMIN
               </Radio>
@@ -161,8 +161,8 @@ const UserUpdate = (props: Props) => {
                 id="mod"
                 control={control}
                 name="role"
-                value={userRole.MOD}
-                checked={Number(watchRole) === Number(userRole.MOD)}
+                value={UserRole.MOD}
+                checked={Number(watchRole) === Number(UserRole.MOD)}
               >
                 MODERATOR
               </Radio>
@@ -170,8 +170,8 @@ const UserUpdate = (props: Props) => {
                 id="user"
                 control={control}
                 name="role"
-                value={userRole.USER}
-                checked={Number(watchRole) === Number(userRole.USER)}
+                value={UserRole.USER}
+                checked={Number(watchRole) === Number(UserRole.USER)}
               >
                 USER
               </Radio>

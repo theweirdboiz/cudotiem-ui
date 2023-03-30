@@ -15,6 +15,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import CategoryManage from "./module/category/CategoryManage";
 import CategoryUpdate from "./module/category/CategoryUpdate";
 import { PostDetailPage } from "./pages/post";
+import { GallaryProvider } from "./contexts";
 
 function App() {
   return (
