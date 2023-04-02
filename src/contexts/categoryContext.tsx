@@ -4,10 +4,12 @@ import React, {
   ReactNode,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
 import { CategoryType } from "~/types/CategoryType";
+import { HttpRequest } from "~/ultis";
 
 interface CategoryContextProps {
   categories: CategoryType[];
@@ -18,6 +20,14 @@ const CategoryContext = createContext<CategoryContextProps | null>(null);
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await HttpRequest.get<CategoryType[]>("/categories");
+      setCategories(res);
+    };
+    fetchCategories();
+  }, []);
 
   const value = {
     categories,

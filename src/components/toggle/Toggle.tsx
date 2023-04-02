@@ -6,8 +6,7 @@ type Props = {
 };
 
 const Toggle = ({ handleToggle, ...props }: Props) => {
-  const on =
-    props.on === "true" ? true : props.on === "false" ? false : undefined;
+  const on = props.on === true ? true : props.on === false ? false : undefined;
   return (
     <label>
       <input

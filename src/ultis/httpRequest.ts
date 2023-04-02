@@ -1,29 +1,12 @@
-import axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosRequestTransformer,
-} from "axios";
-
-interface InternalAxiosRequestConfig extends AxiosRequestConfig {
-  headers: {
-    Authorization?: string;
-  };
-}
-
-interface TokenResponse {
-  access_token: string;
-  refresh_token: string;
-}
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { ENV } from "~/config";
 
 class Api {
   private axiosInstance: AxiosInstance;
-  private isRefreshing = false;
-  private refreshSubscribers: ((token: string) => void)[] = [];
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: import.meta.env.VITE_BASE_SERVICE_URL,
+      baseURL: ENV.BASE_API,
     });
   }
 

@@ -1,8 +1,3 @@
-import { deleteObject, ref } from "firebase/storage";
-import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
-import ReactPaginate from "react-paginate";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import {
   ActionDelete,
   ActionEdit,
@@ -11,23 +6,22 @@ import {
   Paginate,
   Table,
 } from "~/components";
-import { UserRole, UserStatus } from "~/config";
-import { useUser } from "~/contexts/userContext";
-import { storage } from "~/firebase-app/firebase-config";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import UserType from "~/types/UserType";
-import httpRequest from "~/ultis/httpRequest";
+import { useEffect } from "react";
+import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import * as httpRequest from "~/ultis/httpRequest";
+import { useUser } from "~/contexts/userContext";
+import { UserRole, UserStatus } from "~/config";
+import { useNavigate } from "react-router-dom";
+import { useDeleteData, usePaginate, useSearch } from "~/hooks";
 
 const PER_PAGE = 3;
 
 const UserManage = () => {
-  /* A hook that is used to get the users from the context. */
   const { users, setUsers } = useUser();
 
-  /* A hook that is used to navigate to a new location. */
   const navigator = useNavigate();
 
-  /* A hook that is used to perform side effects in function components. */
   useEffect(() => {
     const fetchUsers = async () => {
       const usersResponse = await httpRequest.get<UserType[]>("/users");
@@ -36,59 +30,8 @@ const UserManage = () => {
     fetchUsers();
   }, []);
 
-  /**
-   * It takes a string as an argument, and if the string is not null, it deletes the image from the
-   * firebase storage.
-   * @param {string} [imgLink] - the link of the image you want to delete
-   */
-  const handleDeleteImg = (imgLink?: string) => {
-    const imageRef = ref(storage, imgLink);
-    deleteObject(imageRef)
-      .then(() => {
-        console.log("remove image successfully");
-      })
-      .catch((err) => {
-        console.log("can not delete image");
-      });
-  };
-
-  /*
-   "I want to delete a user, but before that, I want to delete the user's avatar, and then delete the user."
-   */
-  const handleDeleteUser = async (userId: number | null) => {
-    Swal.fire({
-      title: "Khoan đã",
-      text: "Bạn thật sự muốn xóa user này?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3086d6d4",
-      cancelButtonColor: "#f44343d7",
-      confirmButtonText: "Có, hãy xóa!",
-      cancelButtonText: "Hủy",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const userData = await httpRequest.get<UserType>(`/users/${userId}`);
-        userData?.avatar && handleDeleteImg(userData.avatar);
-        await httpRequest.delete(`/users/${userId}`).then(async () => {
-          await httpRequest.get<UserType[]>("/users").then((res) => {
-            setUsers(res);
-            /**
-             * It takes a number and returns a React component
-             * @param {number | null} status - number | null
-             * @returns A React component.
-             */
-            Swal.fire("Deleted!", "Your user has been deleted.", "success");
-          });
-        });
-      }
-    });
-  };
-  /**
-   * It takes a number and returns a React component
-   * @param {number | null} status - number | null
-   * @returns A React component.
-   */
   const renderLabelStatus = (status: number | null) => {
+    console.log("rerender label status");
     switch (status) {
       case UserStatus.ACTIVED:
         return <LabelStatus type={UserStatus.ACTIVED}>Actived</LabelStatus>;
@@ -100,11 +43,7 @@ const UserManage = () => {
         break;
     }
   };
-  /**
-   * It takes a number and returns a string.
-   * @param {number | null} status - number | null
-   * @returns A function that takes a parameter of type number | null and returns a string.
-   */
+
   const renderLabelRole = (status: number | null) => {
     switch (status) {
       case UserRole.ADMIN:
@@ -118,30 +57,18 @@ const UserManage = () => {
     }
   };
 
-  // filter & pagination
-  const [isPending, startTransition] = useTransition();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState<number>(0);
-
-  const indexOfLast = (currentPage + 1) * PER_PAGE;
-  const indexOfFirst = indexOfLast - PER_PAGE;
-
-  const currentUsers = users.slice(indexOfFirst, indexOfLast);
-
-  const handlePageClick = (data: any) => {
-    setCurrentPage(data.selected);
-  };
-
-  const handleSearch = async (e: ChangeEvent<HTMLInputElement>) => {
-    startTransition(() => {
-      setSearchTerm(e.target.value);
-    });
-  };
-
-  const filteredData = currentUsers.filter((user) =>
-    user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  const { handleDeleteData } = useDeleteData<UserType>({
+    data: users,
+    setData: setUsers,
+  });
+  const { paginatedData, handlePageClick, pageCount } = usePaginate({
+    data: users,
+    perPage: PER_PAGE,
+  });
+  const { filteredData, handleSearch } = useSearch({
+    data: paginatedData,
+    searchKey: "name",
+  });
   return (
     <>
       <DashboardHeading>Users</DashboardHeading>
@@ -214,36 +141,14 @@ const UserManage = () => {
                           navigator(`/manage/update-user?id=${user.id}`)
                         }
                       />
-                      <ActionDelete onClick={() => handleDeleteUser(user.id)} />
+                      <ActionDelete onClick={() => handleDeleteData(user.id)} />
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
-          {/* <ReactPaginate
-            previousLabel={"<"}
-            previousClassName="px-3 py-1 rounded border border-gray-200 hover:bg-blue-100 cursor-pointer"
-            pageRangeDisplayed={5}
-            pageLinkClassName={
-              "px-3 py-1 rounded border border-gray-200  hover:bg-blue-100"
-            }
-            pageCount={Math.ceil(users.length / PER_PAGE)}
-            onPageChange={handlePageClick}
-            nextLabel={">"}
-            nextClassName="px-3 py-1 rounded border border-gray-200 hover:bg-blue-100 cursor-pointer"
-            marginPagesDisplayed={2}
-            containerClassName={"box-center mt-3 gap-x-3"}
-            breakLabel={"..."}
-            breakClassName={"break-me"}
-            activeClassName={"text-blue-400 font-semibold"}
-          /> */}
-          <Paginate
-            filteredData={filteredData}
-            length={users.length}
-            perPage={PER_PAGE}
-            // onPageChange={handlePageClick}
-          />
+          <Paginate pageCount={pageCount} onPageChange={handlePageClick} />
         </>
       )}
       {!filteredData ||

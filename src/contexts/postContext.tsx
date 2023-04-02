@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, {
   createContext,
   Dispatch,
@@ -6,22 +7,22 @@ import React, {
   useContext,
   useState,
 } from "react";
+import { createPost, getPosts } from "~/services";
 import { PostType } from "~/types/PostType";
 
 interface PostContextProps {
   posts: PostType[];
-  setPosts: Dispatch<SetStateAction<PostType[]>>;
 }
 
-const PostContext = createContext<PostContextProps | null>(null);
+const PostContext = createContext<PostContextProps | any>(null);
 
 export const PostProvider = ({ children }: { children: ReactNode }) => {
-  const [posts, setPosts] = useState<PostType[]>([]);
-  const value = {
-    posts,
-    setPosts,
-  };
-  return <PostContext.Provider value={value}>{children}</PostContext.Provider>;
+  const { data, isLoading } = useQuery({
+    queryKey: ["posts"],
+    queryFn: async () => await getPosts(),
+  });
+
+  return <PostContext.Provider value={data}>{children}</PostContext.Provider>;
 };
 export const usePost = () => {
   const context = useContext(PostContext);

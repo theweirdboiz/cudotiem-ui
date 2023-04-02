@@ -1,122 +1,76 @@
-import UserType from "~/types/UserType";
-import Swal from "sweetalert2";
-import ReactPaginate from "react-paginate";
-import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
-import httpRequest from "~/ultis/httpRequest";
+import React, { useEffect } from "react";
+import * as httpRequest from "~/ultis/httpRequest";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
-import { PostStatus, UserRole, UserStatus } from "~/config";
 import { usePost } from "~/contexts/postContext";
 import { useNavigate } from "react-router-dom";
-import { storage } from "~/firebase-app/firebase-config";
 import { PostType } from "~/types/PostType";
-import { deleteObject, ref } from "firebase/storage";
 import {
   ActionDelete,
   ActionEdit,
   ActionView,
   Button,
   LabelStatus,
+  Paginate,
   Table,
 } from "~/components";
+import {
+  useDeleteData,
+  useFirebaseImage,
+  usePaginate,
+  useSearch,
+} from "~/hooks";
+import { deletePost, getPost, getPosts } from "~/services";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const PER_PAGE = 3;
 
 const PostManage = () => {
-  /* A hook that is used to get the users from the context. */
-  const { posts, setPosts } = usePost();
+  const queryClient = useQueryClient();
+  const { data: posts } = useQuery({
+    queryKey: ["posts"],
+    queryFn: async () => await getPosts(),
+  });
 
-  /* A hook that is used to navigate to a new location. */
+  const deletePostMutation = useMutation({
+    mutationFn: async (id: number | string) => await deletePost(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
+        exact: true,
+      });
+    },
+  });
+
   const navigator = useNavigate();
 
-  /* A hook that is used to perform side effects in function components. */
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const postRes = await httpRequest.get<PostType[]>("/posts");
-      setPosts(postRes);
-    };
-    fetchPosts();
-  }, []);
+  // handle pagination
+  const { paginatedData, pageCount, handlePageClick } = usePaginate({
+    data: posts as any,
+    perPage: PER_PAGE,
+  });
+  // handle filter data
+  const { filteredData, handleSearch } = useSearch({
+    data: paginatedData,
+    searchKey: "title",
+  });
+  const { handleDeleteImage } = useFirebaseImage("/posts");
 
-  const handleDeleteImg = (imgLink?: string) => {
-    const imageRef = ref(storage, imgLink);
-    deleteObject(imageRef)
-      .then(() => {
-        console.log("remove image successfully");
-      })
-      .catch((err) => {
-        console.log("can not delete image");
-      });
-  };
-
-  const handleDeletePost = async (postId: number | null) => {
-    Swal.fire({
-      title: "Khoan đã",
-      text: "Bạn thật sự muốn xóa user này?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3086d6d4",
-      cancelButtonColor: "#f44343d7",
-      confirmButtonText: "Có, hãy xóa!",
-      cancelButtonText: "Hủy",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const postData = await httpRequest.get<PostType>(`/posts/${postId}`);
-        postData?.image && handleDeleteImg(postData.image);
-        await httpRequest.delete(`/posts/${postId}`).then(async () => {
-          await httpRequest.get<PostType[]>("/posts").then((res) => {
-            setPosts(res);
-            /**
-             * It takes a number and returns a React component
-             * @param {number | null} status - number | null
-             * @returns A React component.
-             */
-            Swal.fire("Deleted!", "Your posts has been deleted.", "success");
-          });
-        });
-      }
-    });
-  };
-
-  const renderLabelStatus = (status: number | null) => {
-    switch (status) {
-      case PostStatus.APPROVED:
-        return <LabelStatus type={PostStatus.APPROVED}>APPROVED</LabelStatus>;
-      case PostStatus.PENDING:
-        return <LabelStatus type={PostStatus.PENDING}>Pending</LabelStatus>;
-      case PostStatus.REJECTED:
-        return <LabelStatus type={PostStatus.REJECTED}>Rejected</LabelStatus>;
-      default:
-        break;
+  // handle delete category
+  // const { handleDeleteData } = useDeleteData<PostType>({
+  //   data: posts as any,
+  //   deleteFn: deletePostMutation,
+  // });
+  const handleDeleteData = async (id: number) => {
+    deletePostMutation.mutate(id);
+    const postData = await getPost(id);
+    if (postData) {
+      handleDeleteImage(postData.image);
     }
   };
 
-  // filter & pagination
-  const [isPending, startTransition] = useTransition();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState<number>(0);
-
-  const indexOfLast = (currentPage + 1) * PER_PAGE;
-  const indexOfFirst = indexOfLast - PER_PAGE;
-
-  const currentPosts = posts.slice(indexOfFirst, indexOfLast);
-
-  const handlePageClick = (data: any) => {
-    setCurrentPage(data.selected);
-  };
-
-  const handleSearch = async (e: ChangeEvent<HTMLInputElement>) => {
-    startTransition(() => {
-      setSearchTerm(e.target.value);
-    });
-  };
-
-  const filteredData = currentPosts.filter((post) =>
-    post.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <>
-      <DashboardHeading>Users</DashboardHeading>
+      <DashboardHeading>Quản lý tin đăng</DashboardHeading>
       <div className="flex items-center justify-between">
         <div className="flex-center border border-gray-200 w-full max-w-xl rounded-lg relative">
           <img
@@ -138,10 +92,16 @@ const PostManage = () => {
           </button>
         </div>
         <div className="flex-center justify-end my-5">
-          <Button to="/manage/add-post">Add new post</Button>
+          <Button
+            to="/manage/add-post"
+            classnames="text-blue-500 hover:bg-blue-100"
+            height="h-10"
+          >
+            Tạo tin mới
+          </Button>
         </div>
       </div>
-      {posts.length > 0 && (
+      {posts && (
         <>
           <Table>
             <thead>
@@ -178,7 +138,9 @@ const PostManage = () => {
                   </td>
                   <td>{post.categoryId}</td>
                   <td>{post.userId}</td>
-                  <td>{renderLabelStatus(post.status)}</td>
+                  <td>
+                    <LabelStatus status={post.status} />
+                  </td>
                   <td>
                     <div className="flex-center gap-x-2.5">
                       <ActionView onClick={() => navigator(`/${post.slug}`)} />
@@ -187,38 +149,17 @@ const PostManage = () => {
                           navigator(`/manage/update-post?id=${post.id}`)
                         }
                       />
-                      <ActionDelete
-                        onClick={() => handleDeletePost(post.id as number)}
-                      />
+                      <ActionDelete onClick={() => handleDeleteData(post.id)} />
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
-          <ReactPaginate
-            previousLabel={"<"}
-            previousClassName="px-3 py-1 rounded border border-gray-200 hover:bg-blue-100 cursor-pointer"
-            pageRangeDisplayed={5}
-            pageLinkClassName={
-              "px-3 py-1 rounded border border-gray-200  hover:bg-blue-100"
-            }
-            pageCount={Math.ceil(posts.length / PER_PAGE)}
-            onPageChange={handlePageClick}
-            nextLabel={">"}
-            nextClassName="px-3 py-1 rounded border border-gray-200 hover:bg-blue-100 cursor-pointer"
-            marginPagesDisplayed={2}
-            containerClassName={"box-center mt-3 gap-x-3"}
-            breakLabel={"..."}
-            breakClassName={"break-me"}
-            activeClassName={"text-blue-400 font-semibold"}
-          />
+          <Paginate pageCount={pageCount} onPageChange={handlePageClick} />
         </>
       )}
-      {!filteredData ||
-        (filteredData.length === 0 && <>Not have any category</>)}
     </>
   );
 };
-
 export default PostManage;

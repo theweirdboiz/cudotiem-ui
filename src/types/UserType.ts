@@ -1,14 +1,13 @@
 interface UserType {
-  id: number | null;
-  fullName: string | "";
-  avatar: string | "";
-  email: string | null;
-  password: string | null;
-  address: string | null;
-  status: number | null;
-  role: number | null;
-  permission: [] | null;
-  createdAt: number | null;
+  id?: number;
+  fullName: string | undefined;
+  avatar: string | undefined;
+  email: string | undefined;
+  password: string;
+  status: number;
+  role: number;
+  permission?: string[] | null;
+  createdAt?: number;
 }
 
 export default UserType;

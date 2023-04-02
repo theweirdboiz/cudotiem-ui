@@ -3,7 +3,7 @@ import ReactPaginate from "react-paginate";
 import { PaginateProps } from "./type";
 
 const Paginate = (props: PaginateProps) => {
-  const { filteredData, onPageChange, pageCount } = props;
+  const { onPageChange, pageCount } = props;
 
   return (
     <>
@@ -24,7 +24,6 @@ const Paginate = (props: PaginateProps) => {
         breakClassName={"break-me"}
         activeClassName={"text-blue-400 font-semibold"}
       />
-      {!filteredData || (filteredData.length === 0 && <>Not have data</>)}
     </>
   );
 };

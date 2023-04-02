@@ -9,7 +9,7 @@ const Select: React.FC<SelectProps> = ({ ...props }) => {
   const { toggle, show } = useDropdown();
   return (
     <div
-      className={`flex-center justify-between py-4 px-6 bg-white border border-blue-400 rounded-xl text-sm font-semibold cursor-pointer ${props.classname}`}
+      className={`flex-center justify-between py-3 px-4 bg-white border rounded-md text-sm font-semibold cursor-pointer ${props.classname}`}
       onClick={toggle}
     >
       <span>{props.placeholder}</span>

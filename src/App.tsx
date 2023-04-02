@@ -1,25 +1,29 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/home";
-import HomeLayout from "./layouts/HomeLayout";
-import PostDetailLayout from "./layouts/PostDetailLayout";
-import {
-  CategoryAddNew,
-  PostAddNew,
-  UserManage,
-  UserAddNew,
-  UserUpdate,
-  PostManage,
-  PostUpdate,
-} from "./module";
-import DashboardLayout from "./layouts/DashboardLayout";
-import CategoryManage from "./module/category/CategoryManage";
-import CategoryUpdate from "./module/category/CategoryUpdate";
-import { PostDetailPage } from "./pages/post";
-import { GallaryProvider } from "./contexts";
+import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
 
+// pages
+const ProfilePage = lazy(() => import("./pages/profile/ProfilePage"));
+const PostDetailPage = lazy(() => import("./pages/post-detail/PostDetailPage"));
+const HomePage = lazy(() => import("./pages/home/HomePage"));
+// modules
+const UserUpdate = lazy(() => import("./module/user/UserUpdate"));
+const UserManage = lazy(() => import("./module/user/UserManage"));
+const UserAddNew = lazy(() => import("./module/user/UserAddNew"));
+const PostUpdate = lazy(() => import("./module/post/PostUpdate"));
+const PostManage = lazy(() => import("./module/post/PostManage"));
+const PostAddNew = lazy(() => import("./module/post/PostAddNew"));
+const CategoryUpdate = lazy(() => import("./module/category/CategoryUpdate"));
+const CategoryManage = lazy(() => import("./module/category/CategoryManage"));
+const CategoryAddNew = lazy(() => import("./module/category/CategoryAddNew"));
+
+const HomeLayout = lazy(() => import("./layouts/HomeLayout/HomeLayout"));
+const DefaultLayout = lazy(() => import("./layouts/DefaultLayout"));
+const DashboardLayout = lazy(
+  () => import("./layouts/DashboardLayout/DashboardLayout")
+);
 function App() {
   return (
-    <BrowserRouter>
+    <Suspense>
       <Routes>
         <Route
           path="/"
@@ -32,9 +36,9 @@ function App() {
         <Route
           path="/:slug"
           element={
-            <PostDetailLayout>
+            <DefaultLayout>
               <PostDetailPage />
-            </PostDetailLayout>
+            </DefaultLayout>
           }
         />
         <Route element={<DashboardLayout />}>
@@ -49,8 +53,9 @@ function App() {
           <Route path="/manage/add-post" element={<PostAddNew />} />
           <Route path="/manage/update-post" element={<PostUpdate />} />
         </Route>
+        <Route path="/me/profile" element={<ProfilePage />} />
       </Routes>
-    </BrowserRouter>
+    </Suspense>
   );
 }
 

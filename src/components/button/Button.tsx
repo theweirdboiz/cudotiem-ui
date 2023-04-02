@@ -8,20 +8,18 @@ const Button = ({
   onClick = () => {},
   ...props
 }: ButtonProps) => {
-  const { isloading, classnames, to, height, style } = props;
+  const { isloading, classnames, to, height, style, disabled } = props;
 
   const child = isloading ? <Spinner /> : children;
 
-  let defaultClassName = `flex justify-center items-center text-sm border border-current font-medium bg-white rounded-md transition-all duration-100 px-3 ${
+  let defaultClassName = `flex justify-center items-center text-sm border border-current font-medium bg-white rounded-md transition-all duration-100 px-3 text-blue-500 hover:bg-blue-100 ${
     height || "h-8"
   }`;
   if (to) {
     return (
       <Link
         to={to}
-        className={`${defaultClassName} !${
-          classnames || ""
-        } disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700`}
+        className={`${defaultClassName}`}
         type={type}
         onClick={onClick}
       >
@@ -33,9 +31,13 @@ const Button = ({
     <button
       style={style}
       className={`${defaultClassName} ${
-        classnames || ""
-      } disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700`}
+        disabled
+          ? "disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700"
+          : ""
+      }
+      `}
       type={type}
+      disabled={disabled}
       onClick={onClick}
     >
       {child}

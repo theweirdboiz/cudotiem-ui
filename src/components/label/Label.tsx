@@ -13,7 +13,7 @@ const Label: FC<LabelProps> = ({
   return (
     <label
       htmlFor={htmlFor}
-      className={`text-sm font-medium text-gray-900 cursor-pointer inline-block ${className}`}
+      className={`text-sm font-medium cursor-pointer inline-block ${className}`}
       {...props}
     >
       {children}

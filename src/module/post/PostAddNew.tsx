@@ -11,113 +11,100 @@ import {
   UploadImg,
   Toggle,
 } from "~/components";
-import useUploadImg from "~/hooks/useUploadImg";
+import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCategory } from "~/contexts";
 import { toast } from "react-toastify";
 import { PostType } from "~/types/PostType";
 import { PostStatus, POST_DEFAULT_VALUE } from "~/config/constant";
-import { CategoryType } from "~/types/CategoryType";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
-import httpRequest from "~/ultis/httpRequest";
+import { createPost } from "~/services";
+import { useFirebaseImage } from "~/hooks";
+
+type FormStateType = Omit<PostType, "id">;
 
 const schema = yup.object().shape({
-  title: yup.string().required("This field is required"),
-  slug: yup.string().required("This field is required"),
+  title: yup.string().required("Không bỏ trống trường này"),
 });
 
-const category = [
-  {
-    id: 1,
-    name: "category 1",
-    status: 2,
-    slug: "frontedn-a",
-  },
-  {
-    id: 2,
-    name: "category 2",
-    status: 2,
-    slug: "frontedn-22",
-  },
-  {
-    id: 3,
-    name: "category 3",
-    status: 3,
-    slug: "frontedn-a",
-  },
-];
-
 const PostAdd = () => {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: (body: FormStateType) => {
+      return createPost(body);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
+        exact: true,
+      });
+    },
+  });
   const {
     control,
     watch,
     setValue,
     handleSubmit,
-    getValues,
     reset,
-    formState: { isSubmitting, isValid },
+    formState: { isSubmitting, isValid, errors },
   } = useForm<PostType>({
     defaultValues: POST_DEFAULT_VALUE,
     mode: "all",
     resolver: yupResolver(schema),
   });
 
-  const { progress, image, onSelectImg, handleDeleteImg, handleResetUpload } =
-    useUploadImg({
-      setValue,
-      getValues,
-    });
+  const { categories } = useCategory();
 
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [categorySelected, setCategorySelected] = useState<string | null>("");
+  const [categorySelected, setCategorySelected] = useState<string>("");
+  const {
+    handleDeleteImage,
+    handleUploadImage,
+    path,
+    process,
+    handleResetUpload,
+  } = useFirebaseImage("/posts");
+  // api
+  useEffect(() => {
+    document.title = "Cụ Đồ Tiễm - Thêm tin đăng";
+  }, []);
 
   const watchStatus = watch("status");
   const watchHot = watch("hot");
 
   // handle event
-  const onSubmit = async (value: any) => {
-    const postValue = { ...value };
-    postValue.slug = slugify(value.slug || value.title);
-    postValue.status = Number(value.status);
-    postValue.image = image;
+  const onSubmit = async (body: FormStateType) => {
+    body.status = Number(body.status);
+    body.image = path;
+    body.categoryId = Number(body.categoryId);
     try {
-      await httpRequest.post("/posts", postValue);
+      mutate(body);
+      reset(POST_DEFAULT_VALUE);
+      setCategorySelected("");
       handleResetUpload();
       toast.success("Thêm Post mới thành công!");
-      reset(POST_DEFAULT_VALUE);
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.error("Thêm Post không thành công, hãy thử lại");
     }
-    setCategorySelected(null);
   };
 
   const handleClickOption = (item: any) => {
-    setValue("categoryId", String(item.id));
+    setValue("categoryId", item.id);
     setCategorySelected(item.name);
   };
 
-  // api
-  useEffect(() => {
-    setCategories(category);
-  }, []);
-
-  useEffect(() => {
-    document.title = "Cụ Đồ Tiễm - Thêm tin đăng";
-  }, []);
   return (
     <>
-      <DashboardHeading>Add new post</DashboardHeading>
-
+      <DashboardHeading>Tạo tin đăng</DashboardHeading>
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-3">
           <FormGroup>
-            <Label>Title</Label>
+            <Label>Tiêu đề</Label>
             <Input
               control={control}
-              placeholder="Enter your title"
+              placeholder="Tiêu đề tin đăng"
               name="title"
-              required
+              error={errors.title?.message}
             />
           </FormGroup>
           <FormGroup>
@@ -129,21 +116,21 @@ const PostAdd = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Label>Image</Label>
+            <Label>Hình ảnh</Label>
             <UploadImg
               name="image"
-              onChange={onSelectImg}
-              progress={progress}
-              imageLink={image}
-              handleDeleteImage={handleDeleteImg}
+              onChange={handleUploadImage}
+              process={process}
+              path={path}
+              handleDeleteImage={handleDeleteImage}
             ></UploadImg>
           </FormGroup>
           <FormGroup>
-            <Label>Category</Label>
+            <Label>Danh mục</Label>
             <Dropdown>
               <Dropdown.Select
                 placeholder={
-                  categorySelected ? categorySelected : "Select the category"
+                  categorySelected ? categorySelected : "Chọn danh mục"
                 }
               />
               <Dropdown.List>
@@ -160,15 +147,15 @@ const PostAdd = () => {
             </Dropdown>
           </FormGroup>
           <FormGroup>
-            <Label>Is hot?</Label>
+            <Label>Tin nổi bật</Label>
             <Toggle
               name="hot"
-              on={String(watchHot)}
+              on={watchHot}
               handleToggle={() => setValue("hot", !watchHot)}
             />
           </FormGroup>
           <FormGroup>
-            <Label>Status</Label>
+            <Label>Trạng thái</Label>
             <div className="flex gap-x-6">
               <Radio
                 id="approved"
@@ -177,7 +164,7 @@ const PostAdd = () => {
                 value={PostStatus.APPROVED}
                 checked={Number(watchStatus) === Number(PostStatus.APPROVED)}
               >
-                Approved
+                Đã duyệt
               </Radio>
               <Radio
                 id="pending"
@@ -186,7 +173,7 @@ const PostAdd = () => {
                 value={PostStatus.PENDING}
                 checked={Number(watchStatus) === Number(PostStatus.PENDING)}
               >
-                Pending
+                Đang xử lý
               </Radio>
               <Radio
                 id="reject"
@@ -195,26 +182,24 @@ const PostAdd = () => {
                 value={PostStatus.REJECTED}
                 checked={Number(watchStatus) === PostStatus.REJECTED}
               >
-                Reject
+                Từ chối
               </Radio>
             </div>
           </FormGroup>
-          <Button
-            style={{
-              width: "100%",
-              maxWidth: "100%",
-              margin: "0 auto",
-            }}
-            type="submit"
-            isloading={String(isSubmitting)}
-            disabled={!isValid}
-            classnames={
-              isSubmitting ? "bg-gray-200 text-gray-700 cursor-not-allowed" : ""
-            }
-          >
-            Add Post
-          </Button>
         </div>
+        <Button
+          style={{
+            width: "100%",
+            maxWidth: "50%",
+            margin: "0 auto",
+          }}
+          height="h-10"
+          type="submit"
+          isloading={isSubmitting}
+          disabled={!isValid}
+        >
+          Add Post
+        </Button>
       </form>
     </>
   );

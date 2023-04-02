@@ -1,12 +1,10 @@
 import React, { ReactNode } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { useSearch } from "~/contexts/searchContext";
 import PageWrapper from "~/layouts/components/wrapper/PageWrapper";
 import Topbar from "./components/topbar/Topbar";
 type Props = {
   children?: ReactNode;
 };
-const PostDetailLayout = (props: Props) => {
+const DefaultLayout = (props: Props) => {
   return (
     <>
       <Topbar />
@@ -19,4 +17,4 @@ const PostDetailLayout = (props: Props) => {
   );
 };
 
-export default PostDetailLayout;
+export default DefaultLayout;

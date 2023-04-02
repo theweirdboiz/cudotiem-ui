@@ -11,7 +11,6 @@ import {
 import useFirebaseImage from "~/hooks/useFirebaseImage";
 import slugify from "react-slugify";
 import React, { useEffect, useState } from "react";
-import httpRequest from "~/ultis/httpRequest";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,9 +18,10 @@ import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { PostType } from "~/types/PostType";
-import { PostStatus, POST_DEFAULT_VALUE } from "~/config/constant";
+import { ENV, PostStatus, POST_DEFAULT_VALUE } from "~/config/constant";
 import { Editor } from "@tinymce/tinymce-react";
 import { CategoryType } from "~/types/CategoryType";
+import { HttpRequest } from "~/ultis";
 
 const schema = yup.object().shape({
   title: yup.string().required("This field is required"),
@@ -44,7 +44,7 @@ const PostUpdate = () => {
 
   // state
   const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [categorySelected, setCategorySelected] = useState<string | null>("");
+  const [categorySelected, setCategorySelected] = useState<string>("");
   const [content, setContent] = useState("");
 
   // ultis
@@ -65,17 +65,17 @@ const PostUpdate = () => {
     postValue.image = path;
     postValue.content = content;
     try {
-      await httpRequest.put(`/posts/${postId}`, postValue);
+      await HttpRequest.put(`/posts/${postId}`, postValue);
       toast.success("Cập nhật tin đăng thành công!");
     } catch (error) {
       console.log(error);
       toast.error("Cập nhật tin đăng không thành công, hãy thử lại");
     }
-    setCategorySelected(null);
+    setCategorySelected("");
   };
 
   const handleClickOption = (item: any) => {
-    setValue("categoryId", String(item.id));
+    setValue("categoryId", item.id);
     setCategorySelected(item.name);
   };
   const handleEditorChange = (content: string) => {
@@ -84,7 +84,7 @@ const PostUpdate = () => {
   const handleImageUpload = async (blobInfo: any) => {
     const formData = new FormData();
     formData.append("image", blobInfo.blob());
-    const response = await httpRequest.post<any>(
+    const response = await HttpRequest.post<any>(
       `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_KEY}`,
       formData,
       {
@@ -98,16 +98,16 @@ const PostUpdate = () => {
   // api
   useEffect(() => {
     const fetchCategories = async () => {
-      const res = await httpRequest.get<CategoryType[]>(`/categories`);
+      const res = await HttpRequest.get<CategoryType[]>(`/categories`);
       setCategories(res);
     };
     fetchCategories();
 
     const fetchPostDetail = async () => {
-      const res = await httpRequest.get<PostType>(`/posts/${postId}`);
+      const res = await HttpRequest.get<PostType>(`/posts/${postId}`);
       reset(res);
       setPath(res.image);
-      setCategorySelected(res.categoryId);
+      // setCategorySelected();
       setContent(res.content || "");
     };
     fetchPostDetail();
@@ -214,10 +214,9 @@ const PostUpdate = () => {
         </FormGroup>
         <FormGroup>
           <Label>Mô tả sản phẩm</Label>
-
           <div className="entry-content">
             <Editor
-              apiKey={import.meta.env.VITE_TINY_MCE_KEY}
+              apiKey={ENV.TINY_MCE_KEY}
               value={content}
               init={{
                 height: 500,
@@ -256,11 +255,14 @@ const PostUpdate = () => {
             maxWidth: "50%",
             margin: "0 auto",
           }}
+          height="h-10"
           type="submit"
           isloading={isSubmitting}
           disabled={!isValid}
           classnames={
-            isSubmitting ? "bg-gray-200 text-gray-700 cursor-not-allowed" : ""
+            isSubmitting
+              ? "bg-gray-200 text-gray-700 cursor-not-allowed"
+              : "text-blue-500 hover:bg-blue-100"
           }
         >
           Cập nhật tin đăng

@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 
 interface UploadImgProps {
-  path?: string;
-  process?: number;
+  path: string;
+  process: number;
   handleDeleteImage?: () => void;
   [key: string]: any;
   className?: string;

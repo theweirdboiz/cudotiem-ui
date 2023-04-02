@@ -23,6 +23,7 @@ video {
 @layer base {
   body {
     min-height: 100vh;
+    @apply text-gray-800;
   }
   input {
     @apply outline-none;
@@ -34,7 +35,7 @@ video {
     width: 100%;
   }
   thead {
-    background-color: #f7f7f8;
+    @apply bg-blue-100 bg-opacity-40;
   }
   th,
   td {
@@ -42,9 +43,7 @@ video {
     white-space: nowrap;
   }
   th {
-    padding: 20px 30px;
-    font-weight: 600;
-    text-align: left;
+    @apply px-8 py-5 font-medium text-left;
   }
   td {
     padding: 15px 30px;

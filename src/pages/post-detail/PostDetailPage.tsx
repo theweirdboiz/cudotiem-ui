@@ -4,7 +4,7 @@ import { Button, Post } from "~/components";
 import { IconHeart } from "~/components/icon";
 import { GallaryProvider } from "~/contexts";
 import { PostType } from "~/types/PostType";
-import httpRequest from "~/ultis/httpRequest";
+import * as httpRequest from "~/ultis/httpRequest";
 import PostDescription from "./components/post-description/PostDescription";
 import Gallary from "./components/post-gallary/Gallary";
 import PostInfo from "./components/post-info/PostInfo";

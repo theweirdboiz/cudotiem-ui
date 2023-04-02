@@ -1,15 +1,15 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { storage } from "~/firebase-app/firebase-config";
 import {
   ref,
   uploadBytesResumable,
   deleteObject,
   getDownloadURL,
 } from "firebase/storage";
-import { storage } from "~/firebase-app/firebase-config";
-import { toast } from "react-toastify";
 
 const useFirebaseImage = (folder: string) => {
-  const [path, setPath] = useState<string | undefined>();
+  const [path, setPath] = useState<string>("");
   const [process, setProcess] = useState<number>(0);
 
   const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,20 +47,34 @@ const useFirebaseImage = (folder: string) => {
       }
     );
   };
-  const handleDeleteImage = () => {
-    const imageRef = ref(storage, path);
-
-    deleteObject(imageRef)
-      .then(() => {
-        toast.success("Remove image successfully");
-        setProcess(0);
-        setPath(undefined);
-      })
-      .catch((err) => {
-        toast.error("Can not delete image");
-      });
+  const handleDeleteImage = (url = "") => {
+    url = url.length > 0 ? url : path;
+    const imageRef = ref(storage, url);
+    if (url)
+      deleteObject(imageRef)
+        .then(() => {
+          toast.success("Xóa ảnh thành công");
+          setProcess(0);
+          setPath("");
+        })
+        .catch((err) => {
+          toast.error("Không thể xóa ảnh");
+          setPath("");
+          setProcess(0);
+        });
+  };
+  const handleResetUpload = () => {
+    setPath("");
+    setProcess(0);
   };
 
-  return { handleUploadImage, handleDeleteImage, process, path, setPath };
+  return {
+    handleUploadImage,
+    handleDeleteImage,
+    process,
+    path,
+    setPath,
+    handleResetUpload,
+  };
 };
 export default useFirebaseImage;

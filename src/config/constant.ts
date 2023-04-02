@@ -1,16 +1,9 @@
-// VITE_BASE_SERVICE_URL=http://localhost:3000/
-// VITE_IMGBB_URL=https://api.imgbb.com/1/upload
-// VITE_TINY_MCE_KEY=ysbemjqh7w2yf92nlkwryqseu5m72z6iec6dcal628cu1gih
-// VITE_IMGBB_KEY=8f0596a70bbee9a51f1540d7daa47e1d
-export enum ENV {
-  TINY_MCE_KEY = "ysbemjqh7w2yf92nlkwryqseu5m72z6iec6dcal628cu1gih",
-  IMGBB_KEY = "8f0596a70bbee9a51f1540d7daa47e1d",
-}
-
-export enum VITE_URL {
-  IMGBB_URL = "https://api.imgbb.com/1/upload",
-  BASE_API = "http://localhost:3000/",
-}
+export const ENV = {
+  TINY_MCE_KEY: import.meta.env.VITE_TINY_MCE_KEY,
+  IMGBB_KEY: import.meta.env.VITE_IMGBB_KEY,
+  IMGBB_URL: import.meta.env.VITE_IMGBB_URL,
+  BASE_API: import.meta.env.VITE_BASE_API,
+};
 
 export enum PostStatus {
   APPROVED = 1,
@@ -19,11 +12,12 @@ export enum PostStatus {
 }
 
 export const POST_DEFAULT_VALUE = {
-  title: "",
-  slug: "",
+  title: undefined,
+  slug: undefined,
+  categoryId: NaN,
   status: 2,
   hot: false,
-  image: "",
+  image: undefined,
   createdAt: new Date().getTime(),
 };
 

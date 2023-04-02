@@ -1,12 +1,12 @@
 export interface PostType {
-  id?: number;
+  id: number;
   title: string;
   slug: string;
   status: number;
   hot: boolean;
   content?: "";
   image: string | "";
-  categoryId: string;
-  userId: string;
+  categoryId: number;
+  userId: number;
   createdAt?: number;
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type PaginationProps = {
-  data: any[];
+  data: any;
   perPage: number;
 };
 

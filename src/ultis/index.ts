@@ -1,3 +1,1 @@
-import httpRequest from "./httpRequest";
-
-export * from "./httpRequest";
+export { default as HttpRequest } from "./httpRequest";

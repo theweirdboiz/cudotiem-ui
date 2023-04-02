@@ -8,7 +8,7 @@ import {
   Paginate,
   Table,
 } from "~/components";
-import httpRequest from "~/ultis/httpRequest";
+import * as httpRequest from "~/ultis/httpRequest";
 import DashboardSearch from "~/layouts/DashboardLayout/components/DashboardSearch";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import { useSearch, useDeleteData, usePaginate } from "~/hooks";

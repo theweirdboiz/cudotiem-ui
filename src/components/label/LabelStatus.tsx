@@ -1,32 +1,36 @@
 import React, { ReactNode } from "react";
-import { PostStatus, CategoryStatus, UserStatus } from "~/config";
+import { PostStatus } from "~/config";
+import { IconLabel } from "../icon";
 
 type Props = {
-  children: ReactNode;
-  type: number;
+  status: number;
 };
 
 const LabelStatus = (props: Props) => {
-  let styleClassnames;
-  switch (props.type) {
+  let styleClassnames, text;
+  switch (props.status) {
     case PostStatus.APPROVED:
-      styleClassnames = "text-green-500 bg-green-100";
+      styleClassnames = "text-green-500";
+      text = "Đã duyệt";
       break;
     case PostStatus.PENDING:
-      styleClassnames = "text-yellow-500 bg-yellow-100";
+      styleClassnames = "text-yellow-500";
+      text = "Đang xử lý";
       break;
     case PostStatus.REJECTED:
-      styleClassnames = "text-red-500 bg-red-100";
+      text = "Từ chối";
+      styleClassnames = "text-red-500";
       break;
     default:
-      styleClassnames = "text-gray-500 bg-gray-500";
+      styleClassnames = "text-gray-500";
       break;
   }
   return (
     <div
-      className={`inline-block px-4 py-2.5 text-sm rounded-lg font-medium ${styleClassnames}`}
+      className={`inline-flex items-center gap-x-1 text-sm font-medium ${styleClassnames}`}
     >
-      {props.children}
+      <IconLabel size="w-5 h-5" />
+      <span>{text}</span>
     </div>
   );
 };
