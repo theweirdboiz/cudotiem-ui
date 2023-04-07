@@ -8,7 +8,6 @@ import {
   Paginate,
   Table,
 } from "~/components";
-import * as httpRequest from "~/ultis/httpRequest";
 import DashboardSearch from "~/layouts/DashboardLayout/components/DashboardSearch";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import { useSearch, useDeleteData, usePaginate } from "~/hooks";
@@ -16,13 +15,37 @@ import { useNavigate } from "react-router-dom";
 import { useCategory } from "~/contexts/categoryContext";
 import { CategoryStatus } from "~/config";
 import { CategoryType } from "~/types/CategoryType";
+import httpRequest from "~/ultis/httpRequest";
+import {
+  deleteCategory,
+  getAllCategories,
+  getCategory,
+} from "~/services/categoryService";
+import Swal from "sweetalert2";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const PER_PAGE = 3;
 
 const CategoryManage = () => {
+  const queryClient = useQueryClient();
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => await getAllCategories(),
+  });
+
+  const deleteCategoryMutation = useMutation({
+    mutationFn: (id: number | string) => deleteCategory(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["categories"],
+        exact: true,
+      });
+    },
+  });
+
   // others
   const navigator = useNavigate();
-  const { categories, setCategories } = useCategory();
+  // const { categories, setCategories } = useCategory();
   // handle pagination
   const { paginatedData, pageCount, handlePageClick } = usePaginate({
     data: categories,
@@ -34,21 +57,41 @@ const CategoryManage = () => {
     searchKey: "name",
   });
   // handle delete category
-  const { handleDeleteData } = useDeleteData<CategoryType>({
-    data: categories,
-    setData: setCategories,
-  });
+  // const { handleDeleteData } = useDeleteData<CategoryType>({
+  //   data: categories,
+  //   setData: setCategories,
+  // });
+  const handleDeleteData = async (id: number) => {
+    const categoryData = await getCategory(id);
+    if (categoryData) {
+      const result = await Swal.fire({
+        title: "Khoan đã",
+        text: "Bạn thật sự muốn xóa?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3086d6d4",
+        cancelButtonColor: "#f44343d7",
+        confirmButtonText: "Có, hãy xóa!",
+        cancelButtonText: "Hủy",
+      });
+
+      if (result.isConfirmed) {
+        Swal.fire("Deleted!", "Your data has been deleted.", "success");
+        deleteCategoryMutation.mutate(id);
+      }
+    }
+  };
 
   // side effect
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const categoriesData = await httpRequest.get<CategoryType[]>(
-        "categories"
-      );
-      setCategories(categoriesData);
-    };
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     const categoriesData = await httpRequest.get<CategoryType[]>(
+  //       "categories"
+  //     );
+  //     setCategories(categoriesData);
+  //   };
+  //   fetchCategories();
+  // }, []);
 
   return (
     <>
@@ -83,19 +126,13 @@ const CategoryManage = () => {
                   </td>
                   <td>
                     {category.status === 1 && (
-                      <LabelStatus type={CategoryStatus.APPROVED}>
-                        Approved
-                      </LabelStatus>
+                      <LabelStatus status={CategoryStatus.APPROVED} />
                     )}
                     {category.status === 2 && (
-                      <LabelStatus type={CategoryStatus.PENDING}>
-                        Pending
-                      </LabelStatus>
+                      <LabelStatus status={CategoryStatus.PENDING} />
                     )}
                     {category.status === 3 && (
-                      <LabelStatus type={CategoryStatus.REJECTED}>
-                        Rejected
-                      </LabelStatus>
+                      <LabelStatus status={CategoryStatus.REJECTED} />
                     )}
                   </td>
                   <td>

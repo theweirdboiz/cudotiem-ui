@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import slugify from "react-slugify";
 import { useForm } from "react-hook-form";
 import {
@@ -21,6 +21,8 @@ import { PostType } from "~/types/PostType";
 import { PostStatus, POST_DEFAULT_VALUE } from "~/config/constant";
 import { createPost } from "~/services";
 import { useFirebaseImage } from "~/hooks";
+import { log } from "console";
+import Image from "~/components/image/Image";
 
 type FormStateType = Omit<PostType, "id">;
 
@@ -55,12 +57,12 @@ const PostAdd = () => {
   });
 
   const { categories } = useCategory();
-
+  const [images, setImages] = useState([]);
   const [categorySelected, setCategorySelected] = useState<string>("");
   const {
     handleDeleteImage,
     handleUploadImage,
-    path,
+    paths,
     process,
     handleResetUpload,
   } = useFirebaseImage("/posts");
@@ -75,7 +77,7 @@ const PostAdd = () => {
   // handle event
   const onSubmit = async (body: FormStateType) => {
     body.status = Number(body.status);
-    body.image = path;
+    body.images = paths;
     body.categoryId = Number(body.categoryId);
     try {
       mutate(body);
@@ -99,7 +101,9 @@ const PostAdd = () => {
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-3">
           <FormGroup>
-            <Label>Tiêu đề</Label>
+            <Label className={`${errors.title && "text-red-400"}`}>
+              Tiêu đề
+            </Label>
             <Input
               control={control}
               placeholder="Tiêu đề tin đăng"
@@ -117,13 +121,7 @@ const PostAdd = () => {
           </FormGroup>
           <FormGroup>
             <Label>Hình ảnh</Label>
-            <UploadImg
-              name="image"
-              onChange={handleUploadImage}
-              process={process}
-              path={path}
-              handleDeleteImage={handleDeleteImage}
-            ></UploadImg>
+            <input type="file" multiple onChange={handleUploadImage} />
           </FormGroup>
           <FormGroup>
             <Label>Danh mục</Label>
@@ -186,6 +184,24 @@ const PostAdd = () => {
               </Radio>
             </div>
           </FormGroup>
+        </div>
+        <div className="grid grid-cols-3 gap-2 mb-3">
+          {paths?.map((path) => (
+            <Image
+              name="image"
+              onChange={handleUploadImage}
+              process={process}
+              path={path}
+              handleDeleteImage={handleDeleteImage}
+            ></Image>
+            // <UploadImg
+            //   name="image"
+            //   onChange={handleUploadImage}
+            //   process={process}
+            //   path={path}
+            //   handleDeleteImage={handleDeleteImage}
+            // />
+          ))}
         </div>
         <Button
           style={{

@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 
-interface UploadImgProps {
+interface ImageProps {
   path?: string;
   process: number;
   handleDeleteImage: (path: string) => void;
@@ -8,7 +8,7 @@ interface UploadImgProps {
   className?: string;
 }
 
-const UploadImg: React.FC<UploadImgProps> = ({
+const Image: React.FC<ImageProps> = ({
   className = "",
   path = "",
   process = 0,
@@ -72,4 +72,4 @@ const UploadImg: React.FC<UploadImgProps> = ({
     </label>
   );
 };
-export default UploadImg;
+export default Image;

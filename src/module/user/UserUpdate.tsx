@@ -14,9 +14,12 @@ import httpRequest from "~/ultis/httpRequest";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { UserRole, UserStatus, USER_DEFAULT_VALUE } from "~/config";
 import { toast } from "react-toastify";
+import { useFirebaseImage } from "~/hooks";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUser } from "~/services/userService";
 
 type Props = {};
 
@@ -42,20 +45,35 @@ const UserUpdate = (props: Props) => {
     mode: "all",
     resolver: yupResolver(schema),
   });
-  const { progress, onSelectImg, handleDeleteImg, image, setImage } =
-    useUploadImg({
-      setValue,
-      getValues,
-    });
-  useEffect(() => {
-    if (!userId) return;
-    const fetchUser = async () => {
-      const userData = await httpRequest.get<UserType>(`/users/${userId}`);
-      setImage(userData.avatar);
-      reset(userData);
-    };
-    fetchUser();
-  }, [userId, reset]);
+  const { path, process, setPath, handleDeleteImage, handleUploadImage } =
+    useFirebaseImage("users");
+
+  const { id } = useParams();
+  const queryClient = useQueryClient();
+  useQuery({
+    queryKey: ["users", id],
+    queryFn: () => {
+      return getUser(id as string);
+    },
+    enabled: id !== undefined,
+    staleTime: 500,
+    onSuccess: (data) => {
+      console.log(data);
+      setPath(data.avatar as string);
+      reset(data);
+      document.title = "Cụ Đồ Tiễm - Thêm tin đăng";
+    },
+  });
+
+  // useEffect(() => {
+  //   if (!userId) return;
+  //   const fetchUser = async () => {
+  //     const userData = await httpRequest.get<UserType>(`/users/${userId}`);
+  //     setImage(userData.avatar);
+  //     reset(userData);
+  //   };
+  //   fetchUser();
+  // }, [userId, reset]);
 
   const watchStatus = watch("status");
   const watchRole = watch("role");
@@ -64,7 +82,7 @@ const UserUpdate = (props: Props) => {
   const handleUpdateUser = async (data: any) => {
     data.status = Number(data.status);
     data.role = Number(data.role);
-    data.avatar = image;
+    data.avatar = path;
     try {
       await httpRequest.put(`/users/${userId}`, data);
       toast.success("Cập nhật User mới thành công!");
@@ -80,11 +98,11 @@ const UserUpdate = (props: Props) => {
         <div className="w-48 h-48 rounded-full mb-10 mx-auto">
           <UploadImg
             name="image"
-            imageLink={image}
-            onChange={onSelectImg}
-            progress={progress}
-            handleDeleteImage={handleDeleteImg}
-            className="!rounded-full"
+            onChange={handleUploadImage}
+            process={process}
+            path={path}
+            handleDeleteImage={handleDeleteImage}
+            className="h-[250px]"
           ></UploadImg>
         </div>
         <div className="grid grid-cols-2 gap-3">

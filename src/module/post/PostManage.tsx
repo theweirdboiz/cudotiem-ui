@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
-import * as httpRequest from "~/ultis/httpRequest";
+import Swal from "sweetalert2";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
-import { usePost } from "~/contexts/postContext";
 import { useNavigate } from "react-router-dom";
-import { PostType } from "~/types/PostType";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFirebaseImage, usePaginate, useSearch } from "~/hooks";
+import { deletePost, getPost, getPosts } from "~/services";
+
 import {
   ActionDelete,
   ActionEdit,
@@ -13,14 +14,6 @@ import {
   Paginate,
   Table,
 } from "~/components";
-import {
-  useDeleteData,
-  useFirebaseImage,
-  usePaginate,
-  useSearch,
-} from "~/hooks";
-import { deletePost, getPost, getPosts } from "~/services";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const PER_PAGE = 3;
 
@@ -32,7 +25,7 @@ const PostManage = () => {
   });
 
   const deletePostMutation = useMutation({
-    mutationFn: async (id: number | string) => await deletePost(id),
+    mutationFn: (id: number | string) => deletePost(id),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["posts"],
@@ -56,15 +49,25 @@ const PostManage = () => {
   const { handleDeleteImage } = useFirebaseImage("/posts");
 
   // handle delete category
-  // const { handleDeleteData } = useDeleteData<PostType>({
-  //   data: posts as any,
-  //   deleteFn: deletePostMutation,
-  // });
   const handleDeleteData = async (id: number) => {
-    deletePostMutation.mutate(id);
     const postData = await getPost(id);
     if (postData) {
-      handleDeleteImage(postData.image);
+      const result = await Swal.fire({
+        title: "Khoan đã",
+        text: "Bạn thật sự muốn xóa?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3086d6d4",
+        cancelButtonColor: "#f44343d7",
+        confirmButtonText: "Có, hãy xóa!",
+        cancelButtonText: "Hủy",
+      });
+
+      if (result.isConfirmed) {
+        Swal.fire("Deleted!", "Your data has been deleted.", "success");
+        deletePostMutation.mutate(id);
+        handleDeleteImage(postData.image);
+      }
     }
   };
 
@@ -146,7 +149,7 @@ const PostManage = () => {
                       <ActionView onClick={() => navigator(`/${post.slug}`)} />
                       <ActionEdit
                         onClick={() =>
-                          navigator(`/manage/update-post?id=${post.id}`)
+                          navigator(`/manage/update-post/${post.id}`)
                         }
                       />
                       <ActionDelete onClick={() => handleDeleteData(post.id)} />

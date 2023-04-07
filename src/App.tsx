@@ -51,7 +51,7 @@ function App() {
 
           <Route path="/manage/post" element={<PostManage />} />
           <Route path="/manage/add-post" element={<PostAddNew />} />
-          <Route path="/manage/update-post" element={<PostUpdate />} />
+          <Route path="/manage/update-post/:id" element={<PostUpdate />} />
         </Route>
         <Route path="/me/profile" element={<ProfilePage />} />
       </Routes>

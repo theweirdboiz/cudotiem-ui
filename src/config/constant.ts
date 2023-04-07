@@ -17,6 +17,7 @@ export const POST_DEFAULT_VALUE = {
   categoryId: NaN,
   status: 2,
   hot: false,
+  content: undefined,
   image: undefined,
   createdAt: new Date().getTime(),
 };

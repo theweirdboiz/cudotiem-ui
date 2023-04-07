@@ -4,9 +4,9 @@ export interface PostType {
   slug: string;
   status: number;
   hot: boolean;
-  content?: "";
-  image: string | "";
+  content: string;
+  images: string[] | string;
   categoryId: number;
   userId: number;
-  createdAt?: number;
+  createdAt: number;
 }

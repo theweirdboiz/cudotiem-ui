@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { PostType } from "~/types/PostType";
@@ -22,6 +22,9 @@ import { ENV, PostStatus, POST_DEFAULT_VALUE } from "~/config/constant";
 import { Editor } from "@tinymce/tinymce-react";
 import { CategoryType } from "~/types/CategoryType";
 import { HttpRequest } from "~/ultis";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getPost, updatePost } from "~/services";
+type FormStateType = Omit<PostType, "id">;
 
 const schema = yup.object().shape({
   title: yup.string().required("This field is required"),
@@ -46,33 +49,56 @@ const PostUpdate = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [categorySelected, setCategorySelected] = useState<string>("");
   const [content, setContent] = useState("");
-
-  // ultis
-  const [params] = useSearchParams();
-  const postId = params.get("id");
-
   const { path, process, setPath, handleDeleteImage, handleUploadImage } =
     useFirebaseImage("posts");
+  // ultis
+  const { id } = useParams();
+  const queryClient = useQueryClient();
+  useQuery({
+    queryKey: ["post", id],
+    queryFn: () => {
+      return getPost(id as string);
+    },
+    enabled: id !== undefined,
+    staleTime: 500,
+    onSuccess: (data) => {
+      console.log(data);
+      setPath(data?.image as string);
+      setContent(data?.content as string);
+      reset(data);
+      document.title = "Cụ Đồ Tiễm - Thêm tin đăng";
+    },
+  });
+
   const watchStatus = watch("status");
   const watchHot = watch("hot");
 
   // handle events
 
-  const onSubmit = async (value: any) => {
-    const postValue = { ...value };
-    postValue.slug = slugify(value.slug || value.title);
-    postValue.status = Number(value.status);
-    postValue.image = path;
-    postValue.content = content;
+  const onSubmit = async (body: FormStateType) => {
+    body.slug = slugify(body.slug || body.title);
+    body.status = Number(body.status);
+    body.content = content;
+    body.image = path;
     try {
-      await HttpRequest.put(`/posts/${postId}`, postValue);
-      toast.success("Cập nhật tin đăng thành công!");
+      updatePostMutation.mutate(body, {
+        onSuccess: () => {
+          toast.success("Cập nhật tin thành công");
+          console.log(body);
+        },
+      });
     } catch (error) {
       console.log(error);
       toast.error("Cập nhật tin đăng không thành công, hãy thử lại");
     }
-    setCategorySelected("");
   };
+
+  const updatePostMutation = useMutation({
+    mutationFn: (body: FormStateType) => updatePost(id as string, body),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["post", id], data);
+    },
+  });
 
   const handleClickOption = (item: any) => {
     setValue("categoryId", item.id);
@@ -85,7 +111,7 @@ const PostUpdate = () => {
     const formData = new FormData();
     formData.append("image", blobInfo.blob());
     const response = await HttpRequest.post<any>(
-      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_KEY}`,
+      `${import.meta.env.VITE_IMGBB_URL}?key=${import.meta.env.VITE_IMGBB_KEY}`,
       formData,
       {
         headers: {
@@ -96,23 +122,6 @@ const PostUpdate = () => {
     return response.data.url;
   };
   // api
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await HttpRequest.get<CategoryType[]>(`/categories`);
-      setCategories(res);
-    };
-    fetchCategories();
-
-    const fetchPostDetail = async () => {
-      const res = await HttpRequest.get<PostType>(`/posts/${postId}`);
-      reset(res);
-      setPath(res.image);
-      // setCategorySelected();
-      setContent(res.content || "");
-    };
-    fetchPostDetail();
-    document.title = "Cụ Đồ Tiễm - Thêm tin đăng";
-  }, [postId]);
 
   return (
     <>
@@ -172,7 +181,7 @@ const PostUpdate = () => {
             <Label>Tin nổi bật</Label>
             <Toggle
               name="hot"
-              on={String(watchHot)}
+              on={watchHot}
               handleToggle={() => setValue("hot", !watchHot)}
             />
           </FormGroup>

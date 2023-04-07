@@ -9,62 +9,68 @@ import {
 } from "firebase/storage";
 
 const useFirebaseImage = (folder: string) => {
-  const [path, setPath] = useState<string>("");
+  const [paths, setPaths] = useState<string[]>([]);
   const [process, setProcess] = useState<number>(0);
 
   const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file: File | undefined = e.target.files?.[0];
-    if (!file) return;
-    const imageRef = ref(storage, `images/${folder}/${Date.now()}${file.name}`);
-    const uploadTask = uploadBytesResumable(imageRef, file);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progressPercent =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProcess(progressPercent);
-        console.log("upload is " + progressPercent + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("upload is paused");
-            break;
-          case "running":
-            console.log("upload is running");
-            break;
-          default:
-            console.log("nothing at all");
-            break;
+    const files = e.target.files;
+    if (!files) return;
+    for (const file of files) {
+      const imageRef = ref(
+        storage,
+        `images/${folder}/${Date.now()}${file.name}`
+      );
+      const uploadTask = uploadBytesResumable(imageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progressPercent =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProcess(progressPercent);
+          console.log("upload is " + progressPercent + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("upload is paused");
+              break;
+            case "running":
+              console.log("upload is running");
+              break;
+            default:
+              console.log("nothing at all");
+              break;
+          }
+        },
+        (err) => {
+          console.log(err);
+        },
+        async () => {
+          await getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+            setPaths((prev) => [...prev, downloadUrl]);
+            console.log("File available at", downloadUrl);
+          });
         }
-      },
-      (err) => {
-        console.log(err);
-      },
-      async () => {
-        await getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-          setPath(downloadUrl);
-          console.log("File available at", downloadUrl);
-        });
-      }
-    );
+      );
+    }
   };
-  const handleDeleteImage = (url = "") => {
-    url = url.length > 0 ? url : path;
-    const imageRef = ref(storage, url);
-    if (url)
+  const handleDeleteImage = (path = "") => {
+    const imageRef = ref(storage, path);
+    if (path)
       deleteObject(imageRef)
         .then(() => {
           toast.success("Xóa ảnh thành công");
+          const newPaths = paths.filter((p) => p !== path);
+          setPaths(newPaths);
           setProcess(0);
-          setPath("");
+          console.log(newPaths, " ...");
         })
         .catch((err) => {
           toast.error("Không thể xóa ảnh");
-          setPath("");
           setProcess(0);
         });
   };
+
   const handleResetUpload = () => {
-    setPath("");
+    setPaths([]);
     setProcess(0);
   };
 
@@ -72,8 +78,8 @@ const useFirebaseImage = (folder: string) => {
     handleUploadImage,
     handleDeleteImage,
     process,
-    path,
-    setPath,
+    paths,
+    setPaths,
     handleResetUpload,
   };
 };

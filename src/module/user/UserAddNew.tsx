@@ -18,6 +18,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserRole, UserStatus, USER_DEFAULT_VALUE } from "~/config";
 import { toast } from "react-toastify";
+import { useFirebaseImage } from "~/hooks";
 
 type Props = {};
 
@@ -44,18 +45,20 @@ const UserAddNew = (props: Props) => {
   const watchStatus = watch("status");
   const watchRole = watch("role");
 
-  const { progress, image, onSelectImg, handleDeleteImg, handleResetUpload } =
-    useUploadImg({
-      setValue,
-      getValues,
-    });
+  const {
+    handleDeleteImage,
+    handleUploadImage,
+    path,
+    process,
+    handleResetUpload,
+  } = useFirebaseImage("/users");
 
   const { value: showPassword, handleToggle } = useToggleValue();
 
   const handleCreateUser = async (data: any) => {
     data.status = Number(data.status);
     data.role = Number(data.role);
-    data.avatar = image;
+    data.image = path;
     try {
       await httpRequest.post("/users", data);
       handleResetUpload();
@@ -73,12 +76,10 @@ const UserAddNew = (props: Props) => {
         <div className="w-48 h-48 rounded-full mb-10 mx-auto">
           <UploadImg
             name="image"
-            onChange={onSelectImg}
-            progress={progress}
-            imageLink={image}
-            handleDeleteImage={handleDeleteImg}
-            className="!rounded-full"
-            control={control}
+            onChange={handleUploadImage}
+            process={process}
+            path={path}
+            handleDeleteImage={handleDeleteImage}
           ></UploadImg>
         </div>
         <div className="grid grid-cols-2 gap-3">

@@ -9,11 +9,11 @@ import {
 import UserType from "~/types/UserType";
 import { useEffect } from "react";
 import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
-import * as httpRequest from "~/ultis/httpRequest";
 import { useUser } from "~/contexts/userContext";
 import { UserRole, UserStatus } from "~/config";
 import { useNavigate } from "react-router-dom";
 import { useDeleteData, usePaginate, useSearch } from "~/hooks";
+import httpRequest from "~/ultis/httpRequest";
 
 const PER_PAGE = 3;
 
@@ -22,45 +22,45 @@ const UserManage = () => {
 
   const navigator = useNavigate();
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const usersResponse = await httpRequest.get<UserType[]>("/users");
-      setUsers(usersResponse);
-    };
-    fetchUsers();
-  }, []);
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     const usersResponse = await httpRequest.get<UserType[]>("/users");
+  //     setUsers(usersResponse);
+  //   };
+  //   fetchUsers();
+  // }, []);
 
-  const renderLabelStatus = (status: number | null) => {
-    console.log("rerender label status");
-    switch (status) {
-      case UserStatus.ACTIVED:
-        return <LabelStatus type={UserStatus.ACTIVED}>Actived</LabelStatus>;
-      case UserStatus.PENDING:
-        return <LabelStatus type={UserStatus.PENDING}>Pending</LabelStatus>;
-      case UserStatus.BANNED:
-        return <LabelStatus type={UserStatus.BANNED}>Banned</LabelStatus>;
-      default:
-        break;
-    }
-  };
+  // const renderLabelStatus = (status: number | null) => {
+  //   console.log("rerender label status");
+  //   switch (status) {
+  //     case UserStatus.ACTIVED:
+  //       return <LabelStatus type={UserStatus.ACTIVED}>Actived</LabelStatus>;
+  //     case UserStatus.PENDING:
+  //       return <LabelStatus type={UserStatus.PENDING}>Pending</LabelStatus>;
+  //     case UserStatus.BANNED:
+  //       return <LabelStatus type={UserStatus.BANNED}>Banned</LabelStatus>;
+  //     default:
+  //       break;
+  //   }
+  // };
 
-  const renderLabelRole = (status: number | null) => {
-    switch (status) {
-      case UserRole.ADMIN:
-        return "ADMIN";
-      case UserRole.MOD:
-        return "MODERATER";
-      case UserRole.USER:
-        return "USER";
-      default:
-        return "NOT";
-    }
-  };
+  // const renderLabelRole = (status: number | null) => {
+  //   switch (status) {
+  //     case UserRole.ADMIN:
+  //       return "ADMIN";
+  //     case UserRole.MOD:
+  //       return "MODERATER";
+  //     case UserRole.USER:
+  //       return "USER";
+  //     default:
+  //       return "NOT";
+  //   }
+  // };
 
-  const { handleDeleteData } = useDeleteData<UserType>({
-    data: users,
-    setData: setUsers,
-  });
+  // const { handleDeleteData } = useDeleteData<UserType>({
+  //   data: users,
+  //   setData: setUsers,
+  // });
   const { paginatedData, handlePageClick, pageCount } = usePaginate({
     data: users,
     perPage: PER_PAGE,
@@ -132,8 +132,12 @@ const UserManage = () => {
                     </div>
                   </td>
                   <td>{user.email}</td>
-                  <td>{renderLabelStatus(user.status)}</td>
-                  <td>{renderLabelRole(user.role)}</td>
+                  <td>
+                    <LabelStatus status={user.status} />
+                  </td>
+                  <td>
+                    <LabelStatus status={user.role} />
+                  </td>
                   <td>
                     <div className="flex-center gap-x-2.5">
                       <ActionEdit
@@ -141,7 +145,9 @@ const UserManage = () => {
                           navigator(`/manage/update-user?id=${user.id}`)
                         }
                       />
-                      <ActionDelete onClick={() => handleDeleteData(user.id)} />
+                      <ActionDelete
+                      // onClick={() => handleDeleteData(user.id)}
+                      />
                     </div>
                   </td>
                 </tr>

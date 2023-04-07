@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import { PostStatus } from "~/config";
 import { IconLabel } from "../icon";
+import { type } from "os";
 
 type Props = {
   status: number;
