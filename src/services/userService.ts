@@ -1,16 +1,18 @@
 import { CategoryType } from "~/types/CategoryType";
-import UserType from "~/types/UserType";
+import { User } from "~/types/user.type";
 import { HttpRequest } from "~/ultis";
 
-export const getAllUsers = () => HttpRequest.get<UserType[]>("/users");
-export const getUser = (id: number | string) =>
-  HttpRequest.get<UserType>("/users/" + id);
+export const getAllUsers = () => HttpRequest.get<User[]>("/users");
+export const getUser = async (id: number | string) => {
+  const response = await HttpRequest.get<User>("/users/" + id);
+  return response.data;
+};
 
-export const createUser = (post: Omit<UserType, "id">) =>
-  HttpRequest.post<UserType[]>("/users", post);
+export const createUser = (username: string, email: string, password: string) =>
+  HttpRequest.post<User[]>("/users", { username, email, password });
 
 export const updateUser = (id: number | string, data: any) =>
-  HttpRequest.put<UserType[]>(`/users/${id}`, data);
+  HttpRequest.put<User[]>(`/users/${id}`, data);
 
 export const deleteUser = (id: number | string) =>
   HttpRequest.delete<{}>(`/users/${id}`);

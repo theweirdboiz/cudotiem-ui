@@ -1,10 +1,14 @@
-export { default as Post } from "./post/Post";
-export { default as Input } from "./input/Input";
+// form group
 export { default as FormGroup } from "./form-group/FormGroup";
+// input
+export { default as Input } from "./input/Input";
+// button
 export { default as Button } from "./button/Button";
 export { default as ButtonFb } from "./button/ButtonFb";
 export { default as ButtonGoogle } from "./button/ButtonGoogle";
-export { default as IconEyeToogle } from "./icon/IconEyeToggle";
+// icon
+export * from "./icon";
+// label
 export { default as Label } from "./label/Label";
 // modal
 export { default as ModalAdvanced } from "./modal/ModalAdvanced";
@@ -14,8 +18,9 @@ export { default as SignUpModal } from "./modal/SignUpModal";
 // portal
 export { default as Portal } from "./portal/Portal";
 
-// post
-export { default as Porst } from "./post/Post";
+//post
+export { default as PostComponent } from "./post/PostComponent";
+
 // dropdown
 export { default as Dropdown } from "./dropdown/Dropdown";
 // radio

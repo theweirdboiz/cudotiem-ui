@@ -1,6 +1,6 @@
 import slugify from "react-slugify";
 import React, { useEffect, useState } from "react";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import DashboardHeading from "~/layouts/dashboard/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSearchParams } from "react-router-dom";

@@ -1,15 +1,13 @@
-import React, { ReactNode } from "react";
-import { PostStatus } from "~/config";
-import { IconLabel } from "../icon";
-import { type } from "os";
+import { PostStatus } from "~/types/post.type";
+import { IconLabel } from "~/components/icon";
 
 type Props = {
-  status: number;
+  status: PostStatus;
 };
-
 const LabelStatus = (props: Props) => {
+  const { status } = props;
   let styleClassnames, text;
-  switch (props.status) {
+  switch (status) {
     case PostStatus.APPROVED:
       styleClassnames = "text-green-500";
       text = "Đã duyệt";
@@ -30,7 +28,9 @@ const LabelStatus = (props: Props) => {
     <div
       className={`inline-flex items-center gap-x-1 text-sm font-medium ${styleClassnames}`}
     >
-      <IconLabel size="w-5 h-5" />
+      <div className="flex-shrink-0">
+        <IconLabel size="w-5 h-5" />
+      </div>
       <span>{text}</span>
     </div>
   );

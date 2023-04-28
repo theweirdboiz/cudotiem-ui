@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import FormGroup from "../form-group/FormGroup";
-import Input from "../input/Input";
-import Label from "../label/Label";
-
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useToggleValue from "../../hooks/useToggle";
-import IconEyeToggle from "../icon/IconEyeToggle";
-import Button from "../button/Button";
-
-type Props = {};
+import { useToggle } from "~/hooks";
+import { UserRegisterFormType, register } from "~/services";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { IconEyeToggle } from "~/components/icon";
+import { FormGroup, Input, Label, Button } from "~/components";
+import { createUser } from "~/services/userService";
 
 const schema = yup.object().shape({
+  username: yup.string().required("This field is required"),
   email: yup
     .string()
     .email("Invalid email format")
@@ -23,24 +21,37 @@ const schema = yup.object().shape({
     .required("This field is required")
     .min(8, "Password must be 8 character"),
 });
-const SignUpModal = (props: Props) => {
+const SignUpModal = () => {
   const {
     handleSubmit,
     control,
-    watch,
-    reset,
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
     mode: "all",
   });
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: (body: UserRegisterFormType) => {
+      return createUser(body.email, body.username, body.password);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user"],
+        exact: true,
+      });
+      toast.success("");
+    },
+    onError: () => {
+      toast.error("");
+    },
+  });
 
   const onSubmit = async (data: any) => {
-    await new Promise((res) => setTimeout(res, 1000));
-    console.log(data);
+    mutate(data);
   };
 
-  const { value: showPassword, handleToggle } = useToggleValue();
+  const { value: showPassword, handleToggle } = useToggle();
 
   return (
     <>
@@ -52,6 +63,15 @@ const SignUpModal = (props: Props) => {
       </p>
       {/* <ButtonGoogle text={"Sign in with google"}></ButtonGoogle> */}
       <form action="" autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+        <FormGroup>
+          <Label htmlFor="username">Username *</Label>
+          <Input
+            name="username"
+            control={control}
+            placeholder="johnny klame"
+            error={errors?.username?.message as string}
+          ></Input>
+        </FormGroup>
         <FormGroup>
           <Label htmlFor="email">Email *</Label>
           <Input
@@ -78,27 +98,22 @@ const SignUpModal = (props: Props) => {
           </Input>
         </FormGroup>
         <FormGroup>
-          <div className="text-right">
-            <Link
-              to="/forgot-password"
-              className="inline-block text-sm font-medium text-primary"
-            >
-              Forgot password
-            </Link>
-          </div>
+          <Link
+            to="/forgot-password"
+            className="inline-block text-sm font-medium text-primary"
+          >
+            Forgot password
+          </Link>
         </FormGroup>
         <Button
           style={{
             width: "100%",
-            maxWidth: "100%",
             margin: "0 auto",
           }}
+          height="h-10"
           type="submit"
-          isloading={String(isSubmitting)}
+          isloading={isSubmitting}
           disabled={!isValid}
-          classnames={
-            isSubmitting ? "bg-gray-200 text-gray-700 cursor-not-allowed" : ""
-          }
         >
           Submit
         </Button>

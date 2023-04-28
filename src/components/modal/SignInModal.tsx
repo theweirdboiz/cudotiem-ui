@@ -27,8 +27,6 @@ const SignInModal = (props: Props) => {
   const {
     handleSubmit,
     control,
-    watch,
-    reset,
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
@@ -37,7 +35,6 @@ const SignInModal = (props: Props) => {
 
   const onSubmit = async (data: any) => {
     await new Promise((res) => setTimeout(res, 1000));
-    console.log(data);
   };
 
   const { value: showPassword, handleToggle } = useToggleValue();
@@ -46,7 +43,7 @@ const SignInModal = (props: Props) => {
     <>
       <p className="text-center lg:text-sm text-xs font-normal  lg:mb-8">
         Dont have an acccount?{" "}
-        <Link className="text-primary font-medium underline" to="/auth/sign-up">
+        <Link className="text-primary font-medium underline" to="/sign-up">
           Sign up
         </Link>
       </p>

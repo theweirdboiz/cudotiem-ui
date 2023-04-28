@@ -9,9 +9,9 @@ import {
   UploadImg,
 } from "~/components";
 import useUploadImg from "~/hooks/useUploadImg";
-import UserType from "~/types/UserType";
+import UserType from "~/types/user.type";
 import httpRequest from "~/ultis/httpRequest";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import DashboardHeading from "~/layouts/dashboard/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams, useSearchParams } from "react-router-dom";

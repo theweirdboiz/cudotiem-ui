@@ -1,10 +1,11 @@
+import uploadImage from "~/assets/img-upload.png";
 import Swal from "sweetalert2";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import DashboardHeading from "~/layouts/dashboard/components/DashboardHeading";
+import { usePaginate, useSearch } from "~/hooks";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useFirebaseImage, usePaginate, useSearch } from "~/hooks";
-import { deletePost, getPost, getPosts } from "~/services";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Post } from "~/types/post.type";
+import { deletePost, getPost } from "~/services";
 import {
   ActionDelete,
   ActionEdit,
@@ -14,16 +15,18 @@ import {
   Paginate,
   Table,
 } from "~/components";
+import { usePost } from "~/contexts";
 
 const PER_PAGE = 3;
 
 const PostManage = () => {
+  const navigator = useNavigate();
   const queryClient = useQueryClient();
-  const { data: posts } = useQuery({
-    queryKey: ["posts"],
-    queryFn: async () => await getPosts(),
-  });
 
+  // Get all posts
+  const posts = usePost();
+
+  // Delete post by id
   const deletePostMutation = useMutation({
     mutationFn: (id: number | string) => deletePost(id),
     onSuccess: () => {
@@ -33,22 +36,19 @@ const PostManage = () => {
       });
     },
   });
-
-  const navigator = useNavigate();
-
-  // handle pagination
+  // custom hook handle pagination
   const { paginatedData, pageCount, handlePageClick } = usePaginate({
-    data: posts as any,
+    data: posts,
     perPage: PER_PAGE,
   });
-  // handle filter data
+
+  // custom hook hanle search
   const { filteredData, handleSearch } = useSearch({
     data: paginatedData,
     searchKey: "title",
   });
-  const { handleDeleteImage } = useFirebaseImage("/posts");
 
-  // handle delete category
+  // delete item
   const handleDeleteData = async (id: number) => {
     const postData = await getPost(id);
     if (postData) {
@@ -66,11 +66,9 @@ const PostManage = () => {
       if (result.isConfirmed) {
         Swal.fire("Deleted!", "Your data has been deleted.", "success");
         deletePostMutation.mutate(id);
-        handleDeleteImage(postData.image);
       }
     }
   };
-
   return (
     <>
       <DashboardHeading>Quản lý tin đăng</DashboardHeading>
@@ -88,7 +86,7 @@ const PostManage = () => {
             onChange={handleSearch}
           />
           <button
-            className="flex-center justify-center w-24 h-9 bg-transparent text-blue-600 p-1  relative after:content-['']  after:absolute after:border-l after:border-l-gray-200 after:left-0 after:top-2 after:h-5 hover:bg-blue-100 rounded-r-lg
+            className="flex-center justify-center w-24 h-9 bg-transparent text-blue-600 p-1  relative after:content-[]  after:absolute after:border-l after:border-l-gray-200 after:left-0 after:top-2 after:h-5 hover:bg-blue-100 rounded-r-lg
     "
           >
             Tìm kiếm
@@ -118,16 +116,13 @@ const PostManage = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((post) => (
+              {filteredData?.map((post: Post) => (
                 <tr key={post.id}>
                   <td>{post.id}</td>
                   <td>
                     <div className="flex items-center gap-x-2">
                       <img
-                        src={
-                          post.image ||
-                          "https://raw.githubusercontent.com/evondev/react-course-projects/master/monkey-blogging/public/img-upload.png"
-                        }
+                        src={uploadImage}
                         className="w-10 h-10 rounded-md"
                         alt=""
                       />
@@ -139,14 +134,16 @@ const PostManage = () => {
                       </div>
                     </div>
                   </td>
-                  <td>{post.categoryId}</td>
-                  <td>{post.userId}</td>
+                  <td>{post.category?.name}</td>
+                  <td>{post.creator.username}</td>
                   <td>
                     <LabelStatus status={post.status} />
                   </td>
                   <td>
                     <div className="flex-center gap-x-2.5">
-                      <ActionView onClick={() => navigator(`/${post.slug}`)} />
+                      <ActionView
+                        onClick={() => navigator(`/posts/${post.id}`)}
+                      />
                       <ActionEdit
                         onClick={() =>
                           navigator(`/manage/update-post/${post.id}`)

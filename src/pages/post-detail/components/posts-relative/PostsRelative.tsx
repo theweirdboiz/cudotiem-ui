@@ -1,18 +1,18 @@
 import React from "react";
-import { Post } from "~/components";
+import { PostComponent } from "~/components";
 
 type Props = {};
 
-const PostsRelative = (props: Props) => {
+const PostComponentsRelative = (props: Props) => {
   return (
     <div className="grid grid-cols-5">
-      <Post />
-      <Post />
-      <Post />
-      <Post />
-      <Post />
+      {/* <PostComponent />
+      <PostComponent />
+      <PostComponent />
+      <PostComponent />
+      <PostComponent /> */}
     </div>
   );
 };
 
-export default PostsRelative;
+export default PostComponentsRelative;

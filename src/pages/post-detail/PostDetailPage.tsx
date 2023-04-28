@@ -1,55 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Button, Post } from "~/components";
-import { IconHeart } from "~/components/icon";
-import { GallaryProvider } from "~/contexts";
-import { PostType } from "~/types/PostType";
-import * as httpRequest from "~/ultis/httpRequest";
-import PostDescription from "./components/post-description/PostDescription";
-import Gallary from "./components/post-gallary/Gallary";
-import PostInfo from "./components/post-info/PostInfo";
-import PostMeta from "./components/post-meta/PostMeta";
-import PostsRelative from "./components/posts-relative/PostsRelative";
-import UserContact from "./components/user-contact/UserContact";
+import UserContact from './components/user-contact/UserContact'
+import PostsRelative from './components/posts-relative/PostsRelative'
+import PostMeta from './components/post-meta/PostMeta'
+import PostDescription from './components/post-description/PostDescription'
+import Gallary from './components/post-gallary/Gallary'
+import { useParams } from 'react-router-dom'
+import { GallaryProvider } from '~/contexts'
+import { useQuery } from '@tanstack/react-query'
+import { getPost } from '~/services'
 
-type Props = {};
-
-const PostDetailPage = (props: Props) => {
-  const [postDetail, setPostDetail] = useState<PostType>();
-  const { slug } = useParams();
-
-  useEffect(() => {
-    const fetchPostDetail = async () => {
-      const res = await httpRequest.get<PostType[]>(
-        `posts?slug=${slug}&_limit=1`
-      );
-
-      setPostDetail(res[0]);
-    };
-    fetchPostDetail();
-  }, []);
+const PostDetailPage = () => {
+  /* Start: Hook */
+  const { id, category } = useParams()
+  const { data: postDetail } = useQuery({
+    queryKey: ['post', id, category],
+    queryFn: async () => await getPost(id as string)
+  })
+  const boxWrapper = 'bg-white mb-2 rounded-lg'
+  /* End: Hook */
 
   return (
-    <div className="rounded-md mb-5 bg-white min-h-screen">
-      <div className="flex gap-x-10">
-        <div className="flex">
-          {/* gallary */}
-          <GallaryProvider>
-            <Gallary />
-          </GallaryProvider>
-          {/* infor */}
-          <PostMeta />
+    <div className='rounded-md mb-5 min-h-screen'>
+      <div className={`flex ${boxWrapper}`}>
+        {/* gallary */}
+        <GallaryProvider>
+          <Gallary images={postDetail?.imageLinks} />
+        </GallaryProvider>
+        {/* infor */}
+        <div className='flex-1'>
+          <h3 className='text-2xl py-3 px-2'>{postDetail?.title}</h3>
+          <div className='flex pr-6'>
+            <PostMeta meta={postDetail} />
+            <UserContact />
+          </div>
         </div>
-        <UserContact />
       </div>
       {/* Post relative */}
-      <PostsRelative />
+      <div className={boxWrapper}>
+        <PostsRelative />
+      </div>
       {/* Detail */}
-      <PostInfo />
       {/* Description */}
-      <PostDescription description={postDetail?.content} />
+      <div className={boxWrapper}>
+        <PostDescription description={postDetail?.content} />
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default PostDetailPage;
+export default PostDetailPage

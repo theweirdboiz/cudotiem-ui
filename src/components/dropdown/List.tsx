@@ -6,7 +6,7 @@ const List = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {show && (
-        <div className="absolute top-full left-0 w-full bg-white shadow-md">
+        <div className="absolute top-full left-0 w-full bg-white shadow-md z-10">
           {children}
         </div>
       )}

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -58,8 +58,7 @@ video {
   }
   .custom-radio input:checked + div {
     @apply bg-blue-500;
-    box-shadow: 0 0 0 2.5px white,
-      0 0 0 5px rgb(59 130 246 / var(--tw-bg-opacity));
+    box-shadow: 0 0 0 2.5px white, 0 0 0 5px rgb(59 130 246 / var(--tw-bg-opacity));
   }
   .custom-checkbox input:checked + div .custom-checkbox-square {
     background-color: rgb(59 130 246 / var(--tw-bg-opacity));
@@ -98,5 +97,13 @@ video {
   }
   .bg-primary {
     @apply bg-blue-500;
+  }
+  .entry-content {
+    & ul {
+      @apply mb-3;
+    }
+    & img {
+      @apply rounded-sm;
+    }
   }
 }

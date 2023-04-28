@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import ModalType from "../../types/ModalBaseType";
 
@@ -19,7 +19,7 @@ const Portal = (props: ModalType) => {
     <div className={`${props.containerClass}`} style={props.containerStyle}>
       <>
         <div
-          className="overlay absolute inset-0 bg-black bg-opacity-25"
+          className="overlay absolute inset-0 bg-black bg-opacity-10"
           onClick={props.handleClose}
         ></div>
         <div className={`${props.bodyClass}`} style={props.bodyStyle}>

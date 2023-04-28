@@ -1,4 +1,3 @@
-import React, { useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 import ModalBaseProps from "../../types/ModalBaseType";
 import Portal from "../portal/Portal";

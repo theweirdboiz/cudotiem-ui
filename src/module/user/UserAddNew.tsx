@@ -10,10 +10,10 @@ import {
 } from "~/components";
 import useUploadImg from "~/hooks/useUploadImg";
 import useToggleValue from "~/hooks/useToggle";
-import UserType from "~/types/UserType";
+import UserType from "~/types/user.type";
 import IconEyeToggle from "~/components/icon/IconEyeToggle";
 import httpRequest from "~/ultis/httpRequest";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import DashboardHeading from "~/layouts/dashboard/components/DashboardHeading";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserRole, UserStatus, USER_DEFAULT_VALUE } from "~/config";

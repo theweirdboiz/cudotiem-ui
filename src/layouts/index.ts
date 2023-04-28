@@ -1,3 +1,3 @@
-export { default as DefaultLayout } from "./DefaultLayout";
-export { default as HomeLayout } from "./HomeLayout/HomeLayout";
-export { default as DashboardLayout } from "./DashboardLayout/DashboardLayout";
+export { default as DefaultLayout } from "./default/DefaultLayout";
+export { default as HomeLayout } from "./home/HomeLayout";
+export { default as DashboardLayout } from "./dashboard/DashboardLayout";

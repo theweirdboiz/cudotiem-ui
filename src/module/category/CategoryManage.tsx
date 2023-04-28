@@ -8,8 +8,8 @@ import {
   Paginate,
   Table,
 } from "~/components";
-import DashboardSearch from "~/layouts/DashboardLayout/components/DashboardSearch";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import DashboardSearch from "~/layouts/dashboard/components/DashboardSearch";
+import DashboardHeading from "~/layouts/dashboard/components/DashboardHeading";
 import { useSearch, useDeleteData, usePaginate } from "~/hooks";
 import { useNavigate } from "react-router-dom";
 import { useCategory } from "~/contexts/categoryContext";

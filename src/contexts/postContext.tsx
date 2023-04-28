@@ -1,17 +1,10 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import React, {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react";
-import { createPost, getPosts } from "~/services";
-import { PostType } from "~/types/PostType";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createContext, ReactNode, useContext } from "react";
+import { getPosts } from "~/services";
+import { Post } from "~/types/post.type";
 
 interface PostContextProps {
-  posts: PostType[];
+  posts: Post[];
 }
 
 const PostContext = createContext<PostContextProps | any>(null);

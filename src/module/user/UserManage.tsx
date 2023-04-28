@@ -6,9 +6,9 @@ import {
   Paginate,
   Table,
 } from "~/components";
-import UserType from "~/types/UserType";
+import UserType from "~/types/user.type";
 import { useEffect } from "react";
-import DashboardHeading from "~/layouts/DashboardLayout/components/DashboardHeading";
+import DashboardHeading from "~/layouts/dashboard/components/DashboardHeading";
 import { useUser } from "~/contexts/userContext";
 import { UserRole, UserStatus } from "~/config";
 import { useNavigate } from "react-router-dom";

@@ -1,22 +1,15 @@
-import React from "react";
-import { Button } from "~/components";
-
 type Props = {
-  description?: string;
-};
+  description?: string
+}
 
 const PostDescription = (props: Props) => {
-  const { description } = props;
+  const { description } = props
   return (
-    <div className="p-3">
-      <h3 className="mb-3 font-semibold text-xl">Mo ta san pham</h3>
-      <div
-        className="entry-content"
-        dangerouslySetInnerHTML={{ __html: description || "" }}
-      ></div>
-      <Button>Xem them noi dung</Button>
+    <div className='p-3'>
+      <h3 className='mb-3 font-semibold text-xl'>Mô tả sản phẩm</h3>
+      <div className='entry-content' dangerouslySetInnerHTML={{ __html: description || '' }}></div>
     </div>
-  );
-};
+  )
+}
 
-export default PostDescription;
+export default PostDescription

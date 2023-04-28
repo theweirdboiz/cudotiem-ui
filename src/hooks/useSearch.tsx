@@ -9,6 +9,7 @@ const useSearch = ({ data, searchKey }: SearchProps) => {
   const [isPending, startTransition] = useTransition();
 
   const [searchTerm, setSearchTerm] = useState("");
+
   const filteredData = data.filter((item) =>
     item[searchKey].toLowerCase().includes(searchTerm.toLowerCase())
   );

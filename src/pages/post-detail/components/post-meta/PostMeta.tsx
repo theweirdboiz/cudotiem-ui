@@ -1,30 +1,28 @@
-import React from "react";
-import { Button } from "~/components";
-import { IconHeart, IconSecurity } from "~/components/icon";
+import React from 'react'
+import { Button } from '~/components'
+import { IconHeart, IconSecurity } from '~/components/icon'
+import { Post } from '~/types/post.type'
 
-type Props = {};
+type Props = {
+  meta: Post | undefined
+}
 
 const PostMeta = (props: Props) => {
+  const { meta } = props
+
   return (
-    <div className="infor flex-1 py-3">
-      <h3 className="text-2xl uppercase mb-3">
-        Không phải sói cũng đừng là cừu
-      </h3>
-      <span className="text-red-500 font-semibold text-3xl">85.000 đ</span>
-      <Button
-        type="button"
-        height="h-10"
-        classnames="text-red-300 bg-red-500 border border-current flex-center gap-x-1 hover:bg-red-300 my-3"
-      >
+    <div className='infor flex-1 py-3'>
+      <h4 className='text-red-400 font-semibold text-4xl mb-2'>{meta?.price} đ</h4>
+      <Button type='button' height='h-8'>
         <IconHeart />
         Lưu tin
       </Button>
-      <div className="flex-center text-gray-500">
+      <div className='flex-center text-gray-500 mt-2'>
         <IconSecurity />
-        <span className="italic">Tin đã được kiểm duyệt</span>
+        <span className='italic'>Tin đã được kiểm duyệt</span>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PostMeta;
+export default PostMeta

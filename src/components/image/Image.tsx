@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 
 interface ImageProps {
   path?: string;
@@ -20,13 +20,13 @@ const Image: React.FC<ImageProps> = ({
 }) => {
   return (
     <label
-      className={`cursor-pointer flex items-center justify-center border border-dashed border-blue-300 w-full ${h} rounded-lg ${className} relative overflow-hidden group`}
+      className={`cursor-pointer flex items-center justify-center border border-dashed border-blue-300 w-full h-[200px] rounded-lg ${className} relative overflow-hidden group`}
     >
       <input type="file" className="hidden" {...rest} />
       {process !== 0 && !path && (
         <div className="absolute z-10 w-16 h-16 border-8 border-blue-400 rounded-full loading border-t-transparent animate-spin"></div>
       )}
-      {!path && process === 0 && (
+      {/* {!path && process === 0 && (
         <div className="flex flex-col items-center text-center pointer-events-none">
           <img
             src="https://raw.githubusercontent.com/evondev/react-course-projects/master/monkey-blogging/public/img-upload.png"
@@ -35,8 +35,8 @@ const Image: React.FC<ImageProps> = ({
           />
           <p className="font-semibold">Choose photo</p>
         </div>
-      )}
-      {path && (
+      )} */}
+      {!!path && (
         <Fragment>
           <img src={path} className="object-cover w-full h-full" alt="" />
           <button

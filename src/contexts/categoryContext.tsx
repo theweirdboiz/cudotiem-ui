@@ -1,50 +1,29 @@
-import React, {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useQuery } from '@tanstack/react-query'
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext } from 'react'
+import { getAllCategories } from '~/services'
 
-import { CategoryType } from "~/types/CategoryType";
-import { HttpRequest } from "~/ultis";
+import { CategoryType } from '~/types/CategoryType'
 
 interface CategoryContextProps {
-  categories: CategoryType[];
-  setCategories: Dispatch<SetStateAction<CategoryType[]>>;
+  categories: CategoryType[]
 }
 
-const CategoryContext = createContext<CategoryContextProps | null>(null);
+const CategoryContext = createContext<CategoryContextProps | any>(null)
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
+  // const [categories, setCategories] = useState<CategoryType[]>([])
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => await getAllCategories()
+  })
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await HttpRequest.get<CategoryType[]>("/categories");
-      setCategories(res);
-    };
-    fetchCategories();
-  }, []);
-
-  const value = {
-    categories,
-    setCategories,
-  };
-
-  return (
-    <CategoryContext.Provider value={value}>
-      {children}
-    </CategoryContext.Provider>
-  );
-};
+  return <CategoryContext.Provider value={data}>{children}</CategoryContext.Provider>
+}
 
 export const useCategory = () => {
-  const context = useContext(CategoryContext);
+  const context = useContext(CategoryContext)
   if (!context) {
-    throw new Error("useAuth must be used within a AuthProvider");
+    throw new Error('useAuth must be used within a AuthProvider')
   }
-  return context;
-};
+  return context
+}

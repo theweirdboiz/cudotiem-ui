@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext, useState } from "react";
-import UserType from "~/types/UserType";
+import UserType from "~/types/user.type";
 
 interface UserContextType {
   users: UserType[];

@@ -1,3 +1,3 @@
-export { default as autheService } from "./autheService";
-export * from "./postService";
-export * from "./categoryService";
+export * from './authService'
+export * from './postService'
+export * from './categoryService'
