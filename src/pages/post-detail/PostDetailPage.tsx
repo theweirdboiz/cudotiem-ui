@@ -22,9 +22,9 @@ const PostDetailPage = () => {
     <div className='rounded-md mb-5 min-h-screen'>
       <div className={`flex ${boxWrapper}`}>
         {/* gallary */}
-        <GallaryProvider>
+        {/* <GallaryProvider>
           <Gallary images={postDetail?.imageLinks} />
-        </GallaryProvider>
+        </GallaryProvider> */}
         {/* infor */}
         <div className='flex-1'>
           <h3 className='text-2xl py-3 px-2'>{postDetail?.title}</h3>

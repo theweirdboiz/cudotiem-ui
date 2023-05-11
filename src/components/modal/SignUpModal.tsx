@@ -36,7 +36,9 @@ const SignUpModal = () => {
         queryKey: ['user'],
         exact: true
       })
-      toast.success('')
+      console.log('success! check email!')
+
+      toast.success(data?.message)
     },
     onError: (error: AxiosError) => {
       toast.error(error?.message)
