@@ -1,14 +1,11 @@
-import React from "react";
-import { ModalAdvanced, ModalBase, SignUpModal } from "~/components";
+import { ModalAdvanced, SignUpModal } from '~/components'
 
-type Props = {};
-
-const SignUpPage = (props: Props) => {
+const SignUpPage = () => {
   return (
-    <ModalAdvanced visible={true} heading="Welcome back, mate">
+    <ModalAdvanced visible={true} heading='Welcome back, mate'>
       <SignUpModal />
     </ModalAdvanced>
-  );
-};
+  )
+}
 
-export default SignUpPage;
+export default SignUpPage

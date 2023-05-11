@@ -1,9 +1,5 @@
-import React from "react";
+const Eror404Page = () => {
+  return <div>Eror404Page</div>
+}
 
-type Props = {};
-
-const Eror404Page = (props: Props) => {
-  return <div>Eror404Page</div>;
-};
-
-export default Eror404Page;
+export default Eror404Page

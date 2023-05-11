@@ -1,107 +1,92 @@
-import React, { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import FormGroup from "../form-group/FormGroup";
-import Input from "../input/Input";
-import Label from "../label/Label";
-
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import useToggleValue from "~/hooks/useToggle";
-import IconEyeToggle from "../icon/IconEyeToggle";
-import Button from "../button/Button";
-
-type Props = {};
+import useToggleValue from '~/hooks/useToggle'
+import Label from '../label/Label'
+import Input from '../input/Input'
+import IconEyeToggle from '../icon/IconEyeToggle'
+import FormGroup from '../form-group/FormGroup'
+import Button from '../button/Button'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Invalid email format")
-    .required("This field is required"),
-  password: yup
-    .string()
-    .required("This field is required")
-    .min(8, "Password must be 8 character"),
-});
-const SignInModal = (props: Props) => {
+  email: yup.string().email('Invalid email format').required('This field is required'),
+  password: yup.string().required('This field is required').min(8, 'Password must be 8 character')
+})
+
+const SignInModal = () => {
+  const navigate = useNavigate()
+
+  const { state } = useLocation()
+
+  const from = state.from.pathname
+
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isValid, isSubmitting }
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "all",
-  });
+    mode: 'all'
+  })
 
   const onSubmit = async (data: any) => {
-    await new Promise((res) => setTimeout(res, 1000));
-  };
+    navigate(from, { replace: true })
+  }
 
-  const { value: showPassword, handleToggle } = useToggleValue();
+  const { value: showPassword, handleToggle } = useToggleValue()
 
   return (
     <>
-      <p className="text-center lg:text-sm text-xs font-normal  lg:mb-8">
-        Dont have an acccount?{" "}
-        <Link className="text-primary font-medium underline" to="/sign-up">
+      <p className='text-center lg:text-sm text-xs font-normal  lg:mb-8'>
+        Dont have an acccount?{' '}
+        <Link className='text-primary font-medium underline' to='/sign-up'>
           Sign up
         </Link>
       </p>
-      {/* <ButtonGoogle text={"Sign in with google"}></ButtonGoogle> */}
-      <form action="" autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+      <form action='' autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
         <FormGroup>
-          <Label htmlFor="email">Email *</Label>
+          <Label htmlFor='email'>Email *</Label>
           <Input
-            type="email"
-            name="email"
+            type='email'
+            name='email'
             control={control}
-            placeholder="johnnyKlame12@gmail.com"
+            placeholder='johnnyKlame12@gmail.com'
             error={errors?.email?.message as string}
           ></Input>
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="password">Password *</Label>
+          <Label htmlFor='password'>Password *</Label>
           <Input
-            type={`${showPassword ? "text" : "password"}`}
-            name="password"
+            type={`${showPassword ? 'text' : 'password'}`}
+            name='password'
             control={control}
-            placeholder="Create a password"
+            placeholder='Enter password'
             error={errors?.password?.message as string}
           >
-            <IconEyeToggle
-              toggle={showPassword}
-              onClick={handleToggle}
-            ></IconEyeToggle>
+            <IconEyeToggle toggle={showPassword} onClick={handleToggle}></IconEyeToggle>
           </Input>
         </FormGroup>
         <FormGroup>
-          <div className="text-right">
-            <Link
-              to="/forgot-password"
-              className="inline-block text-sm font-medium text-primary"
-            >
-              Forgot password
-            </Link>
-          </div>
+          <Link to='/forgot-password' className='inline-block text-sm font-medium text-primary'>
+            Forgot password
+          </Link>
         </FormGroup>
         <Button
           style={{
-            width: "100%",
-            maxWidth: "100%",
-            margin: "0 auto",
+            width: '100%',
+            margin: '0 auto'
           }}
-          type="submit"
-          isloading={String(isSubmitting)}
+          height='h-10'
+          type='submit'
+          isloading={isSubmitting}
           disabled={!isValid}
-          classnames={
-            isSubmitting ? "bg-gray-200 text-gray-700 cursor-not-allowed" : ""
-          }
         >
           Submit
         </Button>
       </form>
     </>
-  );
-};
+  )
+}
 
-export default SignInModal;
+export default SignInModal

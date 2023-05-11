@@ -25,5 +25,3 @@ export interface Post {
   category?: Category
   createdAt?: string
 }
-
-// export type Posts = Pick<Post,'id'>[]

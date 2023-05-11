@@ -1,15 +1,10 @@
+import { Role } from './role.type'
+
 export const enum Permission {
   CREATE = 'CREATE',
   RETRIVE = 'RETRIVE',
   UPDATE = 'UPDATE',
   DELETE = 'DELETE'
-}
-
-export const enum Role {
-  ADMIN = 'ADMIN',
-  MOD = 'MOD',
-  MEMBER = 'MEMBER',
-  GUEST = 'GUEST'
 }
 
 export const enum Status {

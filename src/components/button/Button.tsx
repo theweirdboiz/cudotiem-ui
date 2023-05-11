@@ -8,7 +8,7 @@ const Button = ({ type = 'button', children, onClick, ...props }: ButtonProps) =
   const child = isloading ? <Spinner /> : children
 
   const defaultClassName = `flex justify-center items-center text-sm border border-current font-medium bg-white rounded-md transition-all duration-100 px-3 text-blue-500 hover:bg-blue-100 ${
-    height || 'h-8'
+    height || 'h-10'
   }`
   if (to) {
     return (

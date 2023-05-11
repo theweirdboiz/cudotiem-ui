@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 import { getAllCategories } from '~/services'
 
 import { CategoryType } from '~/types/CategoryType'
@@ -23,7 +23,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
 export const useCategory = () => {
   const context = useContext(CategoryContext)
   if (!context) {
-    throw new Error('useAuth must be used within a AuthProvider')
+    throw new Error('useCategory must be used within a CategoryProvider')
   }
   return context
 }

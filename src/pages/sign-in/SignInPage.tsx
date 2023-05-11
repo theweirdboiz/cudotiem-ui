@@ -1,10 +1,11 @@
-import React from "react";
-import { SignInModal } from "~/components";
+import { ModalAdvanced, SignInModal } from '~/components'
 
-type Props = {};
-
-function SignInPage({}: Props) {
-  return <SignInModal></SignInModal>;
+const SignInPage = () => {
+  return (
+    <ModalAdvanced visible={true} heading='Welcome back, mate'>
+      <SignInModal />
+    </ModalAdvanced>
+  )
 }
 
-export default SignInPage;
+export default SignInPage
