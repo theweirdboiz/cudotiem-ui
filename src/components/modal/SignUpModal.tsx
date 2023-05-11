@@ -19,6 +19,7 @@ const schema = yup.object().shape({
 const SignUpModal = () => {
   const {
     handleSubmit,
+    watch,
     control,
     formState: { errors, isValid, isSubmitting }
   } = useForm<SignUp>({
@@ -26,18 +27,19 @@ const SignUpModal = () => {
     mode: 'all'
   })
 
+  const watchUsername = watch('username')
+
   const navigate = useNavigate()
 
   const queryClient = useQueryClient()
   const signUpMutation = useMutation({
-    mutationFn: (body: SignUp) => signup<SignUp>(body.username, body.email, body.password),
+    mutationFn: async (body: SignUp) => await signup<SignUp>(body.username, body.email, body.password),
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({
-        queryKey: ['user'],
+        queryKey: ['user', watchUsername],
         exact: true
       })
-      console.log('success! check email!')
-
+      console.log('data', data)
       toast.success(data?.message)
     },
     onError: (error: AxiosError) => {
