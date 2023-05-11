@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import { Role } from './types/role.type'
 // pages
 const Eror404Page = lazy(() => import('./pages/404/Eror404Page'))
@@ -33,6 +33,7 @@ const RequiredAuth = lazy(() => import('./ultis/RequiredAuth'))
 function App() {
   return (
     <Suspense>
+      <Link to='/sign-up'>sign up here</Link>
       <Routes>
         <Route element={<AuthLayout />}>
           <Route path='/sign-in' element={<SignInPage />} />

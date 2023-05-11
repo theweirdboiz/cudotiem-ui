@@ -29,9 +29,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <BrowserRouter>
       <QueryClientProvider client={client}>
         <AuthProvider>
-          <ToastContainer autoClose={1200}></ToastContainer>
-          <App />
-          <ReactQueryDevtools initialIsOpen={false} />
+          <SearchProvider>
+            <ToastContainer autoClose={1200}></ToastContainer>
+            <App />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </SearchProvider>
         </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>
