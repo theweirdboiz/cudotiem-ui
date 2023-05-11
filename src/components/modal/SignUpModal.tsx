@@ -39,7 +39,6 @@ const SignUpModal = () => {
         queryKey: ['user', watchUsername],
         exact: true
       })
-      console.log('data', data)
       toast.success(data?.message)
     },
     onError: (error: AxiosError) => {
@@ -47,7 +46,7 @@ const SignUpModal = () => {
     }
   })
 
-  const onSubmit = async (data: SignUp) => {
+  const onSubmit = (data: SignUp) => {
     signUpMutation.mutate(data)
   }
 
@@ -106,7 +105,7 @@ const SignUpModal = () => {
           }}
           height='h-10'
           type='submit'
-          isloading={isSubmitting}
+          isloading={signUpMutation.isLoading}
           disabled={!isValid}
         >
           Submit
