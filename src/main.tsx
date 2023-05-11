@@ -29,15 +29,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <BrowserRouter>
       <QueryClientProvider client={client}>
         <AuthProvider>
-          <PostProvider>
-            <CategoryProvider>
-              <SearchProvider>
-                <ToastContainer autoClose={1200}></ToastContainer>
-                <App />
-                <ReactQueryDevtools initialIsOpen={false} />
-              </SearchProvider>
-            </CategoryProvider>
-          </PostProvider>
+          <ToastContainer autoClose={1200}></ToastContainer>
+          <App />
+          <ReactQueryDevtools initialIsOpen={false} />
         </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>

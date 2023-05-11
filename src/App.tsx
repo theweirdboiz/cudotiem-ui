@@ -40,7 +40,7 @@ function App() {
           <Route path='/verify-email' element={<VerifyEmailPage />} />
           <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         </Route>
-        <Route element={<HomeLayout />}>
+        {/* <Route element={<HomeLayout />}>
           <Route path='/' element={<HomePage />} />
         </Route>
         <Route element={<DefaultLayout />}>
@@ -69,7 +69,7 @@ function App() {
             <Route path='/manage/add-post' element={<PostAddNew />} />
             <Route path='/manage/update-post/:id' element={<PostUpdate />} />
           </Route>
-        </Route>
+        </Route> */}
       </Routes>
     </Suspense>
   )
