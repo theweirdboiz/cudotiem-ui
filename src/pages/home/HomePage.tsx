@@ -1,5 +1,4 @@
 import { PostComponent } from '~/components'
-import Calendar from '~/components/calender/Calendar'
 import { usePost } from '~/contexts'
 import { Post } from '~/types/post.type'
 
