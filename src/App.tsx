@@ -34,6 +34,7 @@ function App() {
   return (
     <Suspense>
       <Link to='/sign-up'>sign up here</Link>
+      <Link to='/sign-in'>sign in here</Link>
       <Routes>
         <Route element={<AuthLayout />}>
           <Route path='/sign-in' element={<SignInPage />} />
