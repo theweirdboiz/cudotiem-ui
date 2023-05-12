@@ -1,12 +1,13 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import { Role } from './types/role.type'
+import VerifyEmailPage from './pages/verify-email/VerifyEmailPage'
 // pages
 const Eror404Page = lazy(() => import('./pages/404/Eror404Page'))
 const SignInPage = lazy(() => import('./pages/sign-in/SignInPage'))
 const SignUpPage = lazy(() => import('./pages/sign-up/SignUpPage'))
 const ForgotPasswordPage = lazy(() => import('./pages/forgot-password/ForgotPasswordPage'))
-const VerifyEmailPage = lazy(() => import('./pages/verify-email/VerifyEmail'))
+
 const ProfilePage = lazy(() => import('./pages/profile/ProfilePage'))
 const PostDetailPage = lazy(() => import('./pages/post-detail/PostDetailPage'))
 const PostByCategoryPage = lazy(() => import('./pages/post-by-category/PostByCategoryPage'))
@@ -33,8 +34,6 @@ const RequiredAuth = lazy(() => import('./ultis/RequiredAuth'))
 function App() {
   return (
     <Suspense>
-      <Link to='/sign-up'>sign up here</Link>
-      <Link to='/sign-in'>sign in here</Link>
       <Routes>
         <Route element={<AuthLayout />}>
           <Route path='/sign-in' element={<SignInPage />} />
@@ -42,10 +41,11 @@ function App() {
           <Route path='/verify-email' element={<VerifyEmailPage />} />
           <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         </Route>
-        {/* <Route element={<HomeLayout />}>
+        <Route path='*' element={<Eror404Page />} />
+        <Route element={<HomeLayout />}>
           <Route path='/' element={<HomePage />} />
         </Route>
-        <Route element={<DefaultLayout />}>
+        {/* <Route element={<DefaultLayout />}>
           <Route
             path='/:category/:id'
             element={
@@ -57,8 +57,8 @@ function App() {
           <Route path='/:category' element={<PostByCategoryPage />} />
           <Route path='/me/profile' element={<ProfilePage />} />
           <Route path='*' element={<Eror404Page />} />
-        </Route>
-
+        </Route> */}
+        {/*
         <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.MEMBER]} />}>
           <Route element={<DashboardLayout />}>
             <Route path='/manage/category' element={<CategoryManage />} />

@@ -19,7 +19,7 @@ const SignInModal = () => {
 
   const { state } = useLocation()
 
-  const from = state.from.pathname
+  const from = state?.from.pathname
 
   const {
     handleSubmit,
@@ -67,11 +67,11 @@ const SignInModal = () => {
             <IconEyeToggle toggle={showPassword} onClick={handleToggle}></IconEyeToggle>
           </Input>
         </FormGroup>
-        <FormGroup>
+        <div className='mb-2'>
           <Link to='/forgot-password' className='inline-block text-sm font-medium text-primary'>
             Forgot password
           </Link>
-        </FormGroup>
+        </div>
         <Button
           style={{
             width: '100%',

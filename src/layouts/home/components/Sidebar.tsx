@@ -4,13 +4,13 @@ import { useCategory } from '~/contexts'
 import { Category } from '~/types/category.type'
 
 const Sidebar: React.FC = (): JSX.Element => {
-  const categories = useCategory()
+  // const categories = useCategory();
 
   return (
     <aside className='w-[210px] max-h-screen sticky overflow-y-scroll top-4 bg-transparent flex flex-col text-gray-800 text-[14px] scrollbar-hide'>
       <div className='flex flex-col mb-4 px-2 py-3 rounded-lg bg-white'>
         <h4 className='font-medium'>Nổi bật</h4>
-        {categories.map((item: Category) => {
+        {/* {categories.map((item: Category) => {
           return (
             <Link
               key={item.id}
@@ -25,11 +25,11 @@ const Sidebar: React.FC = (): JSX.Element => {
               <span>{item.name}</span>
             </Link>
           )
-        })}
+        })} */}
       </div>
       <div className='flex flex-col mb-4 px-2 py-3 rounded-lg bg-white'>
         <h4 className='font-medium'>Danh mục</h4>
-        {categories.map((item: Category) => {
+        {/* {categories.map((item: Category) => {
           return (
             <Link
               key={item.id}
@@ -44,7 +44,7 @@ const Sidebar: React.FC = (): JSX.Element => {
               <span>{item.name}</span>
             </Link>
           )
-        })}
+        })} */}
       </div>
       <div className='flex flex-col mb-4 px-2 py-3 rounded-lg bg-white'>
         <Link

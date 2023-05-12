@@ -3,7 +3,7 @@ import { usePost } from '~/contexts'
 import { Post } from '~/types/post.type'
 
 const HomePage = () => {
-  const posts = usePost()
+  // const posts = usePost()
   return (
     <section className='rounded-md mb-5'>
       <div className='bg-white rounded-md'>
@@ -72,9 +72,9 @@ const HomePage = () => {
         </div>
       </div>
       <div className='grid grid-cols-5 gap-2'>
-        {posts?.map((post: Post) => (
+        {/* {posts?.map((post: Post) => (
           <PostComponent data={post} key={post.id} />
-        ))}
+        ))} */}
       </div>
       <div className='box-center mt-5'>
         <button

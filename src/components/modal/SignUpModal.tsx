@@ -21,7 +21,7 @@ const SignUpModal = () => {
     handleSubmit,
     watch,
     control,
-    formState: { errors, isValid, isSubmitting }
+    formState: { errors, isValid }
   } = useForm<SignUp>({
     resolver: yupResolver(schema),
     mode: 'all'
@@ -39,7 +39,7 @@ const SignUpModal = () => {
         queryKey: ['user', watchUsername],
         exact: true
       })
-      toast.success(data?.message)
+      navigate('/verify-email', { state: { message: data.message } })
     },
     onError: (error: AxiosError) => {
       toast.error(error?.message)
@@ -93,23 +93,20 @@ const SignUpModal = () => {
             <IconEyeToggle toggle={showPassword} onClick={handleToggle}></IconEyeToggle>
           </Input>
         </FormGroup>
-        <FormGroup>
-          <Link to='/forgot-password' className='inline-block text-sm font-medium text-primary'>
-            Forgot password
-          </Link>
-        </FormGroup>
-        <Button
-          style={{
-            width: '100%',
-            margin: '0 auto'
-          }}
-          height='h-10'
-          type='submit'
-          isloading={signUpMutation.isLoading}
-          disabled={!isValid}
-        >
-          Submit
-        </Button>
+        <div className='mt-10'>
+          <Button
+            style={{
+              width: '100%',
+              margin: '0 auto'
+            }}
+            height='h-10'
+            type='submit'
+            isloading={signUpMutation.isLoading}
+            disabled={!isValid}
+          >
+            Submit
+          </Button>
+        </div>
       </form>
     </>
   )
