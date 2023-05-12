@@ -4,7 +4,8 @@ import { Button } from '~/components'
 const VerifyEmailPage = () => {
   const location = useLocation()
 
-  const message = location.state && location.state.mesage
+  const message = location?.state.message
+  console.log(message)
 
   return !message ? (
     <Navigate to={'/error'} replace></Navigate>
