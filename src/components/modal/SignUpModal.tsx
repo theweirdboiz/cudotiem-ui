@@ -42,7 +42,6 @@ const SignUpModal = () => {
       navigate('/verify-email', { state: { message: data.message } })
     },
     onError: (error: AxiosError) => {
-      navigate('/verify-email', { state: { message: 'error' } })
       toast.error(error?.message)
     }
   })

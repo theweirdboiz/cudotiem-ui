@@ -8,6 +8,12 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { SignIn } from '~/types/signin.type'
+import { signin } from '~/services/authService'
+import { AxiosError } from 'axios'
+import { toast } from 'react-toastify'
+import { useAth } from '~/contexts'
 
 const schema = yup.object().shape({
   email: yup.string().email('Invalid email format').required('This field is required'),
@@ -24,14 +30,36 @@ const SignInModal = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid, isSubmitting }
-  } = useForm({
+    watch,
+    formState: { errors, isValid }
+  } = useForm<SignIn>({
     resolver: yupResolver(schema),
     mode: 'all'
   })
 
-  const onSubmit = async (data: any) => {
-    navigate(from, { replace: true })
+  const wathcEmail = watch('email')
+
+  const { setAuth } = useAth()
+
+  const queryClient = useQueryClient()
+  const signInMutation = useMutation({
+    mutationFn: async (body: SignIn) => await signin<SignIn>(body.email, body.password),
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({
+        queryKey: ['user', wathcEmail],
+        exact: true
+      })
+      navigate('/')
+      // setAuth(data)
+      toast.success('Login successful!')
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error?.message)
+    }
+  })
+
+  const onSubmit = (data: SignIn) => {
+    signInMutation.mutate(data)
   }
 
   const { value: showPassword, handleToggle } = useToggleValue()
@@ -79,7 +107,7 @@ const SignInModal = () => {
           }}
           height='h-10'
           type='submit'
-          isloading={isSubmitting}
+          isloading={signInMutation.isLoading}
           disabled={!isValid}
         >
           Submit
