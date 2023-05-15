@@ -7,6 +7,6 @@ export const signup = async <T>(username: string, email: string, password: strin
 }
 
 export const signin = async <T>(email: string, password: string) => {
-  const response = await HttpRequest.post<T>('/auth/signin', { email, password })
+  const response = await HttpRequest.post<T>('/auth/signin', { usernameOrEmail: email, password })
   if (response.status === 200) return response.data
 }
