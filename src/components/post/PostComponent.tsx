@@ -11,7 +11,7 @@ const PostComponent = (props: Props) => {
 
   return (
     <>
-      <Link to={`/${data?.category}/${data.id}`} className='rounded-md border border-gray-100 bg-white hover:shadow-lg'>
+      <Link to={`/${data?.slug}`} className='rounded-md border border-gray-100 bg-white hover:shadow-lg'>
         <div className='w-40 h-40 mt-3 mx-auto'>
           <img src={uploadImage} alt='' className='' />
         </div>

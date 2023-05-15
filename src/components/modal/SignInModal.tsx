@@ -49,8 +49,8 @@ const SignInModal = () => {
         queryKey: ['user', wathcEmail],
         exact: true
       })
-      navigate('/')
-      // setAuth(data)
+      navigate(`${from || '/'}`)
+      setAuth(data)
       toast.success('Login successful!')
     },
     onError: (error: AxiosError) => {

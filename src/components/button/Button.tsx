@@ -12,7 +12,7 @@ const Button = ({ type = 'button', children, onClick, ...props }: ButtonProps) =
   }`
   if (to) {
     return (
-      <Link to={to} className={`${defaultClassName}`} type={type} onClick={onClick}>
+      <Link style={style} to={to} className={`${defaultClassName}`} type={type} onClick={onClick}>
         {child}
       </Link>
     )

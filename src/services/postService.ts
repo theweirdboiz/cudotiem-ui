@@ -9,6 +9,10 @@ export const getPost = async (id: number | string) => {
   const response = await HttpRequest.get<Post>('/posts/' + id)
   if (response.status === 200) return response.data
 }
+export const getPostBySlug = async (slug: string) => {
+  const response = await HttpRequest.get<Post>('/posts/?slug=' + slug)
+  if (response.status === 200) return response.data
+}
 
 export const getPostByCategory = async (category: string) => {
   const response = await HttpRequest.get<Post[]>('/posts?category=' + category)

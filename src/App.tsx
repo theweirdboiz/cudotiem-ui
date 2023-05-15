@@ -3,6 +3,7 @@ import { Routes, Route, Link } from 'react-router-dom'
 import { Role } from './types/role.type'
 import VerifyEmailPage from './pages/verify-email/VerifyEmailPage'
 // pages
+const UnauthorizedPage = lazy(() => import('./pages/unauthorized/UnauthorizedPage'))
 const Eror404Page = lazy(() => import('./pages/404/Eror404Page'))
 const SignInPage = lazy(() => import('./pages/sign-in/SignInPage'))
 const SignUpPage = lazy(() => import('./pages/sign-up/SignUpPage'))
@@ -41,10 +42,14 @@ function App() {
           <Route path='/verify-email' element={<VerifyEmailPage />} />
           <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         </Route>
-        <Route path='*' element={<Eror404Page />} />
         <Route element={<HomeLayout />}>
           <Route path='/' element={<HomePage />} />
         </Route>
+        <Route element={<DefaultLayout />}>
+          <Route path='/:slug' element={<PostDetailPage />} />
+        </Route>
+        <Route path='*' element={<Eror404Page />} />
+        <Route path='/unauthorized' element={<UnauthorizedPage />} />
         {/* <Route element={<DefaultLayout />}>
           <Route
             path='/:category/:id'

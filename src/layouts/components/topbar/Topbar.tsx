@@ -9,7 +9,7 @@ function Topbar() {
   return (
     <>
       <header className='py-2 text-[14px] relative z-[999] bg-white'>
-        <div className='w-[1280px] px-6 mx-auto'>
+        <div className='wrapper'>
           {/* header top */}
           <div className='flex-center'>
             {/* left */}
@@ -23,7 +23,7 @@ function Topbar() {
                 </Link>
               </div>
               {/* search */}
-              <div className='flex-1'>
+              <div className='flex-1 max-w-[50%]'>
                 <Search />
               </div>
             </div>
@@ -43,25 +43,32 @@ function Topbar() {
                   alt=''
                   className='w-6 h-6 mr-1'
                 />
-                {auth ? <Link to='/'>Tài khoản</Link> : <Link to='/sign-up'>Đăng ký</Link>}
-                <div className='hidden group-hover:block absolute w-60 z-10 py-2.5 shadow-lg left-0 top-[38px] rounded-lg bg-white text-gray-700 -translate-x-1/2 border border-gray-200'>
-                  <a href='/customer/account'>
+                {auth ? (
+                  <Link to='/profile/me'>Tài khoản</Link>
+                ) : (
+                  <Link to='/sign-in' target='_blank'>
+                    Đăng nhập
+                  </Link>
+                )}
+                <div
+                  className={`${
+                    auth ? 'group-hover:block' : ''
+                  } hidden absolute w-60 z-10 py-2.5 shadow-lg left-0 top-[38px] rounded-lg bg-white text-gray-700 -translate-x-1/2 border border-gray-200`}
+                >
+                  <a href='/profile/me'>
                     <p className='py-2 px-4 hover:bg-gray-200'>Thông tin tài khoản</p>
                   </a>
-                  <a href='/customer/account'>
-                    <p className='py-2 px-4 hover:bg-gray-200'>Đơn hàng của tôi</p>
-                  </a>
-                  <a href='/customer/account'>
+                  <a href='/posts/me'>
                     <p className='py-2 px-4 hover:bg-gray-200'>Tin đăng của tôi</p>
                   </a>
-                  <a href='/customer/account'>
+                  <a href='/sign-out'>
                     <p className='py-2 px-4 hover:bg-gray-200'>Đăng xuất</p>
                   </a>
                 </div>
               </div>
               {/* cart */}
-              <div className='flex-center cursor-pointer '>
-                <Link to='/checkout/cart'>
+              {/* <div className='flex-center cursor-pointer '>
+                <button>
                   <div className="box-center ml-6 relative after:absolute after:content-[''] after:h-5 after:-left-3 after:border after:border-gray-200">
                     <div className='box-center w-10 h-10 relative hover:bg-blue-100 rounded-lg'>
                       <img
@@ -74,13 +81,12 @@ function Topbar() {
                       </span>
                     </div>
                   </div>
-                </Link>
-              </div>
+                </button>
+              </div> */}
             </div>
           </div>
           {/* header bottom */}
-          <div className='flex-center-between'>
-            {/* left */}
+          {/* <div className='flex-center-between'>
             <div className='flex items-start ml-[105px] mt-2 w-[872px]'>
               <Link to='/thoi-trang/pants' className='mr-3 text-gray-400'>
                 Quần
@@ -92,7 +98,6 @@ function Topbar() {
                 Quần
               </Link>
             </div>
-            {/* right */}
             <div className='mt-2 flex-shrink-0 flex-grow-0 w-[348px] basis-[348px]'>
               <div className='flex justify-end items-center cursor-pointer'>
                 <img
@@ -104,10 +109,10 @@ function Topbar() {
                 <h4 className='underline font-medium'>TP.Thủ Đức, P.Linh Trung, Hồ Chí Minh</h4>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </header>
-      <section className='box-center bg-orange-200 py-2 text-[14px]'>
+      {/* <section className='box-center bg-orange-200 py-2 text-[14px]'>
         <Link to='/khuyen-mai' className='flex-center'>
           <picture>
             <img
@@ -130,8 +135,7 @@ function Topbar() {
             />
           </picture>
         </Link>
-      </section>
-      <div className={`${isOpen ? '' : 'hidden'} overlay absolute inset-0 z-20 bg-black bg-opacity-50`}></div>
+      </section> */}
     </>
   )
 }

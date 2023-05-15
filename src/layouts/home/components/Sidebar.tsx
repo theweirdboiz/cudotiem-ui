@@ -1,23 +1,32 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useCategory } from '~/contexts'
+import { useAth, useCategory } from '~/contexts'
 import { Category } from '~/types/category.type'
 
 const Sidebar: React.FC = (): JSX.Element => {
   // const categories = useCategory();
+  const { auth } = useAth()
+  const categories = [
+    {
+      id: 1,
+      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp',
+      name: 'Thời trang nam',
+      slug: 'thoi-trang-nam/1'
+    }
+  ]
 
   return (
     <aside className='w-[210px] max-h-screen sticky overflow-y-scroll top-4 bg-transparent flex flex-col text-gray-800 text-[14px] scrollbar-hide'>
-      <div className='flex flex-col mb-4 px-2 py-3 rounded-lg bg-white'>
-        <h4 className='font-medium'>Nổi bật</h4>
-        {/* {categories.map((item: Category) => {
+      <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
+        <h4 className='font-medium px-3 mb-1'>Nổi bật</h4>
+        {categories.map((item: any) => {
           return (
             <Link
               key={item.id}
               to={item.slug || '/'}
-              className='flex-center py-1.5 px-4 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-50'
+              className='flex-center py-1.5 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-50'
             >
-              <div className='mr-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
+              <div className='mx-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
                 <picture>
                   <img src={item.icon} alt='Giá tốt mỗi ngày' width={32} height={32} />
                 </picture>
@@ -25,18 +34,18 @@ const Sidebar: React.FC = (): JSX.Element => {
               <span>{item.name}</span>
             </Link>
           )
-        })} */}
+        })}
       </div>
-      <div className='flex flex-col mb-4 px-2 py-3 rounded-lg bg-white'>
-        <h4 className='font-medium'>Danh mục</h4>
-        {/* {categories.map((item: Category) => {
+      <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
+        <h4 className='font-medium px-3'>Danh mục</h4>
+        {categories.map((item: any) => {
           return (
             <Link
               key={item.id}
               to={item.slug || '/'}
-              className='flex-center py-1.5 px-4 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-60'
+              className='flex-center py-1.5 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-60'
             >
-              <div className='mr-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
+              <div className='mx-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
                 <picture className='flex-shrink-0 w-full'>
                   <img src={item.icon} alt='Giá tốt mỗi ngày' width={32} height={32} />
                 </picture>
@@ -44,27 +53,28 @@ const Sidebar: React.FC = (): JSX.Element => {
               <span>{item.name}</span>
             </Link>
           )
-        })} */}
+        })}
       </div>
-      <div className='flex flex-col mb-4 px-2 py-3 rounded-lg bg-white'>
-        <Link
-          to='/manage/post'
-          className='flex-center py-1.5 px-4 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-60'
-        >
-          <div className='mr-2 basis-8 h-8 border border-gray-200 rounded-xl overflow-hidden'>
-            <picture>
-              <img
-                src='https://salt.tikicdn.com/cache/100x100/ts/upload/08/2f/14/fd9d34a8f9c4a76902649d04ccd9bbc5.png.webp
-                '
-                alt='Giá tốt mỗi ngày'
-                width={32}
-                height={32}
-              />
-            </picture>
-          </div>
-          <span>Bán hàng cùng tôi</span>
-        </Link>
-      </div>
+      {auth && (
+        <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
+          <Link
+            to='/manage/post'
+            className='flex-center py-1.5 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-50'
+          >
+            <div className='mx-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
+              <picture>
+                <img
+                  src='https://salt.tikicdn.com/cache/100x100/ts/upload/08/2f/14/fd9d34a8f9c4a76902649d04ccd9bbc5.png.webp'
+                  alt='Giá tốt mỗi ngày'
+                  width={32}
+                  height={32}
+                />
+              </picture>
+            </div>
+            <span>Đăng tin</span>
+          </Link>
+        </div>
+      )}
     </aside>
   )
 }
