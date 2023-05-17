@@ -36,7 +36,7 @@ const UserContact = () => {
         </div>
         <div className='flex-center justify-between gap-x-3 text-blue-700'>
           <Button>Xem info</Button>
-          <Button>Theo dõi</Button>
+          <Button to='/chat/abc-xyz'>Chat với người bán</Button>
         </div>
       </div>
     </div>

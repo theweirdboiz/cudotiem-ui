@@ -22,8 +22,8 @@ class Api {
       baseURL: ENV.BASE_API,
       headers: {
         'Content-Type': 'application/json'
-      }
-      // withCredentials: true
+      },
+      withCredentials: true
     })
     // request
     // add token to request

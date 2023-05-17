@@ -18,18 +18,13 @@ const Input = ({ control, error, type = 'text', placeholder, children, name, ...
   })
 
   return (
-    <div className='relative'>
-      <input
-        id={name}
-        type={type}
-        placeholder={placeholder}
-        className={`w-full transition-all duration-150  rounded-md py-3 px-4 border border-current ${
-          children && 'pr-12'
-        } font-medium text-sm 
-        ${error && 'text-red-500'} `}
-        {...field}
-        {...props}
-      />
+    <div
+      className={`relative transition-all duration-150  rounded-md border border-current overflow-hidden w-full ${
+        children ? 'pr-12' : ''
+      } font-medium text-sm 
+    ${error ? 'text-red-500' : ''}`}
+    >
+      <input id={name} type={type} placeholder={placeholder} className={`w-full py-3 px-4`} {...field} {...props} />
       <h4
         className={`${
           error ? 'opacity-100 visible' : 'opacity-0 invisible'

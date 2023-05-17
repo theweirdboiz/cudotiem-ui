@@ -11,6 +11,7 @@ import { BrowserRouter } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import './index.scss'
 import { AuthProvider } from './contexts/authContext'
+import { ChatProvider } from './contexts/chatContext'
 
 const client = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <App />
             <ReactQueryDevtools initialIsOpen={false} />
           </SearchProvider>
+          {/* <ChatProvider>
+          </ChatProvider> */}
         </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>
