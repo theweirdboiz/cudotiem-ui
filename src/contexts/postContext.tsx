@@ -31,7 +31,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   })
 
   const handleLoadMore = () => {
-    const newSize = pagination.size + 5
+    const newSize = pagination.size + 1
     setPagination({ ...pagination, size: newSize })
   }
 
