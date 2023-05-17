@@ -10,16 +10,13 @@ const RequiredAuth = ({ allowedRoles }: RequeredAuthType) => {
   const { auth } = useAth()
   const location = useLocation()
 
-  // console.log(auth?.user.roles)
-  // console.log(allowedRoles)
-
   if (!auth) {
     return <Navigate to={'/sign-in'} state={{ from: location }} replace />
   }
 
   return (
     <>
-      {allowedRoles.some((role) => auth?.user.roles?.includes(role)) ? (
+      {allowedRoles.some((role) => auth?.roles?.includes(role)) ? (
         <Outlet />
       ) : (
         <Navigate to={'/unauthorized'} state={{ from: location }} replace />

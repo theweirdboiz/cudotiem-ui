@@ -1,5 +1,8 @@
-import { User } from './user.type'
+import { Role } from './role.type'
 
 export interface Auth {
-  user: Pick<User, 'id' | 'username' | 'email' | 'roles'>
+  id: number
+  username: string
+  email: string
+  roles: Role[]
 }
