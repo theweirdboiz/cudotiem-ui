@@ -1,26 +1,52 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createContext, ReactNode, useContext } from "react";
-import { getPosts } from "~/services";
-import { Post } from "~/types/post.type";
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react'
+import { getPosts } from '~/services'
+import { Post } from '~/types/post.type'
 
 interface PostContextProps {
-  posts: Post[];
+  posts: Post[] | undefined
+  handleLoadMore: () => void
+  pagination: {
+    offset: number
+    size: number
+  }
+  setPagination: Dispatch<SetStateAction<any>>
 }
 
-const PostContext = createContext<PostContextProps | any>(null);
+interface PaginationProps {
+  offset: number
+  size: number
+}
+
+const PostContext = createContext<PostContextProps | undefined>(undefined)
 
 export const PostProvider = ({ children }: { children: ReactNode }) => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["posts"],
-    queryFn: async () => await getPosts(),
-  });
+  const [pagination, setPagination] = useState<PaginationProps>({
+    offset: 1,
+    size: 10
+  })
+  const { data: posts } = useQuery({
+    queryKey: ['posts', pagination],
+    queryFn: async () => await getPosts(pagination.offset, pagination.size)
+  })
 
-  return <PostContext.Provider value={data}>{children}</PostContext.Provider>;
-};
-export const usePost = () => {
-  const context = useContext(PostContext);
-  if (!context) {
-    throw new Error("usePost must be used within a PostProvider");
+  const handleLoadMore = () => {
+    const newSize = pagination.size++
+    setPagination({ ...pagination, size: newSize })
   }
-  return context;
-};
+
+  const value = {
+    posts,
+    pagination,
+    setPagination,
+    handleLoadMore
+  }
+  return <PostContext.Provider value={value}>{children}</PostContext.Provider>
+}
+export const usePost = () => {
+  const context = useContext(PostContext)
+  if (!context) {
+    throw new Error('usePost must be used within a PostProvider')
+  }
+  return context
+}

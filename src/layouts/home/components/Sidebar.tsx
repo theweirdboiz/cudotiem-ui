@@ -19,7 +19,7 @@ const Sidebar: React.FC = (): JSX.Element => {
 
   return (
     <aside className='w-[210px] max-h-screen sticky overflow-y-scroll top-4 bg-transparent flex flex-col text-gray-800 text-[14px] scrollbar-hide'>
-      <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
+      {/* <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
         <h4 className='font-medium px-3 mb-1'>Nổi bật</h4>
         {categories?.map((item: Category) => {
           return (
@@ -33,7 +33,7 @@ const Sidebar: React.FC = (): JSX.Element => {
             </Link>
           )
         })}
-      </div>
+      </div> */}
       <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
         <h4 className='font-medium px-3'>Danh mục</h4>
         {categories?.map((item: Category) => {

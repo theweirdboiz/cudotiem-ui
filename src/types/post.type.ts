@@ -14,15 +14,12 @@ export type FormStatePostType = {
   imageLinks: string[]
   content: string
 }
+
 export interface Post {
   id: number
   title: string
-  slug: string
-  content: string
   price: number
-  status: PostStatus
-  imageLinks: string[]
-  creator: User
-  category?: Category
-  createdAt?: string
+  slug: string
+  thumnail: string
+  postedDate: string
 }

@@ -13,7 +13,7 @@ const ImageUpload: React.FC<ImageProps> = (props: ImageProps) => {
       <input type="file" className="hidden" multiple onChange={onChange} />
 
       <div className="flex flex-col items-center text-center pointer-events-none">
-        <img src={uploadImage} className="max-w-[80px] mb-5" />
+        <img  src={uploadImage} className="max-w-[80px] mb-5" />
         <p className="font-semibold">Chọn một hoặc nhiều</p>
       </div>
     </label>

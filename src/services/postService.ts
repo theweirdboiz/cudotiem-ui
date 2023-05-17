@@ -1,8 +1,8 @@
 import { FormStatePostType, Post } from '~/types/post.type'
 import { HttpRequest } from '~/ultis'
 
-export const getPosts = async () => {
-  const response = await HttpRequest.get<Post[]>('/posts')
+export const getPosts = async (offset: number, size: number) => {
+  const response = await HttpRequest.get<Post[]>(`/post/pagination?offset=${offset}&size=${size}`)
   if (response.status === 200) return response.data
 }
 export const getPost = async (id: number | string) => {
