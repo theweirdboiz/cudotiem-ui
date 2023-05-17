@@ -81,7 +81,7 @@ const PostByCategoryPage = () => {
       </div> */}
       <div className='grid grid-cols-5 gap-2'>
         {posts?.map((post: Post) => (
-          <PostComponent data={post} key={post.id} />
+          <PostComponent post={post} key={post.id} />
         ))}
       </div>
       <div className='box-center mt-5'>

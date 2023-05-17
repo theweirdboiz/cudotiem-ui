@@ -63,7 +63,7 @@ const PostManage = () => {
   }
   return (
     <>
-      <DashboardHeading>Quản lý tin đăng</DashboardHeading>
+      {/* <DashboardHeading>Quản lý tin đăng</DashboardHeading>
       <div className='flex items-center justify-between'>
         <div className='flex-center border border-gray-200 w-full max-w-xl rounded-lg relative'>
           <img
@@ -134,7 +134,7 @@ const PostManage = () => {
           </Table>
           <Paginate pageCount={pageCount} onPageChange={handlePageClick} />
         </>
-      )}
+      )} */}
     </>
   )
 }

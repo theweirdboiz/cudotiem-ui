@@ -22,31 +22,32 @@ const PostDetailPage = () => {
   /* End: Hook */
 
   return (
-    <div className='rounded-md mb-5 min-h-screen'>
-      <div className={`flex ${boxWrapper}`}>
-        {/* gallary */}
-        <GallaryProvider>
-          <Gallary images={data?.imageLinks} />
-        </GallaryProvider>
-        {/* infor */}
-        <div className='flex-1'>
-          <h3 className='text-2xl py-3 px-2'>{data?.title}</h3>
-          <div className='flex pr-6'>
-            <PostMeta meta={data} />
-            <UserContact />
-          </div>
-        </div>
-      </div>
-      {/* Post relative */}
-      <div className={boxWrapper}>
-        <PostsRelative />
-      </div>
-      {/* Detail */}
-      {/* Description */}
-      <div className={boxWrapper}>
-        <PostDescription description={data?.content} />
-      </div>
-    </div>
+    <></>
+    // <div className='rounded-md mb-5 min-h-screen'>
+    //   <div className={`flex ${boxWrapper}`}>
+    //     {/* gallary */}
+    //     <GallaryProvider>
+    //       <Gallary images={data?.imageLinks} />
+    //     </GallaryProvider>
+    //     {/* infor */}
+    //     <div className='flex-1'>
+    //       <h3 className='text-2xl py-3 px-2'>{data?.title}</h3>
+    //       <div className='flex pr-6'>
+    //         <PostMeta meta={data} />
+    //         <UserContact />
+    //       </div>
+    //     </div>
+    //   </div>
+    //   {/* Post relative */}
+    //   <div className={boxWrapper}>
+    //     <PostsRelative />
+    //   </div>
+    //   {/* Detail */}
+    //   {/* Description */}
+    //   <div className={boxWrapper}>
+    //     <PostDescription description={data?.content} />
+    //   </div>
+    // </div>
   )
 }
 

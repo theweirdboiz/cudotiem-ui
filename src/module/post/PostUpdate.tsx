@@ -35,14 +35,14 @@ const PostUpdate = () => {
     queryFn: () => getPost(id as string),
     enabled: id !== undefined
   })
-  useEffect(() => {
-    if (post) {
-      setContent(post?.content as string)
-      setPaths(post?.imageLinks as string[])
-      setCategorySelected(post?.category?.name as string)
-      reset(post)
-    }
-  }, [post])
+  // useEffect(() => {
+  //   if (post) {
+  //     setContent(post?.content as string)
+  //     setPaths(post?.imageLinks as string[])
+  //     setCategorySelected(post?.category?.name as string)
+  //     reset(post)
+  //   }
+  // }, [post])
   /* Form init */
   const {
     control,
