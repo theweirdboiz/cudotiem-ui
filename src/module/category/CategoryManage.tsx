@@ -16,15 +16,7 @@ const PER_PAGE = 3
 
 const CategoryManage = () => {
   const queryClient = useQueryClient()
-
-  const { setCategories } = useCategory()
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => await getAllCategories(),
-    onSuccess: (data: any) => {
-      setCategories(data)
-    }
-  })
+  const { categories } = useCategory()
 
   const deleteCategoryMutation = useMutation({
     mutationFn: (id: number | string) => deleteCategory(id),
