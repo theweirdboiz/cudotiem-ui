@@ -13,7 +13,7 @@ const PostComponent = (props: Props) => {
     <>
       <Link to={`/${post.slug}`} className='rounded-md border border-gray-100 bg-white hover:shadow-lg'>
         <div className='w-40 h-40 mt-3 mx-auto'>
-          <img src={uploadImage} alt='' className='' />
+          <img src={post.thumnail} alt='' className='' />
         </div>
         <div className='py-2 px-6 bg-white text-gray-800'>
           <h3 className='text-xs  mb-2'>{post.title}</h3>
