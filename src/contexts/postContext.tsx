@@ -23,7 +23,7 @@ const PostContext = createContext<PostContextProps | undefined>(undefined)
 export const PostProvider = ({ children }: { children: ReactNode }) => {
   const [pagination, setPagination] = useState<PaginationProps>({
     offset: 1,
-    size: 10
+    size: 1
   })
   const { data: posts } = useQuery({
     queryKey: ['posts', pagination],
@@ -31,7 +31,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   })
 
   const handleLoadMore = () => {
-    const newSize = pagination.size++
+    const newSize = pagination.size + 5
     setPagination({ ...pagination, size: newSize })
   }
 

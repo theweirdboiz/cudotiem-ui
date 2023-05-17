@@ -45,7 +45,15 @@ const Sidebar: React.FC = (): JSX.Element => {
             >
               <div className='mx-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
                 <picture className='flex-shrink-0 w-full'>
-                  <img src={item.icon} alt='Giá tốt mỗi ngày' width={32} height={32} />
+                  <img
+                    src={
+                      item.icon ||
+                      'https://salt.tikicdn.com/cache/100x100/ts/upload/08/2f/14/fd9d34a8f9c4a76902649d04ccd9bbc5.png.webp'
+                    }
+                    alt='Giá tốt mỗi ngày'
+                    width={32}
+                    height={32}
+                  />
                 </picture>
               </div>
               <span className='capitalize'>{item.name}</span>
