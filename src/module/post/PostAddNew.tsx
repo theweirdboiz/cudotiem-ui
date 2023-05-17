@@ -16,6 +16,7 @@ import { ENV, POST_DEFAULT_VALUE } from '~/config/constant'
 import { Editor } from '@tinymce/tinymce-react'
 import { createPost } from '~/services'
 import { Category } from '~/types/category.type'
+import { CategoryType } from '~/types/CategoryType'
 
 /* Schema for validate */
 const schema = yup.object().shape({
@@ -51,7 +52,7 @@ const PostAdd = () => {
     resolver: yupResolver(schema)
   })
 
-  const categories = useCategory()
+  const { categories } = useCategory()
   const [categorySelected, setCategorySelected] = useState<string>('')
   const { handleDeleteImage, handleUploadImage, paths, process, handleResetUpload } = useFirebaseImage('/posts')
 
@@ -109,7 +110,7 @@ const PostAdd = () => {
             <Dropdown>
               <Dropdown.Select placeholder={categorySelected ? categorySelected : 'Chọn danh mục'} />
               <Dropdown.List>
-                {categories.map((item: Category) => (
+                {categories.map((item: CategoryType) => (
                   <Dropdown.Option key={item.id} onClick={() => handleClickOption(item)}>
                     {item.name}
                   </Dropdown.Option>

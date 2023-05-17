@@ -17,6 +17,7 @@ import { ENV } from '~/config/constant'
 import { Editor } from '@tinymce/tinymce-react'
 import { useCategory } from '~/contexts'
 import { Category } from '~/types/category.type'
+import { CategoryType } from '~/types/CategoryType'
 
 /* Schema for validation */
 const schema = yup.object().shape({
@@ -61,7 +62,7 @@ const PostUpdate = () => {
   const watchCategory = watch('id_category')
 
   /* local state*/
-  const categories = useCategory()
+  const { categories } = useCategory()
   const [categorySelected, setCategorySelected] = useState<string>('')
   const [content, setContent] = useState<string | undefined>()
 
@@ -132,7 +133,7 @@ const PostUpdate = () => {
             <Dropdown>
               <Dropdown.Select placeholder={categorySelected || 'Select the category'} />
               <Dropdown.List>
-                {categories.map((item: Category) => (
+                {categories.map((item: CategoryType) => (
                   <Dropdown.Option key={item.id} onClick={() => handleClickOption(item)}>
                     {item.name}
                   </Dropdown.Option>
