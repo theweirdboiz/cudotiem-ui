@@ -72,10 +72,10 @@ function App() {
           <Route path='/:category' element={<PostByCategoryPage />} />
           <Route path='/me/profile' element={<ProfilePage />} />
         </Route> */}
-
+        <Route path='/manage/category' element={<CategoryManage />} />
         <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}>
           <Route element={<DashboardLayout />}>
-            <Route path='/manage/category' element={<CategoryManage />} />
+            {/* <Route path='/manage/category' element={<CategoryManage />} /> */}
             <Route path='/manage/update-category' element={<CategoryUpdate />} />
             <Route path='/manage/add-category' element={<CategoryAddNew />} />
             <Route path='/manage/user' element={<UserManage />} />

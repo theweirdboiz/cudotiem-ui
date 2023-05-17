@@ -35,15 +35,15 @@ const CategoryManage = () => {
   const navigator = useNavigate()
   // const { categories, setCategories } = useCategory();
   // handle pagination
-  const { paginatedData, pageCount, handlePageClick } = usePaginate({
-    data: categories,
-    perPage: PER_PAGE
-  })
+  // const { paginatedData, pageCount, handlePageClick } = usePaginate({
+  //   data: categories,
+  //   perPage: PER_PAGE
+  // })
   // handle filter data
-  const { filteredData, handleSearch } = useSearch({
-    data: paginatedData,
-    searchKey: 'name'
-  })
+  // const { filteredData, handleSearch } = useSearch({
+  //   data: paginatedData,
+  //   searchKey: 'name'
+  // })
   // handle delete category
   // const { handleDeleteData } = useDeleteData<CategoryType>({
   //   data: categories,
@@ -85,7 +85,7 @@ const CategoryManage = () => {
 
   return (
     <>
-      <DashboardHeading>Categories</DashboardHeading>
+      {/* <DashboardHeading>Categories</DashboardHeading>
       <div className='flex items-center justify-between'>
         <DashboardSearch handleSearch={handleSearch} />
         <div className='flex-center justify-end my-5'>
@@ -129,7 +129,7 @@ const CategoryManage = () => {
           </tbody>
         </Table>
       )}
-      <Paginate pageCount={pageCount} onPageChange={handlePageClick} />
+      <Paginate pageCount={pageCount} onPageChange={handlePageClick} /> */}
     </>
   )
 }

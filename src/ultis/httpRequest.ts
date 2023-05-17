@@ -42,20 +42,20 @@ class Api {
       (response) => response,
       async (error: ApiError) => {
         // if error
-        if (error.response && error.response.status === 401) {
-          try {
-            const response = await this.axiosInstance.get('/refreshToken')
-            const newToken = response.data.token
+        // if (error.response && error.response.status === 401) {
+        //   try {
+        //     const response = await this.axiosInstance.get('/refreshToken')
+        //     const newToken = response.data.token
 
-            setCookie('accessToken', newToken)
+        //     setCookie('accessToken', newToken)
 
-            const originalRequest = error.config
-            return this.axiosInstance(originalRequest)
-          } catch (err) {
-            // handle error
-            return Promise.reject(error)
-          }
-        }
+        //     const originalRequest = error.config
+        //     return this.axiosInstance(originalRequest)
+        //   } catch (err) {
+        //     // handle error
+        //     return Promise.reject(error)
+        //   }
+        // }
         return Promise.reject(error)
       }
     )
