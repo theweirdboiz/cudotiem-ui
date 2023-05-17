@@ -19,7 +19,7 @@ export interface User {
   password: string
   avatar?: string
   status?: Status
-  role?: Role
+  roles?: Role[]
   permission?: Permission[]
   createdAt?: string
 }

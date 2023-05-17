@@ -2,7 +2,7 @@ import { CategoryType } from '~/types/CategoryType'
 import { HttpRequest } from '~/ultis'
 
 export const getAllCategories = async () => {
-  const response = await HttpRequest.get<CategoryType>('/categories')
+  const response = await HttpRequest.get<CategoryType>('/category')
   if (response.status === 200) return response.data
 }
 export const getCategory = (id: number | string) => HttpRequest.get<CategoryType>('/categories/' + id)

@@ -81,6 +81,8 @@ const CategoryManage = () => {
   //   fetchCategories();
   // }, []);
 
+  console.log(categories)
+
   return (
     <>
       <DashboardHeading>Categories</DashboardHeading>
