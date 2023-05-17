@@ -58,7 +58,7 @@ const Sidebar: React.FC = (): JSX.Element => {
       {auth && (
         <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
           <Link
-            to='/manage/post'
+            to='/manage/category'
             className='flex-center py-1.5 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-50'
           >
             <div className='mx-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
