@@ -37,6 +37,10 @@ const RequiredAuth = lazy(() => import('./ultis/RequiredAuth'))
 const ChatPage = lazy(() => import('./pages/chat/ChatPage'))
 
 function App() {
+  const { auth } = useAth()
+
+  console.log('Auth: ', auth)
+
   return (
     <Suspense>
       <Routes>
