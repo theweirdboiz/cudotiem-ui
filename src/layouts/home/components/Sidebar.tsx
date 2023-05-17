@@ -1,10 +1,11 @@
+import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAth, useCategory } from '~/contexts'
+import { getAllCategories } from '~/services'
 import { Category } from '~/types/category.type'
 
 const Sidebar: React.FC = (): JSX.Element => {
-  // const categories = useCategory();
   const { auth } = useAth()
   const categories = [
     {
@@ -14,6 +15,12 @@ const Sidebar: React.FC = (): JSX.Element => {
       slug: 'thoi-trang-nam/1'
     }
   ]
+  const { data } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => await getAllCategories()
+  })
+
+  console.log(data)
 
   return (
     <aside className='w-[210px] max-h-screen sticky overflow-y-scroll top-4 bg-transparent flex flex-col text-gray-800 text-[14px] scrollbar-hide'>
