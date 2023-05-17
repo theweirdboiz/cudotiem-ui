@@ -23,3 +23,7 @@ export interface Post {
   thumnail: string
   postedDate: string
 }
+export interface PostPagination {
+  paginationPosts: Post[]
+  totalPage: number
+}

@@ -114,7 +114,7 @@ const HomePage = () => {
         </div>
       </div>
       <div className='grid grid-cols-5 gap-2'>
-        {posts?.map((post: Post) => (
+        {posts?.paginationPosts?.map((post: Post) => (
           <PostComponent post={post} key={post.id} />
         ))}
       </div>

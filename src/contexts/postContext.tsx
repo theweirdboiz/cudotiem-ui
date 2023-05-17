@@ -1,10 +1,10 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react'
 import { getPosts } from '~/services'
-import { Post } from '~/types/post.type'
+import { PostPagination } from '~/types/post.type'
 
 interface PostContextProps {
-  posts: Post[] | undefined
+  posts: PostPagination | undefined
   handleLoadMore: () => void
   pagination: {
     offset: number
