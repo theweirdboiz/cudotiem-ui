@@ -7,32 +7,23 @@ import { Category } from '~/types/category.type'
 
 const Sidebar: React.FC = (): JSX.Element => {
   const { auth } = useAth()
-  const categories = [
-    {
-      id: 1,
-      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp',
-      name: 'Thời trang nam',
-      slug: 'thoi-trang-nam/1'
-    }
-  ]
-  const { data } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => await getAllCategories()
-  })
-
-  console.log(data)
+  // const categories = [
+  //   {
+  //     id: 1,
+  //     icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp',
+  //     name: 'Thời trang nam',
+  //     slug: 'thoi-trang-nam/1'
+  //   }
+  // ]
+  const { categories } = useCategory()
 
   return (
     <aside className='w-[210px] max-h-screen sticky overflow-y-scroll top-4 bg-transparent flex flex-col text-gray-800 text-[14px] scrollbar-hide'>
       <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
         <h4 className='font-medium px-3 mb-1'>Nổi bật</h4>
-        {categories.map((item: any) => {
+        {categories?.map((item: Category) => {
           return (
-            <Link
-              key={item.id}
-              to={item.slug || '/'}
-              className='flex-center py-1.5 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-50'
-            >
+            <Link key={item.id} to=''>
               <div className='mx-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
                 <picture>
                   <img src={item.icon} alt='Giá tốt mỗi ngày' width={32} height={32} />
@@ -45,11 +36,11 @@ const Sidebar: React.FC = (): JSX.Element => {
       </div>
       <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
         <h4 className='font-medium px-3'>Danh mục</h4>
-        {categories.map((item: any) => {
+        {categories?.map((item: Category) => {
           return (
             <Link
               key={item.id}
-              to={item.slug || '/'}
+              to='/'
               className='flex-center py-1.5 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-60'
             >
               <div className='mx-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
@@ -57,7 +48,7 @@ const Sidebar: React.FC = (): JSX.Element => {
                   <img src={item.icon} alt='Giá tốt mỗi ngày' width={32} height={32} />
                 </picture>
               </div>
-              <span>{item.name}</span>
+              <span className='capitalize'>{item.name}</span>
             </Link>
           )
         })}

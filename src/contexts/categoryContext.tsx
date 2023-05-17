@@ -1,19 +1,22 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react'
-
-import { CategoryType } from '~/types/CategoryType'
+import { useQuery } from '@tanstack/react-query'
+import { getAllCategories } from '~/services'
+import { createContext, ReactNode, useContext, useState } from 'react'
+import { Category } from '~/types/category.type'
 
 interface CategoryContextProps {
-  categories: CategoryType[]
-  setCategories: Dispatch<SetStateAction<CategoryType[]>>
+  categories: Category[] | undefined
 }
 
 const CategoryContext = createContext<CategoryContextProps | undefined>(undefined)
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
-  const [categories, setCategories] = useState<CategoryType[]>([])
+  const { data: categories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => await getAllCategories()
+  })
+
   const data = {
-    categories,
-    setCategories
+    categories
   }
 
   return <CategoryContext.Provider value={data}>{children}</CategoryContext.Provider>

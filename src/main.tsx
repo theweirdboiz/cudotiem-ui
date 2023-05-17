@@ -30,11 +30,13 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <BrowserRouter>
       <QueryClientProvider client={client}>
         <AuthProvider>
-          <SearchProvider>
-            <ToastContainer autoClose={1200}></ToastContainer>
-            <App />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </SearchProvider>
+          <CategoryProvider>
+            <SearchProvider>
+              <ToastContainer autoClose={1200}></ToastContainer>
+              <App />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </SearchProvider>
+          </CategoryProvider>
           {/* <ChatProvider>
           </ChatProvider> */}
         </AuthProvider>

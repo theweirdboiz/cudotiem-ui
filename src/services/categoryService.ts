@@ -1,15 +1,14 @@
-import { CategoryType } from '~/types/CategoryType'
+import { Category } from '~/types/category.type'
 import { HttpRequest } from '~/ultis'
 
 export const getAllCategories = async () => {
-  const response = await HttpRequest.get<CategoryType>('/post/category')
+  const response = await HttpRequest.get<Category[] | undefined>('/post/category')
   if (response.status === 200) return response.data
 }
-export const getCategory = (id: number | string) => HttpRequest.get<CategoryType>('/categories/' + id)
+export const getCategory = (id: number | string) => HttpRequest.get<Category>('/categories/' + id)
 
-export const createCategory = (post: Omit<CategoryType, 'id'>) => HttpRequest.post<CategoryType[]>('/categories', post)
+export const createCategory = (post: Omit<Category, 'id'>) => HttpRequest.post<Category[]>('/categories', post)
 
-export const updateCategory = (id: number | string, data: any) =>
-  HttpRequest.put<CategoryType[]>(`/categories/${id}`, data)
+export const updateCategory = (id: number | string, data: any) => HttpRequest.put<Category[]>(`/categories/${id}`, data)
 
 export const deleteCategory = (id: number | string) => HttpRequest.delete(`/categories/${id}`)
