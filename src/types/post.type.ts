@@ -20,7 +20,7 @@ export interface Post {
   title: string
   price: number
   slug: string
-  thumnail: string
+  thumbnail: string
   postedDate: string
 }
 export interface PostPagination {
