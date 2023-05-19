@@ -3,40 +3,48 @@ import { PostComponent } from '~/components'
 import { usePost } from '~/contexts'
 import { Post } from '~/types/post.type'
 import { Category } from './components'
+import { useQuery } from '@tanstack/react-query'
+import { getAllUsersProfile } from '~/services/userService'
 
 const HomePage = () => {
-  // const { posts, isError, isLoading, handleLoadMore } = usePost()
-  const isError = false
-  const isLoading = false
-  const handleLoadMore = () => console.log(123)
-  const posts = {
-    paginationPosts: [
-      {
-        id: 1,
-        title: 'This is title',
-        price: 123,
-        slug: 'this-is-slug',
-        thumbnail: '',
-        postedDate: '22/12/2022'
-      },
-      {
-        id: 2,
-        title: 'This is title',
-        price: 123,
-        slug: 'this-is-slug',
-        thumbnail: '',
-        postedDate: '22/12/2022'
-      },
-      {
-        id: 3,
-        title: 'This is title',
-        price: 123,
-        slug: 'this-is-slug',
-        thumbnail: '',
-        postedDate: '22/12/2022'
-      }
-    ]
-  }
+  const { posts, isError, isLoading, handleLoadMore } = usePost()
+  // const isError = false
+  // const isLoading = false
+  // const handleLoadMore = () => console.log(123)
+  // const posts = {
+  //   paginationPosts: [
+  //     {
+  //       id: 1,
+  //       title: 'This is title',
+  //       price: 123,
+  //       slug: 'this-is-slug',
+  //       thumbnail: '',
+  //       postedDate: '22/12/2022'
+  //     },
+  //     {
+  //       id: 2,
+  //       title: 'This is title',
+  //       price: 123,
+  //       slug: 'this-is-slug',
+  //       thumbnail: '',
+  //       postedDate: '22/12/2022'
+  //     },
+  //     {
+  //       id: 3,
+  //       title: 'This is title',
+  //       price: 123,
+  //       slug: 'this-is-slug',
+  //       thumbnail: '',
+  //       postedDate: '22/12/2022'
+  //     }
+  //   ]
+  // }
+  const { data: usersProfile } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => await getAllUsersProfile()
+  })
+
+  console.log(usersProfile?.data)
 
   useEffect(() => {
     document.title = 'Trang chủ - Cụ Đồ Tiễm'

@@ -8,23 +8,23 @@ import { Category } from '~/types/category.type'
 const Sidebar: React.FC = (): JSX.Element => {
   const { auth } = useAth()
 
-  const isError = false
-  const isLoading = false
-  const categories = [
-    {
-      id: 1,
-      name: 'quần áo',
-      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
-    },
-    {
-      id: 2,
-      name: 'Giày dép',
+  // const isError = false
+  // const isLoading = false
+  // const categories = [
+  //   {
+  //     id: 1,
+  //     name: 'quần áo',
+  //     icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Giày dép',
 
-      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
-    }
-  ]
+  //     icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
+  //   }
+  // ]
 
-  // const { categories, isError, isLoading } = useCategory()
+  const { categories, isError, isLoading } = useCategory()
   if (isLoading) return <>Loading</>
   if (isError) return <>Error category</>
 

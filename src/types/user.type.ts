@@ -23,3 +23,11 @@ export interface User {
   permission?: Permission[]
   createdAt?: string
 }
+
+export interface UserInfor {
+  firstName: 'abc'
+  lastName: 'xyz'
+  phoneNumber: string
+  avatar: string
+  idAddress: number
+}

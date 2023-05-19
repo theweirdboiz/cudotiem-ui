@@ -1,4 +1,5 @@
 import { ReactNode, useState } from 'react'
+import { useCategory } from '~/contexts'
 import { Category } from '~/types/category.type'
 
 interface CategoryItemProps {
@@ -8,28 +9,28 @@ interface CategoryItemProps {
 }
 
 const Category = () => {
-  // const { categories, isError, isLoading } = useCategory()
+  const { categories, isError, isLoading } = useCategory()
   const [categoryItemActive, setCategoryItemActive] = useState<number>(1)
   const handleClickCategoryItem = (id: number) => {
     setCategoryItemActive(id)
   }
 
-  const categories = [
-    {
-      id: 1,
-      name: 'quần áo',
-      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
-    },
-    {
-      id: 2,
-      name: 'Giày dép',
+  // const categories = [
+  //   {
+  //     id: 1,
+  //     name: 'quần áo',
+  //     icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Giày dép',
 
-      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
-    }
-  ]
+  //     icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
+  //   }
+  // ]
   return (
     <CategoryList>
-      {categories.map((item) => (
+      {categories?.map((item: Category) => (
         <CategoryItem
           key={item.id}
           item={item}
