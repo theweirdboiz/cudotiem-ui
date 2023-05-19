@@ -40,7 +40,7 @@ const HomePage = () => {
   //   ]
   // }
   const { data: usersProfile } = useQuery({
-    queryKey: ['categories'],
+    queryKey: ['profiles'],
     queryFn: async () => await getAllUsersProfile()
   })
 

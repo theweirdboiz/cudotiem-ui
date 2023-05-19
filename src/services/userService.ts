@@ -3,7 +3,7 @@ import { HttpRequest } from '~/ultis'
 
 export const getAllUsersProfile = async () => {
   const response = await HttpRequest.get<UserInfor[]>('/profile')
-  return response.data
+  if (response.status === 200) return response.data
 }
 
 export const getUser = async (id: number | string) => {
