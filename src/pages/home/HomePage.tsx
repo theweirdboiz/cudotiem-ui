@@ -44,7 +44,7 @@ const HomePage = () => {
     queryFn: async () => await getAllUsersProfile()
   })
 
-  console.log(usersProfile?.data)
+  console.log(usersProfile)
 
   useEffect(() => {
     document.title = 'Trang chủ - Cụ Đồ Tiễm'

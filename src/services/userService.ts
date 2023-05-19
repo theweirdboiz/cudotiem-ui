@@ -1,7 +1,10 @@
 import { User, UserInfor } from '~/types/user.type'
 import { HttpRequest } from '~/ultis'
 
-export const getAllUsersProfile = () => HttpRequest.get<UserInfor[]>('/profile')
+export const getAllUsersProfile = async () => {
+  const response = await HttpRequest.get<UserInfor[]>('/profile')
+  return response.data
+}
 
 export const getUser = async (id: number | string) => {
   const response = await HttpRequest.get<User>('/users/' + id)
