@@ -10,6 +10,8 @@ interface PostContextProps {
     offset: number
     size: number
   }
+  isError: boolean
+  isLoading: boolean
   setPagination: Dispatch<SetStateAction<any>>
 }
 
@@ -25,7 +27,11 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     offset: 1,
     size: 1
   })
-  const { data: posts } = useQuery({
+  const {
+    data: posts,
+    isError,
+    isLoading
+  } = useQuery({
     queryKey: ['posts', pagination],
     queryFn: async () => await getPosts(pagination.offset, pagination.size)
   })
@@ -37,6 +43,8 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 
   const value = {
     posts,
+    isError,
+    isLoading,
     pagination,
     setPagination,
     handleLoadMore

@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { getCookie, setCookie } from 'typescript-cookie'
 import { ENV } from '~/config'
+import { useAth } from '~/contexts'
 
 interface ApiResponse<T> {
   data: T
@@ -29,7 +30,8 @@ class Api {
     // add token to request
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        const token = getCookie('accessToken')
+        const token = getCookie('cudotiem')
+        // auth?.accessToken
         if (token) {
           config.headers['Authorization'] = `Bearer ${token}`
         }
@@ -46,7 +48,7 @@ class Api {
             const response = await this.axiosInstance.get('/refreshToken')
             const newToken = response.data.token
 
-            setCookie('accessToken', newToken)
+            setCookie('cudotiem', newToken)
 
             const originalRequest = error.config
             return this.axiosInstance(originalRequest)

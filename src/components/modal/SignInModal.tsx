@@ -14,6 +14,9 @@ import { signin } from '~/services/authService'
 import { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { useAth } from '~/contexts'
+import { useCookies } from '~/hooks'
+import { Auth } from '~/types/auth.type'
+import { setCookie } from 'typescript-cookie'
 
 const schema = yup.object().shape({
   email: yup.string().email('Invalid email format').required('This field is required'),
@@ -21,11 +24,12 @@ const schema = yup.object().shape({
 })
 
 const SignInModal = () => {
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
-
+  const { value: showPassword, handleToggle } = useToggleValue()
   const { state } = useLocation()
-
-  const from = state?.from.pathname
+  const { setAuth } = useAth()
+  // const { setToken, t } = useCookies()
 
   const {
     handleSubmit,
@@ -37,11 +41,9 @@ const SignInModal = () => {
     mode: 'all'
   })
 
+  const from = state?.from.pathname
   const wathcEmail = watch('email')
 
-  const { setAuth } = useAth()
-
-  const queryClient = useQueryClient()
   const signInMutation = useMutation({
     mutationFn: async (body: SignIn) => await signin<SignIn>(body.email, body.password),
     onSuccess: (data: any) => {
@@ -51,6 +53,7 @@ const SignInModal = () => {
       })
       navigate(`${from || '/'}`)
       setAuth(data)
+      setCookie('cudotiem', data.accessToken)
       toast.success('Login successful!')
     },
     onError: (error: AxiosError) => {
@@ -61,8 +64,6 @@ const SignInModal = () => {
   const onSubmit = (data: SignIn) => {
     signInMutation.mutate(data)
   }
-
-  const { value: showPassword, handleToggle } = useToggleValue()
 
   return (
     <>

@@ -93,26 +93,22 @@ const SignUpModal = () => {
             <IconEyeToggle toggle={showPassword} onClick={handleToggle}></IconEyeToggle>
           </Input>
         </FormGroup>
-        <FormGroup>
-          <div className='flex items-center gap-x-3'>
-            <input type='checkbox' name='' id='' className='cursor-pointer translate-y-[2px]' />
-            <Label>I agree with the terms and conditions</Label>
-          </div>
-        </FormGroup>
-        <div className='mt-10'>
-          <Button
-            style={{
-              width: '100%',
-              margin: '0 auto'
-            }}
-            height='h-10'
-            type='submit'
-            isloading={signUpMutation.isLoading}
-            disabled={!isValid}
-          >
-            Submit
-          </Button>
+        <div className='flex items-center gap-x-3'>
+          <input type='checkbox' name='' id='' className='cursor-pointer translate-y-[2px]' />
+          <Label>I agree with the terms and conditions</Label>
         </div>
+        <Button
+          style={{
+            width: '100%',
+            margin: '10px auto'
+          }}
+          height='h-10'
+          type='submit'
+          isloading={signUpMutation.isLoading}
+          disabled={!isValid}
+        >
+          Submit
+        </Button>
       </form>
     </>
   )
