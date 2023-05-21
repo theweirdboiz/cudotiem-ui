@@ -1,4 +1,4 @@
-import { SignUp } from '~/types/signup.type'
+import { removeCookie } from 'typescript-cookie'
 import { HttpRequest } from '~/ultis'
 
 export const signup = async <T>(username: string, email: string, password: string) => {
@@ -6,7 +6,12 @@ export const signup = async <T>(username: string, email: string, password: strin
   if (response.status === 200) return response.data
 }
 
-export const signin = async <T>(email: string, password: string) => {
-  const response = await HttpRequest.post<T>('/auth/signin', { usernameOrEmail: email, password })
+export const signin = async <T>(usernameOrEmail: string, password: string) => {
+  const response = await HttpRequest.post<T>('/auth/signin', { usernameOrEmail: usernameOrEmail, password })
+  if (response.status === 200) return response.data
+}
+
+export const signout = async <T>() => {
+  const response = await HttpRequest.post<T>('/auth/logout')
   if (response.status === 200) return response.data
 }

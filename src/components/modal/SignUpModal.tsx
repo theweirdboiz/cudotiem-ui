@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom'
 import { IconEyeToggle } from '~/components/icon'
-import { FormGroup, Input, Label, Button, Radio } from '~/components'
+import { FormGroup, Input, Label, Button } from '~/components'
 import { signup } from '~/services/authService'
 import { SignUp } from '~/types/signup.type'
 import { AxiosError } from 'axios'
@@ -93,10 +93,7 @@ const SignUpModal = () => {
             <IconEyeToggle toggle={showPassword} onClick={handleToggle}></IconEyeToggle>
           </Input>
         </FormGroup>
-        <div className='flex items-center gap-x-3'>
-          <input type='checkbox' name='' id='' className='cursor-pointer translate-y-[2px]' />
-          <Label>I agree with the terms and conditions</Label>
-        </div>
+
         <Button
           style={{
             width: '100%',

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Spinner from '../spinner/Spinner'
 import { ButtonProps } from './type'
 
-const Button = ({ type = 'button', children, onClick, ...props }: ButtonProps) => {
+const Button = ({ type = 'button', children, className, onClick, ...props }: ButtonProps) => {
   const { isloading, to, height, style, disabled } = props
 
   const child = isloading ? <Spinner /> : children
@@ -18,7 +18,7 @@ const Button = ({ type = 'button', children, onClick, ...props }: ButtonProps) =
   return (
     <button
       style={style}
-      className={`${defaultClassName} ${
+      className={`${defaultClassName} ${className} ${
         disabled ? 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700' : ''
       } ${isloading ? 'bg-blue-100' : 'bg-white'}`}
       type={type}

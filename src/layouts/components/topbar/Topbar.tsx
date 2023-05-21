@@ -1,10 +1,23 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable react/jsx-no-comment-textnodes */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Link } from 'react-router-dom'
 import { useAth, useSearch } from '~/contexts'
 import Search from './components/search/Search'
+import { signout } from '~/services'
+import { removeCookie } from 'typescript-cookie'
+import { toast } from 'react-toastify'
 
 function Topbar() {
   const { isOpen } = useSearch()
   const { auth } = useAth()
+  const handleSignout = async () => {
+    console.log(123)
+    const response = await signout<any>()
+    removeCookie('cudotiem')
+    toast.success(response?.message)
+  }
 
   return (
     <>
@@ -37,33 +50,35 @@ function Topbar() {
                 />
                 <Link to='/'>Trang chủ</Link>
               </div>
+              <div className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200'>
+                <img
+                  src='https://salt.tikicdn.com/ts/upload/b4/90/74/6baaecfa664314469ab50758e5ee46ca.png'
+                  alt=''
+                  className='w-6 h-6 mr-1'
+                />
+                <Link to='/'>Đăng tin</Link>
+              </div>
               <div className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 relative group'>
                 <img
                   src='https://salt.tikicdn.com/ts/upload/07/d5/94/d7b6a3bd7d57d37ef6e437aa0de4821b.png'
                   alt=''
                   className='w-6 h-6 mr-1'
                 />
-                {auth ? (
-                  <Link to='/profile/me'>Tài khoản</Link>
-                ) : (
-                  <Link to='/sign-in' target='_blank'>
-                    Đăng nhập
-                  </Link>
-                )}
+                {auth ? <Link to='/profile/me'>Tài khoản</Link> : <Link to='/sign-in'>Đăng nhập</Link>}
                 <div
                   className={`${
-                    auth ? 'group-hover:block' : ''
+                    !auth ? 'group-hover:block' : ''
                   } hidden absolute w-60 z-10 py-2.5 shadow-lg left-0 top-[38px] rounded-lg bg-white text-gray-700 -translate-x-1/2 border border-gray-200`}
                 >
-                  <a href='/profile/me'>
+                  <a href='/my-profile'>
                     <p className='py-2 px-4 hover:bg-gray-200'>Thông tin tài khoản</p>
                   </a>
-                  <a href='/posts/me'>
+                  <a href='/my-posts'>
                     <p className='py-2 px-4 hover:bg-gray-200'>Tin đăng của tôi</p>
                   </a>
-                  <a href='/sign-out'>
-                    <p className='py-2 px-4 hover:bg-gray-200'>Đăng xuất</p>
-                  </a>
+                  <p className='py-2 px-4 hover:bg-gray-200' onClick={handleSignout}>
+                    Đăng xuất
+                  </p>
                 </div>
               </div>
               {/* cart */}

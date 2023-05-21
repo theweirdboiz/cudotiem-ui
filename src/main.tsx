@@ -8,10 +8,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { PostProvider } from './contexts/postContext'
 import { CategoryProvider } from './contexts/categoryContext'
 import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './contexts/authContext'
 import 'react-toastify/dist/ReactToastify.css'
 import './index.scss'
-import { AuthProvider } from './contexts/authContext'
-import { ChatProvider } from './contexts/chatContext'
 
 const client = new QueryClient({
   defaultOptions: {
@@ -24,7 +23,6 @@ const client = new QueryClient({
     }
   }
 })
-
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -39,8 +37,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               </SearchProvider>
             </CategoryProvider>
           </PostProvider>
-          {/* <ChatProvider>
-          </ChatProvider> */}
         </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>
