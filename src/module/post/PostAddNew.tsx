@@ -7,22 +7,29 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useFirebaseImage } from '~/hooks'
 import { useEffect, useState } from 'react'
-import { useCategory } from '~/contexts'
+import { useAth, useCategory } from '~/contexts'
 import { toast } from 'react-toastify'
-import { FormStatePostType } from '~/types/post.type'
+import { FormStatePostType, PostStatus } from '~/types/post.type'
 import { HttpRequest } from '~/ultis'
-import { FormGroup, Input, Label, Dropdown, Button } from '~/components'
+import { FormGroup, Input, Label, Dropdown, Button, Radio } from '~/components'
 import { ENV, POST_DEFAULT_VALUE } from '~/config/constant'
 import { Editor } from '@tinymce/tinymce-react'
 import { createPost } from '~/services'
 import { Category } from '~/types/category.type'
+import { Role } from '~/types/role.type'
 
 /* Schema for validate */
 const schema = yup.object().shape({
-  title: yup.string().required('Không bỏ trống trường này')
+  title: yup.string().required('Không bỏ trống trường này'),
+  price: yup
+    .number()
+    .typeError('Giá tiền phải là một số')
+    .positive('Giá tiền không được âm')
+    .required('Không bỏ trống trường này')
 })
 
 const PostAdd = () => {
+  const { auth } = useAth()
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: (body: FormStatePostType) => createPost(body),
@@ -44,12 +51,14 @@ const PostAdd = () => {
     setValue,
     handleSubmit,
     reset,
+    watch,
     formState: { isSubmitting, isValid, errors }
   } = useForm<FormStatePostType>({
     // defaultValues: POST_DEFAULT_VALUE,
     mode: 'all',
     resolver: yupResolver(schema)
   })
+  const watchStatus = watch('status')
 
   const { categories } = useCategory()
   const [categorySelected, setCategorySelected] = useState<string>('')
@@ -103,7 +112,6 @@ const PostAdd = () => {
             <Label className={`${errors.title && 'text-red-400'}`}>Tiêu đề</Label>
             <Input control={control} placeholder='Tiêu đề tin đăng' name='title' error={errors.title?.message} />
           </FormGroup>
-
           <FormGroup>
             <Label>Danh mục</Label>
             <Dropdown>
@@ -118,41 +126,42 @@ const PostAdd = () => {
               <span></span>
             </Dropdown>
           </FormGroup>
-          {/* Just admin */}
-          {/* <FormGroup>
-            <Label>Trạng thái</Label>
-            <div className='flex gap-x-6'>
-              <Radio
-                id='pending'
-                control={control}
-                name='status'
-                value={PostStatus.PENDING}
-                checked={watchStatus === PostStatus.PENDING}
-              >
-                Đang xử lý
-              </Radio>
-              <Radio
-                id='approved'
-                control={control}
-                name='status'
-                value={PostStatus.APPROVED}
-                checked={watchStatus === PostStatus.APPROVED}
-              >
-                Đã duyệt
-              </Radio>
-              <Radio
-                id='reject'
-                control={control}
-                name='status'
-                value={PostStatus.REJECTED}
-                checked={watchStatus === PostStatus.REJECTED}
-              >
-                Từ chối
-              </Radio>
-            </div>
-          </FormGroup> */}
+          {auth?.roles.includes(Role.ADMIN || Role.MODERATOR) && (
+            <FormGroup>
+              <Label>Trạng thái</Label>
+              <div className='flex gap-x-6'>
+                <Radio
+                  id='pending'
+                  control={control}
+                  name='status'
+                  value={PostStatus.PENDING}
+                  checked={watchStatus === PostStatus.PENDING}
+                >
+                  Đang xử lý
+                </Radio>
+                <Radio
+                  id='approved'
+                  control={control}
+                  name='status'
+                  value={PostStatus.APPROVED}
+                  checked={watchStatus === PostStatus.APPROVED}
+                >
+                  Đã duyệt
+                </Radio>
+                <Radio
+                  id='reject'
+                  control={control}
+                  name='status'
+                  value={PostStatus.REJECTED}
+                  checked={watchStatus === PostStatus.REJECTED}
+                >
+                  Từ chối
+                </Radio>
+              </div>
+            </FormGroup>
+          )}
           <FormGroup>
-            <Label>Giá bán</Label>
+            <Label className={`${errors.title && 'text-red-400'}`}>Giá bán</Label>
             <Input
               control={control}
               placeholder='Giá của bạn'
@@ -162,8 +171,17 @@ const PostAdd = () => {
             ></Input>
           </FormGroup>
         </div>
-        <FormGroup>
-          <Label>Hình ảnh</Label>
+        <div className='flex items-center gap-x-3'>
+          <FormGroup>
+            <Label>Thumbnail</Label>
+            <Image />
+          </FormGroup>
+          <FormGroup>
+            <Label>Các ảnh khác</Label>
+            <ImageUpload multiple onChange={handleUploadImage} />
+          </FormGroup>
+        </div>
+        {/* <FormGroup>
           <div className='grid grid-cols-5 gap-3'>
             {paths?.map((path) => (
               <Image
@@ -175,9 +193,9 @@ const PostAdd = () => {
                 key={path}
               ></Image>
             ))}
-            <ImageUpload onChange={handleUploadImage}></ImageUpload>
+            <ImageUpload multiple onChange={handleUploadImage}></ImageUpload>
           </div>
-        </FormGroup>
+        </FormGroup> */}
         <FormGroup>
           <Label>Nội dung</Label>
           <div className='entry-content'>

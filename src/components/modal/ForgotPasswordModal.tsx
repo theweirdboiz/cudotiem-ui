@@ -1,9 +1,5 @@
-import React from "react";
+const ForgotPasswordModal = () => {
+  return <div>ForgotPasswordModal</div>
+}
 
-type Props = {};
-
-const ForgotPasswordModal = (props: Props) => {
-  return <div>ForgotPasswordModal</div>;
-};
-
-export default ForgotPasswordModal;
+export default ForgotPasswordModal

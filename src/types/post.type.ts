@@ -1,6 +1,3 @@
-import { Category } from './category.type'
-import { User } from './user.type'
-
 export enum PostStatus {
   APPROVED = 'APPROVED',
   PENDING = 'PENDING',
@@ -16,6 +13,15 @@ export type FormStatePostType = {
 }
 
 export interface Post {
+  id: number
+  title: string
+  price: number
+  slug: string
+  thumbnail: string
+  postedDate: string
+}
+
+export interface PostDetail {
   id: number
   title: string
   price: number

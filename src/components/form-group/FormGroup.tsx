@@ -6,8 +6,8 @@ interface FormGroupProps {
 }
 
 const FormGroup = ({ children, className }: FormGroupProps) => {
-  const defaultClass = 'flex-col gap-y-2 mb-4 lg:gap-y-3 lg:mb-5'
-  return <div className={`${className ? className : defaultClass} flex`}>{children}</div>
+  const defaultClass = 'flex items-baseline flex-col gap-y-2 mb-4 lg:gap-y-3 lg:mb-5 w-full'
+  return <div className={`${className ? className : defaultClass}`}>{children}</div>
 }
 
 export default FormGroup

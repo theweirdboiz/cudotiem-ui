@@ -1,5 +1,6 @@
 import React from 'react'
 import { useController } from 'react-hook-form'
+import { twMerge } from 'tailwind-merge'
 
 interface InputProps {
   control?: any
@@ -18,21 +19,23 @@ const Input = ({ control, error, type = 'text', placeholder, children, name, ...
   })
 
   return (
-    <div className={`relative`}>
+    <div className='relative w-full'>
       <input
         id={name}
         type={type}
         placeholder={placeholder}
-        className={`w-full py-2.5 px-4 mb-1 border ${
-          !error ? 'border-blue-200 focus:border-blue-400' : 'border-red-200 focus:border-red-400'
-        } rounded-md transition-all duration-300 `}
+        className={twMerge(
+          `w-full py-2.5 px-4 mb-1 border border-blue-200 focus:border-blue-400 rounded-md transition-all duration-300 `,
+          `${error && 'border-red-200 focus:border-red-400'}`
+        )}
         {...field}
         {...props}
       />
       <h4
-        className={`${
-          error ? 'opacity-100 visible' : 'opacity-0 invisible'
-        } absolute text-sm text-red-400  pointer-events-none bg-white w-[calc(100%-50px)]`}
+        className={twMerge(
+          'absolute text-sm text-red-400  pointer-events-none bg-white w-[calc(100%-50px)] opacity-100 visible',
+          `${!error && 'opacity-0 invisible'} `
+        )}
       >
         {error}
       </h4>
@@ -44,5 +47,4 @@ const Input = ({ control, error, type = 'text', placeholder, children, name, ...
     </div>
   )
 }
-
 export default Input

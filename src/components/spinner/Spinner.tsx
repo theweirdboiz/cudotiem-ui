@@ -1,9 +1,18 @@
-import React from 'react'
+import { twMerge } from 'tailwind-merge'
 import { SpinnerProps } from './type'
 
-const Spinner = ({ className = 'w-6 h-6 border-white', style }: SpinnerProps) => {
-  const defaultClass = 'rounded-full border-current border-4 border-l-transparent animate-spin'
-  return <div style={style} className={`${defaultClass} ${className}`}></div>
+const Spinner = ({ color = 'text-primary', h = 6, w = 6, strokeWidth = 4 }: SpinnerProps) => {
+  return (
+    <div
+      className={twMerge(
+        'rounded-full border-current border-l-transparent animate-spin',
+        color,
+        `border-${strokeWidth}`,
+        `w-${w}`,
+        `h-${h}`
+      )}
+    ></div>
+  )
 }
 
 export default Spinner

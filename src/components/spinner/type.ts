@@ -1,4 +1,6 @@
 export interface SpinnerProps {
-  style?: object | undefined;
-  className?: string | undefined;
+  color?: string
+  strokeWidth?: number
+  w?: number
+  h?: number
 }

@@ -8,6 +8,7 @@ import Search from './components/search/Search'
 import { signout } from '~/services'
 import { removeCookie } from 'typescript-cookie'
 import { toast } from 'react-toastify'
+import { Button } from '~/components'
 
 function Topbar() {
   const { isOpen } = useSearch()
@@ -36,12 +37,12 @@ function Topbar() {
                 </Link>
               </div>
               {/* search */}
-              <div className='flex-1 max-w-[50%]'>
+              <div className='flex-1 max-w-[75%]'>
                 <Search />
               </div>
             </div>
             {/* right */}
-            <div className='flex-center ml-12 text-gray-500 font-normal'>
+            <div className='flex-center gap-x-3 ml-12 text-gray-500 font-normal'>
               <div className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200'>
                 <img
                   src='https://salt.tikicdn.com/ts/upload/b4/90/74/6baaecfa664314469ab50758e5ee46ca.png'
@@ -50,14 +51,11 @@ function Topbar() {
                 />
                 <Link to='/'>Trang chủ</Link>
               </div>
-              <div className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200'>
-                <img
-                  src='https://salt.tikicdn.com/ts/upload/b4/90/74/6baaecfa664314469ab50758e5ee46ca.png'
-                  alt=''
-                  className='w-6 h-6 mr-1'
-                />
-                <Link to='/'>Đăng tin</Link>
-              </div>
+              {auth && (
+                <div className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 text-blue-500 border border-current font-bold'>
+                  <Link to='/manage/add-post'>Đăng tin</Link>
+                </div>
+              )}
               <div className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 relative group'>
                 <img
                   src='https://salt.tikicdn.com/ts/upload/07/d5/94/d7b6a3bd7d57d37ef6e437aa0de4821b.png'
