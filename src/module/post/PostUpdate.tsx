@@ -65,12 +65,12 @@ const PostUpdate = () => {
   const [categorySelected, setCategorySelected] = useState<string>('')
   const [content, setContent] = useState<string | undefined>()
 
-  const { paths, setPaths, process, handleDeleteImage, handleUploadImage } = useFirebaseImage('posts')
+  // const { paths, setPaths, process, handleDeleteImage, handleUploadImage } = useFirebaseImage('posts')
 
   /* Submit form*/
   const onSubmit = async (body: FormStatePostType) => {
     body.content = content as string
-    body.imageLinks = paths
+    // body.imageLinks = paths
     body.id_category = Number(watchCategory)
 
     updatePostMutation.mutate(body, {
@@ -181,7 +181,7 @@ const PostUpdate = () => {
         </div>
         <FormGroup>
           <Label>Hình ảnh</Label>
-          <div className='grid grid-cols-5 gap-3'>
+          {/* <div className='grid grid-cols-5 gap-3'>
             {paths.map((path) => (
               <Image
                 name='image'
@@ -193,7 +193,7 @@ const PostUpdate = () => {
               ></Image>
             ))}
             <ImageUpload onChange={handleUploadImage}></ImageUpload>
-          </div>
+          </div> */}
         </FormGroup>
         <FormGroup>
           <Label>Nội dung</Label>
