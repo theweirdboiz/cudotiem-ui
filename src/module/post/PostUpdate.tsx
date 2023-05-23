@@ -58,7 +58,7 @@ const PostUpdate = () => {
 
   /* Manage `status` */
   const watchStatus = watch('status')
-  const watchCategory = watch('id_category')
+  const watchCategory = watch('idCategory')
 
   /* local state*/
   const { categories } = useCategory()
@@ -71,7 +71,7 @@ const PostUpdate = () => {
   const onSubmit = async (body: FormStatePostType) => {
     body.content = content as string
     // body.imageLinks = paths
-    body.id_category = Number(watchCategory)
+    body.idCategory = Number(watchCategory)
 
     updatePostMutation.mutate(body, {
       onSuccess: () => {
@@ -96,7 +96,7 @@ const PostUpdate = () => {
   })
   //select category
   const handleClickOption = (item: any) => {
-    setValue('id_category', item.id)
+    setValue('idCategory', item.id)
     setCategorySelected(item.name)
   }
   //change content

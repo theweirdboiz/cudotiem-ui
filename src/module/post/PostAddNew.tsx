@@ -103,7 +103,7 @@ const PostAdd = () => {
     createPostMutation.mutate(body)
   }
   const handleClickOption = (item: any) => {
-    setValue('id_category', item.id)
+    setValue('idCategory', item.id)
     setCategorySelected(item.name)
   }
 

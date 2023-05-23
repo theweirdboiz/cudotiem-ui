@@ -13,26 +13,26 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(undefine
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const {
-    // data: categories,
+    data: categories,
     isError,
     isLoading
   } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => await getAllCategories()
   })
-  const categories = [
-    {
-      id: 1,
-      name: 'quần áo',
-      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
-    },
-    {
-      id: 2,
-      name: 'Giày dép',
+  // const categories = [
+  //   {
+  //     id: 1,
+  //     name: 'quần áo',
+  //     icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Giày dép',
 
-      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
-    }
-  ]
+  //     icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp'
+  //   }
+  // ]
 
   const data = {
     categories,

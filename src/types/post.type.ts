@@ -5,7 +5,7 @@ export enum PostStatus {
 }
 export type FormStatePostType = {
   title: string
-  id_category: number | undefined
+  idCategory: number | undefined
   price: number
   status: PostStatus
   thumbnail: string
