@@ -9,7 +9,7 @@ export type FormStatePostType = {
   price: number
   status: PostStatus
   thumbnail: string
-  imageLinks: string[]
+  imageUrls: string[]
   content: string
 }
 

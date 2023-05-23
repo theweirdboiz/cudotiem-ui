@@ -98,7 +98,7 @@ const PostAdd = () => {
 
   // handle event
   const onSubmit = async (body: FormStatePostType) => {
-    body.imageLinks = [thumbnail]
+    body.imageUrls = [thumbnail]
     body.content = content
     createPostMutation.mutate(body)
   }
