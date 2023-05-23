@@ -20,7 +20,7 @@ export const getPostByCategory = async (category: string) => {
 }
 
 export const createPost = async (post: FormStatePostType) => {
-  const response = await HttpRequest.post<Post>(`/posts`, post)
+  const response = await HttpRequest.post<Post>(`/post`, post)
   if (response.status === 200) return response.data
 }
 
