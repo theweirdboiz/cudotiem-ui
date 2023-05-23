@@ -8,6 +8,7 @@ export type FormStatePostType = {
   id_category: number | undefined
   price: number
   status: PostStatus
+  thumbnail: string
   imageLinks: string[]
   content: string
 }

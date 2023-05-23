@@ -11,7 +11,7 @@ import { useAth, useCategory } from '~/contexts'
 import { toast } from 'react-toastify'
 import { FormStatePostType, PostStatus } from '~/types/post.type'
 import { HttpRequest } from '~/ultis'
-import { FormGroup, Input, Label, Dropdown, Button, Radio } from '~/components'
+import { FormGroup, Input, Label, Dropdown, Button, Radio, Spinner } from '~/components'
 import { ENV, POST_DEFAULT_VALUE } from '~/config/constant'
 import { Editor } from '@tinymce/tinymce-react'
 import { createPost } from '~/services'
@@ -29,23 +29,8 @@ const schema = yup.object().shape({
 })
 
 const PostAdd = () => {
-  const { auth } = useAth()
-  const queryClient = useQueryClient()
-  const { mutate } = useMutation({
-    mutationFn: (body: FormStatePostType) => createPost(body),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['posts'],
-        exact: true
-      })
-      reset(POST_DEFAULT_VALUE)
-      setCategorySelected('')
-      setContent('')
-      handleResetUpload()
-      toast.success('Thêm Post mới thành công!')
-    }
-  })
   /* form init */
+
   const {
     control,
     setValue,
@@ -58,15 +43,44 @@ const PostAdd = () => {
     mode: 'all',
     resolver: yupResolver(schema)
   })
+  const { auth } = useAth()
+  const queryClient = useQueryClient()
+  const createPostMutation = useMutation({
+    mutationFn: (body: FormStatePostType) => createPost(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['posts'],
+        exact: true
+      })
+      reset(POST_DEFAULT_VALUE)
+      setCategorySelected('')
+      setContent('')
+      // handleResetUpload()
+      toast.success('Thêm Post mới thành công!')
+    },
+    onError: (err) => {
+      toast.error('Thêm tin đăng không thành công, hãy thử lại')
+    }
+  })
+
   const watchStatus = watch('status')
 
   const { categories } = useCategory()
+  const [content, setContent] = useState('')
   const [categorySelected, setCategorySelected] = useState<string>('')
-  const { handleDeleteImage, handleUploadImage, paths, process, handleResetUpload } = useFirebaseImage('/posts')
+  const [thumbnail, setThumbnail] = useState<string>('')
+
+  useEffect(() => {
+    document.title = 'Cụ Đồ Tiễm - Thêm tin đăng'
+  }, [])
 
   const handleEditorChange = (content: string) => {
     setContent(content)
   }
+  const handleChangeThumbnail = (thumbnail: string) => {
+    setThumbnail(thumbnail)
+  }
+
   const handleImageUpload = async (blobInfo: any) => {
     const formData = new FormData()
     formData.append('image', blobInfo.blob())
@@ -81,23 +95,13 @@ const PostAdd = () => {
     )
     return response.data.data.url
   }
-  useEffect(() => {
-    document.title = 'Cụ Đồ Tiễm - Thêm tin đăng'
-  }, [])
-
-  const [content, setContent] = useState('')
 
   // handle event
   const onSubmit = async (body: FormStatePostType) => {
-    body.imageLinks = paths
+    body.imageLinks = [thumbnail]
     body.content = content
-    try {
-      mutate(body)
-    } catch {
-      toast.error('Thêm Post không thành công, hãy thử lại')
-    }
+    createPostMutation.mutate(body)
   }
-
   const handleClickOption = (item: any) => {
     setValue('id_category', item.id)
     setCategorySelected(item.name)
@@ -174,11 +178,11 @@ const PostAdd = () => {
         <div className='flex items-center gap-x-3'>
           <FormGroup>
             <Label>Thumbnail</Label>
-            <Image />
+            <Image to='post/thumbnail' onChange={handleChangeThumbnail} />
           </FormGroup>
           <FormGroup>
             <Label>Các ảnh khác</Label>
-            <ImageUpload multiple onChange={handleUploadImage} />
+            {/* <ImageUpload multiple onChange={handleUploadImage} /> */}
           </FormGroup>
         </div>
         {/* <FormGroup>
@@ -240,7 +244,7 @@ const PostAdd = () => {
           }}
           height='h-10'
           type='submit'
-          isloading={isSubmitting}
+          isloading={createPostMutation.isLoading}
           disabled={!isValid}
         >
           Add Post

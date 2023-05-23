@@ -1,15 +1,11 @@
 import { twMerge } from 'tailwind-merge'
 import { SpinnerProps } from './type'
 
-const Spinner = ({ color = 'text-primary', h = 6, w = 6, strokeWidth = 4 }: SpinnerProps) => {
+const Spinner = ({ color = 'blue-500', h = 6, w = 6, strokeWidth = 4 }: SpinnerProps) => {
   return (
     <div
       className={twMerge(
-        'rounded-full border-current border-l-transparent animate-spin',
-        color,
-        `border-${strokeWidth}`,
-        `w-${w}`,
-        `h-${h}`
+        `rounded-full bg-transparent  border-${strokeWidth} border-${color} border-l-transparent animate-spin w-${w} h-${h}`
       )}
     ></div>
   )

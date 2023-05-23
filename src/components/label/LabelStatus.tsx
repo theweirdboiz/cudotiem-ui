@@ -28,7 +28,7 @@ const LabelStatus = (props: Props) => {
   return (
     <div className={`inline-flex items-center gap-x-1 text-sm font-medium ${styleClassnames}`}>
       <div className='flex-shrink-0'>
-        <IconLabel size='w-5 h-5' />
+        <IconLabel w={5} h={5} />
       </div>
       <span>{text}</span>
     </div>

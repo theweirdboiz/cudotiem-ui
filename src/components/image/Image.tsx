@@ -1,20 +1,17 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { useFirebaseImage } from '~/hooks'
 import uploadImage from '~/assets/img-upload.png'
-import { twMerge } from 'tailwind-merge'
-import { IconEyeToggle, IconGarbage } from '../icon'
 import Spinner from '../spinner/Spinner'
 import PreviewImageModal from '../modal/PreviewImageModal'
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react'
+import { useFirebaseImage } from '~/hooks'
+import { twMerge } from 'tailwind-merge'
+import { IconEyeToggle, IconGarbage } from '../icon'
 interface ImageProps {
-  [key: string]: any
+  to: string
+  onChange?: (thumbnail: string) => void
 }
-
-const Image = ({ ...rest }: ImageProps) => {
-  const { process, fileName, paths, errorMsg, handleDeleteImage, handleUploadImage } = useFirebaseImage(
-    `${import.meta.env.VITE_FIREBASE_FOLDER_POST}`
-  )
+const Image = ({ to, onChange }: ImageProps) => {
+  const { process, fileName, path, errorMsg, handleUploadImage, handleDeleteImage } = useFirebaseImage()
   const [preview, setPreview] = useState<boolean>(false)
   const handlePreviewImage = () => {
     setPreview(!preview)
@@ -22,11 +19,17 @@ const Image = ({ ...rest }: ImageProps) => {
   const handleClose = () => {
     setPreview(false)
   }
+  const handleChangeThumbnail = async (e: File | undefined) => {
+    await handleUploadImage(to, e)
+  }
+  useEffect(() => {
+    onChange && onChange(path), [path]
+  })
   return (
     <>
-      <PreviewImageModal visible={preview} handleClose={handleClose} path={paths[0]} fileName={fileName} />
+      <PreviewImageModal visible={preview} handleClose={handleClose} path={path} fileName={fileName} />
       <label
-        htmlFor={`${!paths[0] && 'post_thumbnail'}`}
+        htmlFor={`${!path && 'post_thumbnail'}`}
         className={twMerge(
           'relative pb-[50%] pl-[50%] w-1 overflow-hidden border border-dashed border-blue-300 cursor-pointer rounded-lg transition-all duration-300 group',
           'hover:bg-gray-200'
@@ -52,21 +55,21 @@ const Image = ({ ...rest }: ImageProps) => {
         </div>
         {/* success*/}
         <img
-          src={paths[0]}
+          src={path}
           alt='upload-img'
           className={twMerge(
             'absolute rounded-md object-cover left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 invisible opacity-0 transition-all duration-300',
-            `${paths[0] && process === 100 && 'w-full h-full visible opacity-100'}`
+            `${path && process === 100 && 'w-full h-full visible opacity-100'}`
           )}
         />
         <div
           className={twMerge(
             'absolute inset-0 transition-all duration-300 bg-gray-300 opacity-0 invisible box-center gap-x-3',
-            `${paths[0] && 'group-hover:visible group-hover:opacity-80 z-50'}`
+            `${path && 'group-hover:visible group-hover:opacity-80 z-50'}`
           )}
         >
           <IconEyeToggle toggle onClick={handlePreviewImage} />
-          <IconGarbage strokeWidth={1.5} onClick={() => handleDeleteImage(paths[0])} />
+          <IconGarbage strokeWidth={1.5} onClick={() => handleDeleteImage(path)} />
         </div>
       </label>
       <span className='font-medium text-xs text-primary'>{`${
@@ -78,7 +81,12 @@ const Image = ({ ...rest }: ImageProps) => {
           ? 'Đang tải lên'
           : 'Chọn một ảnh'
       }`}</span>
-      <input id='post_thumbnail' type='file' className='hidden' onChange={handleUploadImage} />
+      <input
+        id='post_thumbnail'
+        type='file'
+        className='hidden'
+        onChange={(e) => handleChangeThumbnail(e.target.files?.[0])}
+      />
     </>
   )
 }
