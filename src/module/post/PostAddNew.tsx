@@ -95,7 +95,7 @@ const PostAdd = () => {
   const onSubmit = async (body: CreatePostRequest) => {
     body.imageUrls = [thumbnail, ...imageUrls]
     body.content = content
-    body.categoryCode = categorySelected?.categoryCode
+    body.categoryCode = categorySelected?.code
     createPostMutation.mutate(body)
   }
   const handleClickOption = (item: Category) => {

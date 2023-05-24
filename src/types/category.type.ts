@@ -2,5 +2,5 @@ export interface Category {
   id?: number
   name: string
   icon?: string
-  categoryCode: string
+  code: string
 }
