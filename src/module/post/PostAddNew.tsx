@@ -1,22 +1,23 @@
-import ImageUpload from '~/components/image/ImageUpload'
 import Image from '~/components/image/Image'
 import DashboardHeading from '~/layouts/dashboard/components/DashboardHeading'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { useFirebaseImage } from '~/hooks'
 import { useEffect, useState } from 'react'
 import { useAth, useCategory } from '~/contexts'
 import { toast } from 'react-toastify'
-import { FormStatePostType, PostStatus } from '~/types/post.type'
+import { CreatePostRequest, PostStatus } from '~/types/post.type'
 import { HttpRequest } from '~/ultis'
-import { FormGroup, Input, Label, Dropdown, Button, Radio, Spinner } from '~/components'
-import { ENV, POST_DEFAULT_VALUE } from '~/config/constant'
+import { FormGroup, Input, Label, Dropdown, Button, Radio } from '~/components'
+import { ENV } from '~/config/constant'
 import { Editor } from '@tinymce/tinymce-react'
 import { createPost } from '~/services'
 import { Category } from '~/types/category.type'
 import { Role } from '~/types/role.type'
+import { useNavigate } from 'react-router-dom'
+import { PostMessage } from '~/ultis/message/post.message'
+import ImageUpload from '~/components/image/ImageUpload'
 
 /* Schema for validate */
 const schema = yup.object().shape({
@@ -29,46 +30,39 @@ const schema = yup.object().shape({
 })
 
 const PostAdd = () => {
-  /* form init */
-
+  const navigate = useNavigate()
+  const { categories } = useCategory()
+  const { auth } = useAth()
+  const [thumbnail, setThumbnail] = useState<string>('')
+  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [content, setContent] = useState('')
+  const [categorySelected, setCategorySelected] = useState<Category | undefined>(undefined)
   const {
     control,
-    setValue,
     handleSubmit,
-    reset,
     watch,
-    formState: { isSubmitting, isValid, errors }
-  } = useForm<FormStatePostType>({
-    // defaultValues: POST_DEFAULT_VALUE,
+    formState: { isValid, errors }
+  } = useForm<CreatePostRequest>({
     mode: 'all',
     resolver: yupResolver(schema)
   })
-  const { auth } = useAth()
+
+  const watchStatus = watch('status')
   const queryClient = useQueryClient()
   const createPostMutation = useMutation({
-    mutationFn: (body: FormStatePostType) => createPost(body),
+    mutationFn: (body: CreatePostRequest) => createPost(body),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['posts'],
         exact: true
       })
-      reset(POST_DEFAULT_VALUE)
-      setCategorySelected('')
-      setContent('')
-      // handleResetUpload()
-      toast.success('Thêm Post mới thành công!')
+      toast.success(PostMessage.SUCCESS)
+      navigate('/manage/post')
     },
     onError: (err) => {
-      toast.error('Thêm tin đăng không thành công, hãy thử lại')
+      toast.error(PostMessage.FAILED)
     }
   })
-
-  const watchStatus = watch('status')
-
-  const { categories } = useCategory()
-  const [content, setContent] = useState('')
-  const [categorySelected, setCategorySelected] = useState<string>('')
-  const [thumbnail, setThumbnail] = useState<string>('')
 
   useEffect(() => {
     document.title = 'Cụ Đồ Tiễm - Thêm tin đăng'
@@ -77,8 +71,9 @@ const PostAdd = () => {
   const handleEditorChange = (content: string) => {
     setContent(content)
   }
-  const handleChangeThumbnail = (thumbnail: string) => {
-    setThumbnail(thumbnail)
+
+  const handleChangeImageUrls = (imageUrls: string[]) => {
+    setImageUrls(imageUrls)
   }
 
   const handleImageUpload = async (blobInfo: any) => {
@@ -97,14 +92,18 @@ const PostAdd = () => {
   }
 
   // handle event
-  const onSubmit = async (body: FormStatePostType) => {
-    body.imageUrls = [thumbnail]
+  const onSubmit = async (body: CreatePostRequest) => {
+    body.imageUrls = [thumbnail, ...imageUrls]
     body.content = content
+    body.categoryCode = categorySelected?.categoryCode
     createPostMutation.mutate(body)
   }
-  const handleClickOption = (item: any) => {
-    setValue('idCategory', item.id)
-    setCategorySelected(item.name)
+  const handleClickOption = (item: Category) => {
+    setCategorySelected(item)
+  }
+
+  const handleChangeThumbnail = (thumbnail: string) => {
+    setThumbnail(thumbnail)
   }
 
   return (
@@ -119,10 +118,10 @@ const PostAdd = () => {
           <FormGroup>
             <Label>Danh mục</Label>
             <Dropdown>
-              <Dropdown.Select placeholder={categorySelected ? categorySelected : 'Chọn danh mục'} />
+              <Dropdown.Select placeholder={categorySelected ? categorySelected.name : 'Chọn danh mục'} />
               <Dropdown.List>
                 {categories?.map((item: Category) => (
-                  <Dropdown.Option key={item.id} onClick={() => handleClickOption(item)}>
+                  <Dropdown.Option option={item} key={item.id} onClick={handleClickOption}>
                     {item.name}
                   </Dropdown.Option>
                 ))}
@@ -178,28 +177,14 @@ const PostAdd = () => {
         <div className='flex items-center gap-x-3'>
           <FormGroup>
             <Label>Thumbnail</Label>
-            <Image to='post/thumbnail' onChange={handleChangeThumbnail} />
+            <Image to='post/thumbnail' handleChangeThumbnail={handleChangeThumbnail} />
           </FormGroup>
           <FormGroup>
             <Label>Các ảnh khác</Label>
-            {/* <ImageUpload multiple onChange={handleUploadImage} /> */}
+            <div className='grid grid-cols-5'></div>
+            <ImageUpload to='post/imgs' multiple handleChangeImageUrls={handleChangeImageUrls} imageUrls={imageUrls} />
           </FormGroup>
         </div>
-        {/* <FormGroup>
-          <div className='grid grid-cols-5 gap-3'>
-            {paths?.map((path) => (
-              <Image
-                name='image'
-                onChange={handleUploadImage}
-                process={process}
-                path={path}
-                handleDeleteImage={handleDeleteImage}
-                key={path}
-              ></Image>
-            ))}
-            <ImageUpload multiple onChange={handleUploadImage}></ImageUpload>
-          </div>
-        </FormGroup> */}
         <FormGroup>
           <Label>Nội dung</Label>
           <div className='entry-content'>
@@ -237,17 +222,12 @@ const PostAdd = () => {
           </div>
         </FormGroup>
         <Button
-          style={{
-            width: '100%',
-            maxWidth: '50%',
-            margin: '0 auto'
-          }}
-          height='h-10'
+          className='w-full max-w-[50%] mx-auto h-10'
           type='submit'
           isloading={createPostMutation.isLoading}
           disabled={!isValid}
         >
-          Add Post
+          {auth?.roles.includes(Role.ADMIN) ? 'Đăng bài' : 'Gửi yêu cầu đăng bài'}
         </Button>
       </form>
     </>

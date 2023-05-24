@@ -7,13 +7,15 @@ export const ENV = {
   BASE_API: import.meta.env.VITE_BASE_API
 }
 
-export const POST_DEFAULT_VALUE = {
-  title: '',
-  content: '',
-  status: PostStatus.PENDING,
-  imageLinks: [],
-  id_category: undefined
-}
+// export const CREATE_POST_DEFAULT_VALUE = {
+//   title:
+//   idCategory: number | undefined
+//   price: number
+//   status: PostStatus
+//   thumbnail: string
+//   imageUrls: string[]
+//   content: string
+// }
 
 export const CATEGORY_DEFAULT_VALUE = {
   name: '',

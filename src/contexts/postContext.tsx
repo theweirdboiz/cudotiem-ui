@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react'
-import { getPosts } from '~/services'
-import { PostPagination } from '~/types/post.type'
+import { getAllPosts } from '~/services'
+import { PostPagination, Post } from '~/types/post.type'
 
 interface PostContextProps {
   posts: PostPagination | undefined
@@ -24,7 +24,7 @@ const PostContext = createContext<PostContextProps | undefined>(undefined)
 
 export const PostProvider = ({ children }: { children: ReactNode }) => {
   const [pagination, setPagination] = useState<PaginationProps>({
-    offset: 1,
+    offset: 5,
     size: 1
   })
   const {
@@ -33,14 +33,26 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     isLoading
   } = useQuery({
     queryKey: ['posts', pagination],
-    queryFn: async () => await getPosts(pagination.offset, pagination.size)
+    queryFn: async () => await getAllPosts(pagination.offset, pagination.size)
   })
 
   const handleLoadMore = () => {
-    const newSize = pagination.size + 1
+    const newSize = pagination.size + 5
     setPagination({ ...pagination, size: newSize })
   }
-
+  // const posts: PostPagination = {
+  //   paginationPosts: [
+  //     {
+  //       id: 1,
+  //       title: '123',
+  //       price: 123123,
+  //       slug: '123-123',
+  //       thumbnail: '123123',
+  //       postedDate: '123123'
+  //     }
+  //   ],
+  //   totalPage: 3
+  // }
   const value = {
     posts,
     isError,
@@ -49,6 +61,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     setPagination,
     handleLoadMore
   }
+
   return <PostContext.Provider value={value}>{children}</PostContext.Provider>
 }
 export const usePost = () => {

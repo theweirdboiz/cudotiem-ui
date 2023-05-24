@@ -1,25 +1,28 @@
-import React from "react";
-import { useDropdown } from "./dropdown-context";
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import { ReactNode } from 'react'
+import { useDropdown } from './dropdown-context'
 
 type Props = {
-  [key: string]: any;
-};
+  option: any
+  children: ReactNode
+  onClick?: (option: any) => void
+}
 
-const Option = ({ ...props }: Props) => {
-  const { onClick } = props;
-  const { setShow } = useDropdown();
+const Option = ({ children, option, onClick }: Props) => {
+  const { setShow } = useDropdown()
   const handleClick = () => {
-    onClick && onClick();
-    setShow(false);
-  };
+    onClick && onClick(option)
+    setShow(false)
+  }
   return (
     <div
-      className="py-3 px-4 cursor-pointer flex-center justify-between hover:text-blue-400 transition-all text-sm font-semibold"
+      className='py-3 px-4 cursor-pointer flex-center justify-between hover:text-blue-400 transition-all text-sm font-semibold'
       onClick={handleClick}
     >
-      {props.children}
+      {children}
     </div>
-  );
-};
+  )
+}
 
-export default Option;
+export default Option

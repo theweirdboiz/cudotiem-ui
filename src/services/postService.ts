@@ -1,8 +1,8 @@
-import { FormStatePostType, Post, PostPagination } from '~/types/post.type'
+import { CreatePostRequest, Post, PostPagination } from '~/types/post.type'
 import { HttpRequest } from '~/ultis'
 
-export const getPosts = async (offset: number, size: number) => {
-  const response = await HttpRequest.get<PostPagination>(`/post/pagination?offset=${offset}&size=${size}`)
+export const getAllPosts = async (offset: number, size: number) => {
+  const response = await HttpRequest.get<PostPagination>(`/post/approved?offset=${offset}&size=${size}`)
   if (response.status === 200) return response.data
 }
 export const getPost = async (id: number | string) => {
@@ -19,7 +19,7 @@ export const getPostByCategory = async (category: string) => {
   if (response.status === 200) return response.data
 }
 
-export const createPost = async (post: FormStatePostType) => {
+export const createPost = async (post: CreatePostRequest) => {
   const response = await HttpRequest.post<Post>(`/post`, post)
   if (response.status === 200) return response.data
 }

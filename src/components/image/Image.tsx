@@ -2,15 +2,26 @@
 import uploadImage from '~/assets/img-upload.png'
 import Spinner from '../spinner/Spinner'
 import PreviewImageModal from '../modal/PreviewImageModal'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { useFirebaseImage } from '~/hooks'
 import { twMerge } from 'tailwind-merge'
 import { IconEyeToggle, IconGarbage } from '../icon'
 interface ImageProps {
   to: string
-  onChange?: (thumbnail: string) => void
+  file?: File
+  handleDeleteImageUrl?: (imageUrl: string) => void
+  handleAddImageUrl?: (imageUrl: string) => void
+  handleChangeThumbnail?: (img: string) => void
+  handleDeleteFile?: (file: File) => void
 }
-const Image = ({ to, onChange }: ImageProps) => {
+const Image = ({
+  to,
+  file,
+  handleChangeThumbnail,
+  handleDeleteImageUrl,
+  handleAddImageUrl,
+  handleDeleteFile
+}: ImageProps) => {
   const { process, fileName, path, errorMsg, handleUploadImage, handleDeleteImage } = useFirebaseImage()
   const [preview, setPreview] = useState<boolean>(false)
   const handlePreviewImage = () => {
@@ -19,12 +30,23 @@ const Image = ({ to, onChange }: ImageProps) => {
   const handleClose = () => {
     setPreview(false)
   }
-  const handleChangeThumbnail = async (e: File | undefined) => {
-    await handleUploadImage(to, e)
+  const handleDelete = (path: string) => {
+    file && handleDeleteFile && handleDeleteFile(file)
+    handleDeleteImage(path)
+    handleDeleteImageUrl && handleDeleteImageUrl(path)
+    handleChangeThumbnail && handleChangeThumbnail(path)
+  }
+  const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+    handleUploadImage(to, e.target.files?.[0])
   }
   useEffect(() => {
-    onChange && onChange(path), [path]
-  })
+    file && handleUploadImage(to, file)
+  }, [])
+
+  useEffect(() => {
+    handleAddImageUrl && path && handleAddImageUrl(path)
+    handleChangeThumbnail && path && handleChangeThumbnail(path)
+  }, [path])
   return (
     <>
       <PreviewImageModal visible={preview} handleClose={handleClose} path={path} fileName={fileName} />
@@ -69,7 +91,7 @@ const Image = ({ to, onChange }: ImageProps) => {
           )}
         >
           <IconEyeToggle toggle onClick={handlePreviewImage} />
-          <IconGarbage strokeWidth={1.5} onClick={() => handleDeleteImage(path)} />
+          <IconGarbage strokeWidth={1.5} onClick={() => handleDelete(path)} />
         </div>
       </label>
       <span className='font-medium text-xs text-primary'>{`${
@@ -81,12 +103,7 @@ const Image = ({ to, onChange }: ImageProps) => {
           ? 'Đang tải lên'
           : 'Chọn một ảnh'
       }`}</span>
-      <input
-        id='post_thumbnail'
-        type='file'
-        className='hidden'
-        onChange={(e) => handleChangeThumbnail(e.target.files?.[0])}
-      />
+      <input id='post_thumbnail' type='file' className='hidden' onChange={handleChangeFile} />
     </>
   )
 }

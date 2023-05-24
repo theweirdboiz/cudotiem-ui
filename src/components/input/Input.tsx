@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { useController } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 
@@ -10,8 +10,9 @@ interface InputProps {
   name: string
   placeholder?: string
   [key: string]: any
+  isPrice?: boolean
 }
-const Input = ({ control, error, type = 'text', placeholder, children, name, ...props }: InputProps) => {
+const Input = ({ control, error, type = 'text', placeholder, children, name, isPrice, ...props }: InputProps) => {
   const { field } = useController({
     control,
     name,

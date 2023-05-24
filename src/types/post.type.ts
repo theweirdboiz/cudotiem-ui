@@ -3,9 +3,9 @@ export enum PostStatus {
   PENDING = 'PENDING',
   REJECTED = 'REJECTED'
 }
-export type FormStatePostType = {
+export type CreatePostRequest = {
   title: string
-  idCategory: number | undefined
+  categoryCode?: string
   price: number
   status: PostStatus
   thumbnail: string

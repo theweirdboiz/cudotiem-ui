@@ -17,10 +17,6 @@ const useFirebaseImage = () => {
     path: '',
     process: 0
   })
-  // const [paths, setPaths] = useState<string[]>([])
-  // const [process, setProcess] = useState<number>(0)
-  // const [fileName, setFileName] = useState<string>('')
-  // const [errorMsg, setErrorMsg] = useState<string>('')
   const handleUploadImage = async (folder: string, e: File | undefined) => {
     if (!e) return
     const file: File = e
@@ -59,7 +55,6 @@ const useFirebaseImage = () => {
       async () => {
         await getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
           setImage((prev) => ({ ...prev, ...newImage, path: downloadUrl }))
-          // console.log('File available at', downloadUrl)
         })
       }
     )
