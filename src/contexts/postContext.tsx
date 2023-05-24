@@ -24,8 +24,8 @@ const PostContext = createContext<PostContextProps | undefined>(undefined)
 
 export const PostProvider = ({ children }: { children: ReactNode }) => {
   const [pagination, setPagination] = useState<PaginationProps>({
-    offset: 5,
-    size: 1
+    offset: 1,
+    size: 10
   })
   const {
     data: posts,
