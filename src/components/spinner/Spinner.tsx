@@ -5,7 +5,7 @@ const Spinner = ({ color = 'blue-500', h = 6, w = 6, strokeWidth = 4 }: SpinnerP
   return (
     <div
       className={twMerge(
-        `rounded-full bg-transparent  animate-spin border-${strokeWidth} border-${color} border-l-transparent w-${w} h-${h}`
+        `w-${6} h-${6} rounded-full bg-transparent animate-spin border-${strokeWidth} border-blue-500 border-l-transparent`
       )}
     ></div>
   )

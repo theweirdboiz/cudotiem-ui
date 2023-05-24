@@ -1,4 +1,3 @@
-import { removeCookie } from 'typescript-cookie'
 import { HttpRequest } from '~/ultis'
 
 export const signup = async <T>(username: string, email: string, password: string) => {
