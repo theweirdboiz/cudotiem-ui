@@ -58,7 +58,6 @@ const ImageUpload = ({ to, imageUrls, handleChangeImageUrls, multiple }: ImagePr
             key={file.name}
             to={to}
             file={file}
-            count={index}
             handleDeleteImageUrl={handleDeleteImageUrl}
             handleDeleteFile={handleDeleteFile}
             handleAddImageUrl={handleAddImageUrl}
