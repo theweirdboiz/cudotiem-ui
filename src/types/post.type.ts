@@ -17,9 +17,14 @@ export interface Post {
   id: number
   title: string
   price: number
-  slug: string
   thumbnail: string
-  postedDate: string
+  postedDate: number
+  createdDate?: number
+  updatedDate?: number
+  username: string
+  status?: string
+  category?: string
+  slug?: string
 }
 
 export interface PostDetail {
@@ -31,6 +36,11 @@ export interface PostDetail {
   postedDate: string
 }
 export interface PostPagination {
+  paginationPosts: Post[]
+  totalPage: number
+}
+
+export interface PostPrivatePaginated {
   paginationPosts: Post[]
   totalPage: number
 }

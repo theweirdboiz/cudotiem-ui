@@ -1,9 +1,8 @@
 import { PostStatus } from '~/types/post.type'
 import { IconLabel } from '~/components/icon'
-import { CategoryStatus } from '~/config'
 
 type Props = {
-  status: PostStatus | CategoryStatus
+  status?: string
 }
 const LabelStatus = (props: Props) => {
   const { status } = props

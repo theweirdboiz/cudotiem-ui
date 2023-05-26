@@ -1,66 +1,67 @@
-import uploadImage from '~/assets/img-upload.png'
-import Swal from 'sweetalert2'
 import DashboardHeading from '~/layouts/dashboard/components/DashboardHeading'
-import { usePaginate, useSearch } from '~/hooks'
-import { useNavigate } from 'react-router-dom'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Post } from '~/types/post.type'
-import { deletePost, getPost } from '~/services'
-import { ActionDelete, ActionEdit, ActionView, Button, LabelStatus, Paginate, Table } from '~/components'
-import { usePost } from '~/contexts'
-
-const PER_PAGE = 3
+import { useState } from 'react'
+import { Post, PostStatus } from '~/types/post.type'
+import { Link } from 'react-router-dom'
+import { Button, LabelStatus, Table } from '~/components'
+import { useQuery } from '@tanstack/react-query'
+import { getPostsPrivatePaginated } from '~/services'
 
 const PostManage = () => {
-  const navigator = useNavigate()
-  const queryClient = useQueryClient()
-
-  // Get all posts
-  const { posts } = usePost()
-
-  // Delete post by id
-  // const deletePostMutation = useMutation({
-  //   mutationFn: (id: number | string) => deletePost(id),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({
-  //       queryKey: ['posts'],
-  //       exact: true
-  //     })
-  //   }
-  // })
-  // custom hook handle pagination
-  // const { paginatedData, pageCount, handlePageClick } = usePaginate({
-  //   data: posts,
-  //   perPage: PER_PAGE
-  // })
-
-  // custom hook hanle search
-  // const { filteredData, handleSearch } = useSearch({
-  //   data: paginatedData,
-  //   searchKey: 'title'
-  // })
-
-  // delete item
-  // const handleDeleteData = async (id: number) => {
-  //   const postData = await getPost(id)
-  //   if (postData) {
-  //     const result = await Swal.fire({
-  //       title: 'Khoan đã',
-  //       text: 'Bạn thật sự muốn xóa?',
-  //       icon: 'warning',
-  //       showCancelButton: true,
-  //       confirmButtonColor: '#3086d6d4',
-  //       cancelButtonColor: '#f44343d7',
-  //       confirmButtonText: 'Có, hãy xóa!',
-  //       cancelButtonText: 'Hủy'
-  //     })
-
-  //     if (result.isConfirmed) {
-  //       Swal.fire('Deleted!', 'Your data has been deleted.', 'success')
-  //       deletePostMutation.mutate(id)
+  const [pagination, setPagination] = useState({
+    offset: 1,
+    size: 10
+  })
+  // const { posts } = usePost()
+  const { data: postsPrivatePaginated } = useQuery({
+    queryKey: ['posts-private', pagination],
+    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size)
+  })
+  // const postsPrivatePaginated = {
+  //   paginationPosts: [
+  //     {
+  //       id: 8,
+  //       title: 'new post',
+  //       price: 100.0,
+  //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhm34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
+  //       postedDate: 253402275599000,
+  //       createdDate: 1684910788513,
+  //       updatedDate: 1684910788513,
+  //       username: 'kienthuc',
+  //       status: 'PENDING',
+  //       category: 'quần áo'
+  //     },
+  //     {
+  //       id: 10,
+  //       title: 'new post',
+  //       price: 100.0,
+  //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhmsvsv34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
+  //       postedDate: 1684911535254,
+  //       createdDate: 1684911334925,
+  //       updatedDate: 1684911535257,
+  //       username: 'kienthuc',
+  //       status: 'APPROVED',
+  //       category: 'quần áo'
+  //     },
+  //     {
+  //       id: 11,
+  //       title: 'bai viet moi',
+  //       price: 234523.0,
+  //       thumbnail:
+  //         'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fthumbnail%2F1684925640846118183102_4355227071217499_45429216837241885_n.png?alt=media&token=6678bc7e-fdc1-415e-931b-19252b5aa92c',
+  //       postedDate: 253402275599999,
+  //       createdDate: 1684925649228,
+  //       updatedDate: 1684925649228,
+  //       username: 'kienthuc',
+  //       status: 'PENDING',
+  //       category: 'giày dép'
   //     }
-  //   }
+  //   ],
+  //   totalPage: 1
   // }
+
+  const handleClickOnPage = (page: number) => {
+    setPagination((prev) => ({ ...prev, offset: page }))
+  }
   return (
     <>
       <DashboardHeading>Quản lý tin đăng</DashboardHeading>
@@ -90,53 +91,70 @@ const PostManage = () => {
           </Button>
         </div>
       </div>
-      {posts && (
-        <>
-          <Table>
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Post</th>
-                <th>Category</th>
-                <th>Author</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {posts.paginationPosts.map((post: Post) => (
+      <>
+        <Table>
+          <thead className='text-sm'>
+            <tr>
+              <th>Id</th>
+              <th>Danh mục</th>
+              <th>Tin đăng</th>
+              <th>Người đăng</th>
+              <th>Ngày cập nhật</th>
+              <th>Ngày đăng tin</th>
+              <th>Trạng thái</th>
+              <th>Options</th>
+            </tr>
+          </thead>
+          <tbody>
+            {postsPrivatePaginated ? (
+              postsPrivatePaginated?.paginationPosts.map((post: Post) => (
                 <tr key={post.id}>
                   <td>{post.id}</td>
+                  <td>{post.category}</td>
                   <td>
                     <div className='flex items-center gap-x-2'>
-                      <img src={uploadImage} className='w-10 h-10 rounded-md' alt='' />
+                      <img src={post.thumbnail} className='w-10 h-10 rounded-md' alt='' />
                       <div className=''>
                         <h3 className='font-semibold'>{post.title}</h3>
-                        <time className='text-xs text-gray-400'>{post.postedDate}</time>
+                        <time className='text-xs text-gray-400'>{post.createdDate}</time>
                       </div>
                     </div>
                   </td>
-                  {/* <td>{post. .name}</td> */}
-                  {/* <td>{post.creator.username}</td> */}
-                  <td>{/* <LabelStatus status={post.status} /> */}</td>
+                  <td>{post.username}</td>
+                  <td>{post.updatedDate}</td>
+                  <td>{post.postedDate}</td>
                   <td>
-                    <div className='flex-center gap-x-2.5'>
-                      <ActionView onClick={() => navigator(`/posts/${post.id}`)} />
-                      <ActionEdit onClick={() => navigator(`/manage/update-post/${post.id}`)} />
-                      {/* <ActionDelete onClick={() => handleDeleteData(post.id)} /> */}
-                    </div>
+                    <LabelStatus status={post.status} />
                   </td>
+                  <td>Duyệt tin/ Hủy yêu cầu</td>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-
-          <Paginate
-            pageCount={posts.totalPage}
-            // onPageChange={handlePageClick}
-          />
-        </>
-      )}
+              ))
+            ) : (
+              <p className='w-full text-center'>Trống</p>
+            )}
+          </tbody>
+        </Table>
+        <div className='text-center'>
+          {postsPrivatePaginated?.totalPage &&
+            Array(postsPrivatePaginated?.totalPage)
+              .fill(0)
+              .map((_, index) => {
+                const pageNumber = index + 1
+                const isActive = pagination.offset === pageNumber
+                return (
+                  <button
+                    key={pageNumber}
+                    className={`border border-gray-300   py-2 px-3 leading-tight  hover:bg-gray-100 hover:text-gray-700 ${
+                      isActive && 'text-primary'
+                    }`}
+                    onClick={() => handleClickOnPage(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                )
+              })}
+        </div>
+      </>
     </>
   )
 }

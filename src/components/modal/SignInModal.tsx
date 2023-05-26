@@ -17,7 +17,7 @@ import { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { useAth } from '~/contexts'
 import { setCookie } from 'typescript-cookie'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // const schema = yup.object().shape({
 //   password: yup.string().required('This field is required').min(8, 'Password must be 8 character')
@@ -53,6 +53,7 @@ const SignInModal = () => {
     handleSubmit,
     control,
     watch,
+    trigger,
     formState: { errors, isValid }
   } = useForm<SignIn>({
     resolver: yupResolver(optionSignIn === 'email' ? usernameLoginSchema : emailLoginSchema),
@@ -87,6 +88,9 @@ const SignInModal = () => {
   const handleToggleOptionSignIn = () => {
     setOptionSignIn(optionSignIn === 'email' ? 'username' : 'email')
   }
+  useEffect(() => {
+    trigger('email', { shouldFocus: true })
+  }, [])
   return (
     <>
       <p className='text-center lg:text-sm text-xs font-normal  lg:mb-8'>
@@ -96,28 +100,30 @@ const SignInModal = () => {
         </Link>
       </p>
       <form action='' autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
-        {optionSignIn === 'username' ? (
-          <FormGroup>
-            <Label htmlFor='email'>Email *</Label>
-            <Input
-              type='email'
-              name='email'
-              control={control}
-              placeholder='johnnyKlame12@gmail.com'
-              error={errors?.email?.message as string}
-            ></Input>
-          </FormGroup>
-        ) : (
-          <FormGroup>
-            <Label htmlFor='username'>Username *</Label>
-            <Input
-              name='username'
-              control={control}
-              placeholder='johnnyKlame12'
-              error={errors?.username?.message as string}
-            ></Input>
-          </FormGroup>
-        )}
+        <FormGroup>
+          {optionSignIn === 'username' ? (
+            <>
+              <Label htmlFor='email'>Email *</Label>
+              <Input
+                type='email'
+                name='email'
+                control={control}
+                placeholder='johnnyKlame12@gmail.com'
+                error={errors?.email?.message as string}
+              />
+            </>
+          ) : (
+            <>
+              <Label htmlFor='username'>Username *</Label>
+              <Input
+                name='username'
+                control={control}
+                placeholder='johnnyKlame12'
+                error={errors?.username?.message as string}
+              />
+            </>
+          )}
+        </FormGroup>
         <FormGroup>
           <Label htmlFor='password'>Password *</Label>
           <Input

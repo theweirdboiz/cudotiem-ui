@@ -65,7 +65,7 @@ function Topbar() {
                 {auth ? <Link to='/profile/me'>Tài khoản</Link> : <Link to='/sign-in'>Đăng nhập</Link>}
                 <div
                   className={`${
-                    !auth ? 'group-hover:block' : ''
+                    auth ? 'group-hover:block' : ''
                   } hidden absolute w-60 z-10 py-2.5 shadow-lg left-0 top-[38px] rounded-lg bg-white text-gray-700 -translate-x-1/2 border border-gray-200`}
                 >
                   <a href='/my-profile'>

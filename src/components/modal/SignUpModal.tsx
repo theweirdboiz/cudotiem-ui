@@ -10,6 +10,7 @@ import { FormGroup, Input, Label, Button } from '~/components'
 import { signup } from '~/services/authService'
 import { SignUp } from '~/types/signup.type'
 import { AxiosError } from 'axios'
+import { useEffect } from 'react'
 
 const schema = yup.object().shape({
   username: yup.string().required('This field is required'),
@@ -21,17 +22,18 @@ const SignUpModal = () => {
     handleSubmit,
     watch,
     control,
+    trigger,
     formState: { errors, isValid }
   } = useForm<SignUp>({
     resolver: yupResolver(schema),
     mode: 'all'
   })
-
   const watchUsername = watch('username')
 
   const navigate = useNavigate()
-
   const queryClient = useQueryClient()
+  const { value: showPassword, handleToggle } = useToggle()
+
   const signUpMutation = useMutation({
     mutationFn: async (body: SignUp) => await signup<SignUp>(body.username, body.email, body.password),
     onSuccess: (data: any) => {
@@ -49,9 +51,9 @@ const SignUpModal = () => {
   const onSubmit = (data: SignUp) => {
     signUpMutation.mutate(data)
   }
-
-  const { value: showPassword, handleToggle } = useToggle()
-
+  useEffect(() => {
+    trigger('username', { shouldFocus: true })
+  }, [])
   return (
     <>
       <p className='text-center lg:text-sm text-xs font-normal  lg:mb-8'>

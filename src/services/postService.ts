@@ -1,8 +1,12 @@
-import { CreatePostRequest, Post, PostPagination } from '~/types/post.type'
+import { CreatePostRequest, Post, PostPagination, PostPrivatePaginated } from '~/types/post.type'
 import { HttpRequest } from '~/ultis'
 
 export const getAllPosts = async (offset: number, size: number) => {
   const response = await HttpRequest.get<PostPagination>(`/post/approved?offset=${offset}&size=${size}`)
+  if (response.status === 200) return response.data
+}
+export const getPostsPrivatePaginated = async (offset: number, size: number) => {
+  const response = await HttpRequest.get<PostPrivatePaginated>(`/post/admin?offset=${offset}&size=${size}`)
   if (response.status === 200) return response.data
 }
 export const getPost = async (id: number | string) => {
