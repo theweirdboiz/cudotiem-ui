@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { useAth, useCategory } from '~/contexts'
 import { toast } from 'react-toastify'
-import { CreatePostRequest, PostStatus } from '~/types/post.type'
+import { Post, PostStatus } from '~/types/post.type'
 import { HttpRequest } from '~/ultis'
 import { FormGroup, Input, Label, Dropdown, Button, Radio } from '~/components'
 import { ENV } from '~/config/constant'
@@ -16,7 +16,7 @@ import { createPost } from '~/services'
 import { Category } from '~/types/category.type'
 import { Role } from '~/types/role.type'
 import { useNavigate } from 'react-router-dom'
-import { PostMessage } from '~/ultis/message/post.message'
+import { CreatePostMessage } from '~/ultis/message/post.message'
 import ImageUpload from '~/components/image/ImageUpload'
 
 /* Schema for validate */
@@ -42,7 +42,7 @@ const PostAdd = () => {
     handleSubmit,
     watch,
     formState: { isValid, errors }
-  } = useForm<CreatePostRequest>({
+  } = useForm<Post>({
     mode: 'all',
     resolver: yupResolver(schema)
   })
@@ -50,17 +50,17 @@ const PostAdd = () => {
   const watchStatus = watch('status')
   const queryClient = useQueryClient()
   const createPostMutation = useMutation({
-    mutationFn: (body: CreatePostRequest) => createPost(body),
+    mutationFn: (body: Post) => createPost<Post>(body),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['posts'],
         exact: true
       })
-      toast.success(PostMessage.SUCCESS)
+      toast.success(CreatePostMessage.SUCCESS)
       navigate('/manage/post')
     },
     onError: (err) => {
-      toast.error(PostMessage.FAILED)
+      toast.error(CreatePostMessage.FAILED)
     }
   })
 
@@ -92,7 +92,7 @@ const PostAdd = () => {
   }
 
   // handle event
-  const onSubmit = async (body: CreatePostRequest) => {
+  const onSubmit = async (body: Post) => {
     body.imageUrls = [thumbnail, ...imageUrls]
     body.content = content
     body.categoryCode = categorySelected?.code

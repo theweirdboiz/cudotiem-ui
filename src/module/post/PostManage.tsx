@@ -1,20 +1,22 @@
 import DashboardHeading from '~/layouts/dashboard/components/DashboardHeading'
 import { useState } from 'react'
-import { Post, PostStatus } from '~/types/post.type'
-import { Link } from 'react-router-dom'
+import { Post } from '~/types/post.type'
 import { Button, LabelStatus, Table } from '~/components'
 import { useQuery } from '@tanstack/react-query'
 import { getPostsPrivatePaginated } from '~/services'
+import { useAth } from '~/contexts'
+import { Role } from '~/types/role.type'
 
 const PostManage = () => {
   const [pagination, setPagination] = useState({
     offset: 1,
-    size: 10
+    size: 5
   })
   // const { posts } = usePost()
+  const { auth } = useAth()
   const { data: postsPrivatePaginated } = useQuery({
-    queryKey: ['posts-private', pagination],
-    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size)
+    queryKey: ['posts-private', auth?.roles[0], pagination],
+    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles[0] || Role.USER)
   })
   // const postsPrivatePaginated = {
   //   paginationPosts: [
@@ -98,7 +100,7 @@ const PostManage = () => {
               <th>Id</th>
               <th>Danh mục</th>
               <th>Tin đăng</th>
-              <th>Người đăng</th>
+              {auth?.roles[0] !== Role.USER && <th>Người đăng</th>}
               <th>Ngày cập nhật</th>
               <th>Ngày đăng tin</th>
               <th>Trạng thái</th>
@@ -110,19 +112,19 @@ const PostManage = () => {
               postsPrivatePaginated?.paginationPosts.map((post: Post) => (
                 <tr key={post.id}>
                   <td>{post.id}</td>
-                  <td>{post.category}</td>
+                  <td>{post.categoryCode}</td>
                   <td>
                     <div className='flex items-center gap-x-2'>
                       <img src={post.thumbnail} className='w-10 h-10 rounded-md' alt='' />
                       <div className=''>
                         <h3 className='font-semibold'>{post.title}</h3>
-                        <time className='text-xs text-gray-400'>{post.createdDate}</time>
+                        <time className='text-xs text-gray-400'>{post.dateCreated}</time>
                       </div>
                     </div>
                   </td>
-                  <td>{post.username}</td>
-                  <td>{post.updatedDate}</td>
-                  <td>{post.postedDate}</td>
+                  {auth?.roles[0] !== Role.USER && <td>{post.username}</td>}
+                  <td>{post.dateUpdated}</td>
+                  <td>{post.datePosted}</td>
                   <td>
                     <LabelStatus status={post.status} />
                   </td>

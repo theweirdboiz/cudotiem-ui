@@ -75,12 +75,12 @@ const Sidebar: React.FC = (): JSX.Element => {
           )
         })}
       </div>
-      <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
+      {/* <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
         <h4 className='font-medium px-3'>Đánh giá</h4>
         <RateStarts amount={5} />
         <RateStarts amount={4} />
         <RateStarts amount={3} />
-      </div>
+      </div> */}
       <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
         <h4 className='font-medium px-3'>Giá</h4>
         <div className='px-3'>

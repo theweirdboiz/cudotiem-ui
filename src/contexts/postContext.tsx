@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react'
 import { getAllPosts } from '~/services'
 import { PostPagination, Post } from '~/types/post.type'
+import { useAth } from './authContext'
 
 interface PostContextProps {
   posts: PostPagination | undefined

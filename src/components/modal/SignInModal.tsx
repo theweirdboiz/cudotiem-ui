@@ -11,13 +11,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { SignIn } from '~/types/signin.type'
 import { signin } from '~/services/authService'
 import { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { useAth } from '~/contexts'
 import { setCookie } from 'typescript-cookie'
 import { useEffect, useState } from 'react'
+import { SignInMessage } from '~/ultis/message/auth.message'
+import { SignInRequest } from '~/types/signin.type'
 
 // const schema = yup.object().shape({
 //   password: yup.string().required('This field is required').min(8, 'Password must be 8 character')
@@ -55,7 +56,7 @@ const SignInModal = () => {
     watch,
     trigger,
     formState: { errors, isValid }
-  } = useForm<SignIn>({
+  } = useForm<SignInRequest>({
     resolver: yupResolver(optionSignIn === 'email' ? usernameLoginSchema : emailLoginSchema),
     mode: 'all'
   })
@@ -65,7 +66,8 @@ const SignInModal = () => {
   const wathcUsername = watch('username')
 
   const signInMutation = useMutation({
-    mutationFn: async (body: SignIn) => await signin<SignIn>((wathcEmail || wathcUsername) as string, body.password),
+    mutationFn: async (body: SignInRequest) =>
+      await signin<SignInRequest>((wathcEmail || wathcUsername) as string, body.password),
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({
         queryKey: ['user', wathcEmail || wathcUsername],
@@ -74,15 +76,15 @@ const SignInModal = () => {
       navigate(`${from || '/'}`)
       setAuth(data)
       setCookie('cudotiem', data.accessToken)
-      toast.success('Login successful!')
+      toast.success(SignInMessage.SUCCESS)
     },
     onError: (error: AxiosError) => {
-      toast.error(error?.message)
+      toast.error(SignInMessage.FAILED)
       navigate(`${from || '/'}`)
     }
   })
 
-  const onSubmit = (data: SignIn) => {
+  const onSubmit = (data: SignInRequest) => {
     signInMutation.mutate(data)
   }
   const handleToggleOptionSignIn = () => {

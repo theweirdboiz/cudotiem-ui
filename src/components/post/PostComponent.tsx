@@ -21,7 +21,7 @@ const PostComponent = (props: Props) => {
             {post.price}
             <span className='underline'>đ</span>
           </h4>
-          <span className='text-xs'>{post.postedDate}</span>
+          <span className='text-xs'>{post.datePosted}</span>
         </div>
       </Link>
     </>
