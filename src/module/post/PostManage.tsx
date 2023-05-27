@@ -24,7 +24,7 @@ const PostManage = () => {
   const navigate = useNavigate()
   const { auth } = useAth()
   const { data: postsPrivatePaginated } = useQuery({
-    queryKey: ['posts-private', auth?.roles[0], pagination],
+    queryKey: ['posts-private', pagination],
     queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles[0] || Role.USER)
   })
   // const postsPrivatePaginated = {
@@ -73,7 +73,7 @@ const PostManage = () => {
     mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['posts-private', auth?.roles[0], pagination],
+        queryKey: ['posts-private', pagination],
         exact: true
       })
     }
