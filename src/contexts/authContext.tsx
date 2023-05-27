@@ -10,11 +10,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const accessToken = getCookie('cudotiem') || undefined
-  const [auth, setAuth] = useState<Auth | undefined>({
-    accessToken,
-    roles: []
-  })
+  const token = JSON.parse(getCookie('cudotiem') || '')
+  const [auth, setAuth] = useState<Auth | undefined>(token)
   const value = {
     auth,
     setAuth

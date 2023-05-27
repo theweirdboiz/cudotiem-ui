@@ -8,10 +8,8 @@ import Search from './components/search/Search'
 import { signout } from '~/services'
 import { removeCookie } from 'typescript-cookie'
 import { toast } from 'react-toastify'
-import { Button } from '~/components'
 
 function Topbar() {
-  const { isOpen } = useSearch()
   const { auth } = useAth()
   const handleSignout = async () => {
     console.log(123)
