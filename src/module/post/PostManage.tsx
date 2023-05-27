@@ -21,11 +21,10 @@ const PostManage = () => {
   const { formatDate, formatMilisecondToDate } = useFormatDate()
   // const { posts } = usePost()
   const queryClient = new QueryClient()
-  const navigate = useNavigate()
   const { auth } = useAth()
-  const { data: postsPrivatePaginated } = useQuery({
+  const { data: postsPrivatePaginated, refetch } = useQuery({
     queryKey: ['posts-private', pagination],
-    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles[0] || Role.USER)
+    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles[0] || undefined)
   })
   // const postsPrivatePaginated = {
   //   paginationPosts: [
@@ -71,12 +70,7 @@ const PostManage = () => {
   // }
   const handlePostMutation = useMutation({
     mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['posts-private', pagination],
-        exact: true
-      })
-    }
+    onSuccess: () => refetch()
   })
   const handleClickOnPage = (page: number) => {
     setPagination((prev) => ({ ...prev, offset: page }))
