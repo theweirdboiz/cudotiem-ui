@@ -133,11 +133,13 @@ const PostManage = () => {
                   <td>
                     <LabelStatus status={post.status} />
                   </td>
-                  <td>
-                    <Button className='w-20 py-2'>
-                      <LabelPostAction status={post.status} />
-                    </Button>
-                  </td>
+                  {auth?.roles[0] !== Role.USER && (
+                    <td>
+                      <Button className='w-20 py-2'>
+                        <LabelPostAction status={post.status} />
+                      </Button>
+                    </td>
+                  )}
                 </tr>
               ))
             ) : (

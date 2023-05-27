@@ -71,7 +71,7 @@ function Topbar() {
                   <a href='/my-profile'>
                     <p className='py-2 px-4 hover:bg-gray-200'>Thông tin tài khoản</p>
                   </a>
-                  <a href='/my-posts'>
+                  <a href='/manage/post'>
                     <p className='py-2 px-4 hover:bg-gray-200'>Tin đăng của tôi</p>
                   </a>
                   <p className='py-2 px-4 hover:bg-gray-200' onClick={handleSignout}>
