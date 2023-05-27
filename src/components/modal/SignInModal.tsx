@@ -75,7 +75,7 @@ const SignInModal = () => {
       })
       navigate(`${from || '/'}`)
       setAuth(jwtToken)
-      setCookie('cudotiem', jwtToken)
+      setCookie('cudotiem', JSON.stringify(jwtToken))
       toast.success(SignInMessage.SUCCESS)
     },
     onError: (error: AxiosError) => {
