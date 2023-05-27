@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 import { getCookie, setCookie } from 'typescript-cookie'
 import { ENV } from '~/config'
 import { useAth } from '~/contexts'
+import { Auth } from '~/types/auth.type'
 
 interface ApiResponse<T> {
   data: T
@@ -30,10 +31,9 @@ class Api {
     // add token to request
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        const token = getCookie('cudotiem')
-        // auth?.accessToken
-        if (token) {
-          config.headers['Authorization'] = `Bearer ${token}`
+        const jwtToken: Auth = getCookie('cudotiem') && JSON.parse(getCookie('cudotiem') as string)
+        if (jwtToken) {
+          config.headers['Authorization'] = `Bearer ${jwtToken.accessToken}`
         }
         return config
       },

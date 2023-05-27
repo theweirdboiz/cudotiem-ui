@@ -2,13 +2,16 @@ import DashboardHeading from '~/layouts/dashboard/components/DashboardHeading'
 import { useState } from 'react'
 import { Post, PostStatus } from '~/types/post.type'
 import { Button, LabelStatus, Table } from '~/components'
-import { useQuery } from '@tanstack/react-query'
-import { getPostsPrivatePaginated } from '~/services'
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { getPostsPrivatePaginated, handlePostByStatus } from '~/services'
 import { useAth } from '~/contexts'
 import { Role } from '~/types/role.type'
 import { twMerge } from 'tailwind-merge'
 import { LabelPostAction } from '~/components/label'
 import useFormatDate from '~/hooks/useFormatDate'
+import { toast } from 'react-toastify'
+import { CreatePostMessage } from '~/ultis/message/post.message'
+import { useNavigate } from 'react-router-dom'
 
 const PostManage = () => {
   const [pagination, setPagination] = useState({
@@ -17,6 +20,8 @@ const PostManage = () => {
   })
   const { formatDate, formatMilisecondToDate } = useFormatDate()
   // const { posts } = usePost()
+  const queryClient = new QueryClient()
+  const navigate = useNavigate()
   const { auth } = useAth()
   const { data: postsPrivatePaginated } = useQuery({
     queryKey: ['posts-private', auth?.roles[0], pagination],
@@ -64,9 +69,22 @@ const PostManage = () => {
   //   ],
   //   totalPage: 3
   // }
-
+  const handlePostMutation = useMutation({
+    mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['posts-private', auth?.roles[0], pagination],
+        exact: true
+      })
+    }
+  })
   const handleClickOnPage = (page: number) => {
     setPagination((prev) => ({ ...prev, offset: page }))
+  }
+  const handleAction = (id: number, status?: PostStatus) => {
+    const requestStatus = status === PostStatus.APPROVED ? PostStatus.REJECTED : PostStatus.APPROVED
+
+    requestStatus && handlePostMutation.mutate({ id, status: requestStatus })
   }
 
   return (
@@ -135,7 +153,7 @@ const PostManage = () => {
                   </td>
                   {auth?.roles[0] !== Role.USER && (
                     <td>
-                      <Button className='w-20 py-2'>
+                      <Button className='w-20 py-2' onClick={() => handleAction(post.id, post.status)}>
                         <LabelPostAction status={post.status} />
                       </Button>
                     </td>

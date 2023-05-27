@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import { PostComponent } from '~/components'
 import { usePost } from '~/contexts'
-import { Post, PostStatus } from '~/types/post.type'
+import { Post } from '~/types/post.type'
 import { Category } from './components'
+import { Role } from '~/types/role.type'
 
 const HomePage = () => {
   const { posts, isError, isLoading, handleLoadMore } = usePost()
@@ -86,6 +87,7 @@ const HomePage = () => {
   useEffect(() => {
     document.title = 'Trang chủ - Cụ Đồ Tiễm'
   }, [])
+
   if (isLoading) return <>Loading</>
   if (isError) return <>Error post</>
 

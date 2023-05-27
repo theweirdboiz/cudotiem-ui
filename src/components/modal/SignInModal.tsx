@@ -68,14 +68,14 @@ const SignInModal = () => {
   const signInMutation = useMutation({
     mutationFn: async (body: SignInRequest) =>
       await signin<SignInRequest>((wathcEmail || wathcUsername) as string, body.password),
-    onSuccess: (data: any) => {
+    onSuccess: (jwtToken: any) => {
       queryClient.invalidateQueries({
         queryKey: ['user', wathcEmail || wathcUsername],
         exact: true
       })
       navigate(`${from || '/'}`)
-      setAuth(data)
-      setCookie('cudotiem', data.accessToken)
+      setAuth(jwtToken)
+      setCookie('cudotiem', jwtToken)
       toast.success(SignInMessage.SUCCESS)
     },
     onError: (error: AxiosError) => {

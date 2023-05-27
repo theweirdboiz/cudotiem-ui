@@ -1,4 +1,4 @@
-import { Post, PostPagination, PostPrivatePaginated } from '~/types/post.type'
+import { Post, PostPagination, PostPrivatePaginated, PostStatus } from '~/types/post.type'
 import { Role } from '~/types/role.type'
 import { HttpRequest } from '~/ultis'
 
@@ -7,6 +7,12 @@ export const getAllPosts = async (offset: number, size: number) => {
   if (response.status === 200) return response.data
 }
 // admin
+export const handlePostByStatus = async (id: number, status: PostStatus) => {
+  console.log(id, status)
+  const response = await HttpRequest.put(`/admin/post/${id}?status=${status}`)
+  if (response.status === 200) return response.data
+}
+
 export const getPostsPrivatePaginated = async (offset: number, size: number, role?: Role) => {
   const check = role === Role.USER ? 'user' : role === Role.MODERATOR ? 'mod' : 'admin'
   const response = await HttpRequest.get<PostPrivatePaginated>(`/${check}/post?offset=${offset}&size=${size}`)

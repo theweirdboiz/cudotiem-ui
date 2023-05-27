@@ -1,4 +1,5 @@
 import { ReactNode, createContext, useContext, useState } from 'react'
+import { getCookie } from 'typescript-cookie'
 import { Auth } from '~/types/auth.type'
 
 interface AuthContextType {
@@ -9,7 +10,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [auth, setAuth] = useState<Auth>()
+  const jwtToken: Auth = getCookie('cudotiem') && JSON.parse(getCookie('cudotiem') as string)
+  const [auth, setAuth] = useState<Auth | undefined>(jwtToken)
   const value = {
     auth,
     setAuth

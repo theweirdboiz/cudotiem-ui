@@ -12,7 +12,6 @@ import { toast } from 'react-toastify'
 function Topbar() {
   const { auth } = useAth()
   const handleSignout = async () => {
-    console.log(123)
     const response = await signout<any>()
     removeCookie('cudotiem')
     toast.success(response?.message)
