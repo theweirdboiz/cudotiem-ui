@@ -2,9 +2,9 @@ import { PostStatus } from '~/types/post.type'
 import { IconLabel } from '~/components/icon'
 
 type Props = {
-  status?: string
+  status?: PostStatus
 }
-const LabelStatus = (props: Props) => {
+const LabelPostStatus = (props: Props) => {
   const { status } = props
   let styleClassnames, text
   switch (status) {
@@ -34,4 +34,4 @@ const LabelStatus = (props: Props) => {
   )
 }
 
-export default LabelStatus
+export default LabelPostStatus

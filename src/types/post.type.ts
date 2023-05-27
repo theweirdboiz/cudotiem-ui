@@ -13,10 +13,10 @@ export interface Post {
   dateCreated?: number
   dateUpdated?: number
   username?: string
-  status?: string
+  status?: PostStatus
   categoryCode?: string
   imageUrls?: string[]
-  content: string
+  content?: string
   slug?: string
 }
 

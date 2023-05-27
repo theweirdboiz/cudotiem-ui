@@ -33,7 +33,7 @@ export { default as Toggle } from './toggle/Toggle'
 export { default as Table } from './table/Table'
 
 // label status
-export { default as LabelStatus } from './label/LabelStatus'
+export { default as LabelStatus } from './label/LabelPostStatus'
 
 // actions
 export { default as ActionEdit } from './actions/ActionEdit'

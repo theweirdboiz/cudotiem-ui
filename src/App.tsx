@@ -69,9 +69,9 @@ function App() {
           <Route path='/me/profile' element={<ProfilePage />} />
         </Route> */}
         {/* <Route path='/manage/category' element={<CategoryManage />} /> */}
+        <Route path='/manage/post' element={<PostManage />} />
         <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}>
           <Route element={<DashboardLayout />}>
-            <Route path='/manage/post' element={<PostManage />} />
             <Route path='/manage/add-post' element={<PostAddNew />} />
             {/* <Route path='/manage/category' element={<CategoryManage />} />
             <Route path='/manage/update-category' element={<CategoryUpdate />} />

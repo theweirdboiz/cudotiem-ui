@@ -1,17 +1,21 @@
 import DashboardHeading from '~/layouts/dashboard/components/DashboardHeading'
 import { useState } from 'react'
-import { Post } from '~/types/post.type'
+import { Post, PostStatus } from '~/types/post.type'
 import { Button, LabelStatus, Table } from '~/components'
 import { useQuery } from '@tanstack/react-query'
 import { getPostsPrivatePaginated } from '~/services'
 import { useAth } from '~/contexts'
 import { Role } from '~/types/role.type'
+import { twMerge } from 'tailwind-merge'
+import { LabelPostAction } from '~/components/label'
+import useFormatDate from '~/hooks/useFormatDate'
 
 const PostManage = () => {
   const [pagination, setPagination] = useState({
     offset: 1,
     size: 5
   })
+  const { formatDate, formatMilisecondToDate } = useFormatDate()
   // const { posts } = usePost()
   const { auth } = useAth()
   const { data: postsPrivatePaginated } = useQuery({
@@ -25,11 +29,11 @@ const PostManage = () => {
   //       title: 'new post',
   //       price: 100.0,
   //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhm34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
-  //       postedDate: 253402275599000,
-  //       createdDate: 1684910788513,
-  //       updatedDate: 1684910788513,
+  //       datePosted: 253402275599000,
+  //       dateCreated: 1684910788513,
+  //       dateUpdated: 1684910788513,
   //       username: 'kienthuc',
-  //       status: 'PENDING',
+  //       status: PostStatus.APPROVED,
   //       category: 'quần áo'
   //     },
   //     {
@@ -37,11 +41,11 @@ const PostManage = () => {
   //       title: 'new post',
   //       price: 100.0,
   //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhmsvsv34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
-  //       postedDate: 1684911535254,
-  //       createdDate: 1684911334925,
-  //       updatedDate: 1684911535257,
+  //       datePosted: 253402275599000,
+  //       dateCreated: 1684910788513,
+  //       dateUpdated: 1684910788513,
   //       username: 'kienthuc',
-  //       status: 'APPROVED',
+  //       status: PostStatus.REJECTED,
   //       category: 'quần áo'
   //     },
   //     {
@@ -50,20 +54,21 @@ const PostManage = () => {
   //       price: 234523.0,
   //       thumbnail:
   //         'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fthumbnail%2F1684925640846118183102_4355227071217499_45429216837241885_n.png?alt=media&token=6678bc7e-fdc1-415e-931b-19252b5aa92c',
-  //       postedDate: 253402275599999,
-  //       createdDate: 1684925649228,
-  //       updatedDate: 1684925649228,
+  //       datePosted: 253402275599000,
+  //       dateCreated: 1684910788513,
+  //       dateUpdated: 1684910788513,
   //       username: 'kienthuc',
-  //       status: 'PENDING',
+  //       status: PostStatus.PENDING,
   //       category: 'giày dép'
   //     }
   //   ],
-  //   totalPage: 1
+  //   totalPage: 3
   // }
 
   const handleClickOnPage = (page: number) => {
     setPagination((prev) => ({ ...prev, offset: page }))
   }
+
   return (
     <>
       <DashboardHeading>Quản lý tin đăng</DashboardHeading>
@@ -110,7 +115,7 @@ const PostManage = () => {
           <tbody>
             {postsPrivatePaginated ? (
               postsPrivatePaginated?.paginationPosts.map((post: Post) => (
-                <tr key={post.id}>
+                <tr key={post.id} className='text-sm shadow-md'>
                   <td>{post.id}</td>
                   <td>{post.categoryCode}</td>
                   <td>
@@ -118,17 +123,21 @@ const PostManage = () => {
                       <img src={post.thumbnail} className='w-10 h-10 rounded-md' alt='' />
                       <div className=''>
                         <h3 className='font-semibold'>{post.title}</h3>
-                        <time className='text-xs text-gray-400'>{post.dateCreated}</time>
+                        <time className='text-xs text-gray-400'>{formatMilisecondToDate(post.dateCreated)}</time>
                       </div>
                     </div>
                   </td>
                   {auth?.roles[0] !== Role.USER && <td>{post.username}</td>}
-                  <td>{post.dateUpdated}</td>
-                  <td>{post.datePosted}</td>
+                  <td>{formatMilisecondToDate(post.dateUpdated)}</td>
+                  <td>{formatMilisecondToDate(post.datePosted)}</td>
                   <td>
                     <LabelStatus status={post.status} />
                   </td>
-                  <td>Duyệt tin/ Hủy yêu cầu</td>
+                  <td>
+                    <Button className='w-20 py-2'>
+                      <LabelPostAction status={post.status} />
+                    </Button>
+                  </td>
                 </tr>
               ))
             ) : (
@@ -136,7 +145,7 @@ const PostManage = () => {
             )}
           </tbody>
         </Table>
-        <div className='text-center'>
+        <div className='flex gap-x-2 justify-center'>
           {postsPrivatePaginated?.totalPage &&
             Array(postsPrivatePaginated?.totalPage)
               .fill(0)
@@ -146,9 +155,11 @@ const PostManage = () => {
                 return (
                   <button
                     key={pageNumber}
-                    className={`border border-gray-300   py-2 px-3 leading-tight  hover:bg-gray-100 hover:text-gray-700 ${
-                      isActive && 'text-primary'
-                    }`}
+                    className={twMerge(
+                      `text-primary border-current border w-8 h-8 rounded-full 
+                      transition-all duration-300  shadow-md hover:bg-gray-100`,
+                      `${isActive && 'bg-blue-100 '}`
+                    )}
                     onClick={() => handleClickOnPage(pageNumber)}
                   >
                     {pageNumber}
