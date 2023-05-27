@@ -75,7 +75,7 @@ const SignInModal = () => {
       })
       navigate(`${from || '/'}`)
       setAuth(data)
-      setCookie('cudotiem', data)
+      setCookie('cudotiem', data.accessToken)
       toast.success(SignInMessage.SUCCESS)
     },
     onError: (error: AxiosError) => {
