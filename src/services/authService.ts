@@ -11,6 +11,6 @@ export const signin = async <T>(usernameOrEmail: string, password: string) => {
 }
 
 export const signout = async <T>() => {
-  const response = await HttpRequest.post<T>('/auth/logout')
+  const response = await HttpRequest.post<T>('/auth/signout')
   if (response.status === 200) return response.data
 }

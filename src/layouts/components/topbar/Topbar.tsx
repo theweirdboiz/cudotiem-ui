@@ -2,21 +2,29 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAth, useSearch } from '~/contexts'
 import Search from './components/search/Search'
 import { signout } from '~/services'
 import { removeCookie } from 'typescript-cookie'
 import { toast } from 'react-toastify'
+import { QueryClient, useMutation } from '@tanstack/react-query'
 
 function Topbar() {
-  const { auth } = useAth()
-  const handleSignout = async () => {
-    const response = await signout<any>()
-    removeCookie('cudotiem')
-    toast.success(response?.message)
-  }
+  const { auth, setAuth } = useAth()
+  const navigate = useNavigate()
 
+  const signOutMutation = useMutation({
+    mutationFn: () => signout(),
+    onSuccess: () => {
+      removeCookie('cudotiem')
+      navigate('/')
+      setAuth(undefined)
+    }
+  })
+  const handleSignOut = () => {
+    signOutMutation.mutate()
+  }
   return (
     <>
       <header className='py-2 text-[14px] relative z-[999] bg-white'>
@@ -71,7 +79,7 @@ function Topbar() {
                   <a href='/manage/post'>
                     <p className='py-2 px-4 hover:bg-gray-200'>Tin đăng của tôi</p>
                   </a>
-                  <p className='py-2 px-4 hover:bg-gray-200' onClick={handleSignout}>
+                  <p className='py-2 px-4 hover:bg-gray-200' onClick={handleSignOut}>
                     Đăng xuất
                   </p>
                 </div>
