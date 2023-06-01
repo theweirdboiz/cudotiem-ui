@@ -1,15 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAth, useCategory } from '~/contexts'
-import { getAllCategories } from '~/services'
 import { Category } from '~/types/category.type'
-import RateStart from './RateStart'
-import RateStarts from './RateStarts'
-import { Button, Input } from '~/components'
-
+import { Button } from '~/components'
+import { useTranslation } from 'react-i18next'
 const Sidebar: React.FC = (): JSX.Element => {
   const { auth } = useAth()
+  const { t } = useTranslation()
 
   // const isError = false
   // const isLoading = false
@@ -49,7 +46,7 @@ const Sidebar: React.FC = (): JSX.Element => {
         })}
       </div> */}
       <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
-        <h4 className='font-medium px-3'>Danh mục</h4>
+        <h4 className='font-medium px-3'>{t('categories')}</h4>
         {categories?.map((item: Category) => {
           return (
             <Link

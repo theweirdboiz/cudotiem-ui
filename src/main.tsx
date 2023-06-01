@@ -6,11 +6,13 @@ import { SearchProvider } from './contexts/searchContext'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { PostProvider } from './contexts/postContext'
+
 import { CategoryProvider } from './contexts/categoryContext'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './contexts/authContext'
 import 'react-toastify/dist/ReactToastify.css'
 import './index.scss'
+import './i18n/i18n'
 
 const client = new QueryClient({
   defaultOptions: {

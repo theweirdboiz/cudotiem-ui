@@ -1,29 +1,31 @@
-import React, { ReactNode } from "react";
-import { DropdownProvider } from "./dropdown-context";
-import List from "./List";
-import Option from "./Option";
-import Select from "./Select";
+import { ReactNode } from 'react'
+import { DropdownProvider } from './dropdown-context'
+import List from './List'
+import Option from './Option'
+import Select from './Select'
+import { twMerge } from 'tailwind-merge'
 
 interface DropdownBoudaryProps {
-  children: ReactNode;
+  children: ReactNode
+  classNames?: string
 }
 
 interface DropdownProps extends DropdownBoudaryProps {
-  Select?: typeof Select;
-  List?: typeof List;
-  Option?: typeof Option;
+  Select?: typeof Select
+  List?: typeof List
+  Option?: typeof Option
 }
 
-const Dropdown = ({ children }: DropdownBoudaryProps & DropdownProps) => {
+const Dropdown = ({ children, classNames }: DropdownBoudaryProps & DropdownProps) => {
   return (
     <DropdownProvider>
-      <div className="w-full relative">{children}</div>
+      <div className={twMerge('w-full relative', classNames)}>{children}</div>
     </DropdownProvider>
-  );
-};
+  )
+}
 
-Dropdown.Select = Select;
-Dropdown.List = List;
-Dropdown.Option = Option;
+Dropdown.Select = Select
+Dropdown.List = List
+Dropdown.Option = Option
 
-export default Dropdown;
+export default Dropdown

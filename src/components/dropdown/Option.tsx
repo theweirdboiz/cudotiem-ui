@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import { useDropdown } from './dropdown-context'
 
 type Props = {
-  option: any
+  option?: any
   children: ReactNode
   onClick?: (option: any) => void
 }

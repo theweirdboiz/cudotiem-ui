@@ -72,13 +72,23 @@ const PostManage = () => {
     mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
     onSuccess: () => refetch()
   })
+  const userHandlePostMutation = useMutation({
+    mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
+    onSuccess: () => refetch()
+  })
   const handleClickOnPage = (page: number) => {
     setPagination((prev) => ({ ...prev, offset: page }))
   }
+  // admin
   const handleAction = (id: number, status?: PostStatus) => {
     const requestStatus = status === PostStatus.APPROVED ? PostStatus.REJECTED : PostStatus.APPROVED
 
     requestStatus && handlePostMutation.mutate({ id, status: requestStatus })
+  }
+  const handleUserAction = (id: number, status?: PostStatus) => {
+    const requestStatus = status === PostStatus.APPROVED ? PostStatus.REJECTED : PostStatus.APPROVED
+
+    // requestStatus && handlePostMutation.mutate({ id, status: requestStatus })
   }
 
   return (
@@ -146,6 +156,13 @@ const PostManage = () => {
                     <LabelStatus status={post.status} />
                   </td>
                   {auth?.roles[0] !== Role.USER && (
+                    <td>
+                      <Button className='w-20 py-2' onClick={() => handleAction(post.id, post.status)}>
+                        <LabelPostAction status={post.status} />
+                      </Button>
+                    </td>
+                  )}
+                  {auth?.roles[0] === Role.USER && (
                     <td>
                       <Button className='w-20 py-2' onClick={() => handleAction(post.id, post.status)}>
                         <LabelPostAction status={post.status} />

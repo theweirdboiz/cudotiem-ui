@@ -2,17 +2,22 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { Link, useNavigate } from 'react-router-dom'
-import { useAth, useSearch } from '~/contexts'
 import Search from './components/search/Search'
+import { useTranslation } from 'react-i18next'
+import { useMutation } from '@tanstack/react-query'
+import { useAth } from '~/contexts'
 import { signout } from '~/services'
+import { Role } from '~/types/role.type'
 import { removeCookie } from 'typescript-cookie'
-import { toast } from 'react-toastify'
-import { QueryClient, useMutation } from '@tanstack/react-query'
+import { locales, languages } from '~/i18n/i18n'
+import { Link, useNavigate } from 'react-router-dom'
+import { Dropdown } from '~/components'
 
 function Topbar() {
   const { auth, setAuth } = useAth()
   const navigate = useNavigate()
+  const { i18n } = useTranslation()
+  const currentLanguage = locales[i18n.language as keyof typeof locales]
 
   const signOutMutation = useMutation({
     mutationFn: () => signout(),
@@ -25,6 +30,10 @@ function Topbar() {
   const handleSignOut = () => {
     signOutMutation.mutate()
   }
+  const handleChangeLanguage = (language: string) => {
+    i18n.changeLanguage(language)
+  }
+
   return (
     <>
       <header className='py-2 text-[14px] relative z-[999] bg-white'>
@@ -48,59 +57,76 @@ function Topbar() {
             </div>
             {/* right */}
             <div className='flex-center gap-x-3 ml-12 text-gray-500 font-normal'>
-              <div className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200'>
+              <Link to='/' className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200'>
                 <img
                   src='https://salt.tikicdn.com/ts/upload/b4/90/74/6baaecfa664314469ab50758e5ee46ca.png'
                   alt=''
                   className='w-6 h-6 mr-1'
                 />
-                <Link to='/'>Trang chủ</Link>
-              </div>
+                Trang chủ
+              </Link>
+              {!auth?.roles.includes(Role.USER) && (
+                <Link
+                  className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 text-blue-500 border border-current font-bold'
+                  to='/manage/add-post'
+                >
+                  Đăng tin
+                </Link>
+              )}
               {auth && (
-                <div className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 text-blue-500 border border-current font-bold'>
-                  <Link to='/manage/add-post'>Đăng tin</Link>
+                <Link
+                  to='/sign-in'
+                  className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 relative group'
+                >
+                  <img
+                    src='https://salt.tikicdn.com/ts/upload/07/d5/94/d7b6a3bd7d57d37ef6e437aa0de4821b.png'
+                    alt=''
+                    className='w-6 h-6 mr-1'
+                  />
+                  Đăng nhập
+                </Link>
+              )}
+              {!auth && (
+                <div className='relative group'>
+                  <Link
+                    to='/me'
+                    className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 relative group'
+                  >
+                    <img
+                      src='https://salt.tikicdn.com/ts/upload/07/d5/94/d7b6a3bd7d57d37ef6e437aa0de4821b.png'
+                      alt=''
+                      className='w-6 h-6 mr-1'
+                    />
+                    Tài khoản
+                  </Link>
+                  <div className='absolute hidden w-60 z-10 py-2.5 shadow-lg left-0 top-[36px] rounded-lg bg-white -translate-x-1/2 border border-gray-200 text-gray-700 group-hover:block'>
+                    <Link to='/my-profile' className='block py-2 px-4 hover:bg-gray-200'>
+                      Thông tin tài khoản
+                    </Link>
+                    <Link to='/manage/post' className='block py-2 px-4 hover:bg-gray-200'>
+                      Quản lý tin đăng
+                    </Link>
+                    <Link to='/' className='block py-2 px-4 hover:bg-gray-200' onClick={handleSignOut}>
+                      Đăng xuất
+                    </Link>
+                  </div>
                 </div>
               )}
-              <div className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 relative group'>
-                <img
-                  src='https://salt.tikicdn.com/ts/upload/07/d5/94/d7b6a3bd7d57d37ef6e437aa0de4821b.png'
-                  alt=''
-                  className='w-6 h-6 mr-1'
-                />
-                {auth ? <Link to='/profile/me'>Tài khoản</Link> : <Link to='/sign-in'>Đăng nhập</Link>}
-                <div
-                  className={`${
-                    auth ? 'group-hover:block' : ''
-                  } hidden absolute w-60 z-10 py-2.5 shadow-lg left-0 top-[38px] rounded-lg bg-white text-gray-700 -translate-x-1/2 border border-gray-200`}
-                >
-                  <a href='/my-profile'>
-                    <p className='py-2 px-4 hover:bg-gray-200'>Thông tin tài khoản</p>
-                  </a>
-                  <a href='/manage/post'>
-                    <p className='py-2 px-4 hover:bg-gray-200'>Tin đăng của tôi</p>
-                  </a>
-                  <p className='py-2 px-4 hover:bg-gray-200' onClick={handleSignOut}>
-                    Đăng xuất
-                  </p>
-                </div>
-              </div>
-              {/* cart */}
-              {/* <div className='flex-center cursor-pointer '>
-                <button>
-                  <div className="box-center ml-6 relative after:absolute after:content-[''] after:h-5 after:-left-3 after:border after:border-gray-200">
-                    <div className='box-center w-10 h-10 relative hover:bg-blue-100 rounded-lg'>
-                      <img
-                        src='https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png'
-                        alt='header cart'
-                        className='w-6 h-6'
-                      />
-                      <span className='absolute bg-red-500 rounded-lg inline-block right-0 -top-1 px-[3.5px] py-[0.5px] text-[10px] text-white'>
-                        0
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              </div> */}
+
+              <Dropdown classNames='w-[8rem]'>
+                <Dropdown.Select placeholder={`${currentLanguage}`} />
+                <Dropdown.List>
+                  {languages.map((l) => {
+                    return (
+                      l.key !== i18n.language && (
+                        <Dropdown.Option key={l?.key} onClick={handleChangeLanguage} option={l.key}>
+                          {l.name}
+                        </Dropdown.Option>
+                      )
+                    )
+                  })}
+                </Dropdown.List>
+              </Dropdown>
             </div>
           </div>
           {/* header bottom */}

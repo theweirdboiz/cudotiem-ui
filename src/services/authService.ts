@@ -1,4 +1,9 @@
+import { Role } from '~/types/role.type'
 import { HttpRequest } from '~/ultis'
+
+export const getBestRole = (roles: Role[]) => {
+  return roles.includes(Role.ADMIN) ? 'admin' : roles.includes(Role.MODERATOR) ? 'mod' : 'user'
+}
 
 export const signup = async <T>(username: string, email: string, password: string) => {
   const response = await HttpRequest.post<T>('/auth/signup', { username, email, password })
