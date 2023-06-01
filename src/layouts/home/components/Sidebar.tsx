@@ -79,39 +79,19 @@ const Sidebar: React.FC = (): JSX.Element => {
         <RateStarts amount={3} />
       </div> */}
       <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
-        <h4 className='font-medium px-3'>Giá</h4>
+        <h4 className='font-medium px-3'>{t('price')}</h4>
         <div className='px-3'>
-          <span>Chọn khoảng giá</span>
+          <span>{t('price-range')}</span>
           <div className='flex items-center  gap-x-2 my-3 text-xs'>
             <input name='from' className='border max-w-[40%] rounded p-1.5' defaultValue={0} />
             <span>-</span>
             <input name='to' className='border max-w-[40%] rounded p-1.5' defaultValue={0} />
           </div>
           <Button style={{ width: '100%', padding: '4px 0' }} type='submit'>
-            Áp dụng
+            {t('apply')}
           </Button>
         </div>
       </div>
-      {auth && (
-        <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
-          <Link
-            to='/manage/category'
-            className='flex-center py-1.5 rounded-lg transition-all duration-300 ease-linear hover:bg-gray-300 hover:bg-opacity-50'
-          >
-            <div className='mx-2 flex flex-shrink-0 basis-8 h-8 overflow-hidden'>
-              <picture>
-                <img
-                  src='https://salt.tikicdn.com/cache/100x100/ts/upload/08/2f/14/fd9d34a8f9c4a76902649d04ccd9bbc5.png.webp'
-                  alt='Giá tốt mỗi ngày'
-                  width={32}
-                  height={32}
-                />
-              </picture>
-            </div>
-            <span>Đăng tin</span>
-          </Link>
-        </div>
-      )}
     </aside>
   )
 }

@@ -3,7 +3,6 @@ import { Routes, Route, Link } from 'react-router-dom'
 import { Role } from './types/role.type'
 import VerifyEmailPage from './pages/verify-email/VerifyEmailPage'
 import { useChat } from './contexts/chatContext'
-import { io, Socket } from 'socket.io-client'
 import { useAth } from './contexts'
 // pages
 const UnauthorizedPage = lazy(() => import('./pages/unauthorized/UnauthorizedPage'))
