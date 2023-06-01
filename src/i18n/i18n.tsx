@@ -31,6 +31,7 @@ const resources = {
       price: 'Price',
       'price-range': 'Choose a price range',
       apply: 'Apply',
+      account: 'Account',
       language: 'Choose language'
     }
   },
@@ -46,14 +47,15 @@ const resources = {
       price: 'Giá',
       'price-range': 'Chọn khoảng giá',
       apply: 'Áp dụng',
+      account: 'Tài khoản',
       language: 'Chọn ngôn ngữ'
     }
   }
 }
 use(initReactI18next).init({
   resources,
-  lng: 'vi',
-  fallbackLng: 'vi',
+  // lng: 'en',
+  fallbackLng: 'en',
   interpolation: {
     escapeValue: false
   }

@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { getAllCategories } from '~/services'
-import { createContext, ReactNode, useContext, useState } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 import { Category } from '~/types/category.type'
+import { useTranslation } from 'react-i18next'
 
 interface CategoryContextProps {
   categories: Category[] | undefined
@@ -12,12 +13,13 @@ interface CategoryContextProps {
 const CategoryContext = createContext<CategoryContextProps | undefined>(undefined)
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
+  const { i18n } = useTranslation()
   const {
     data: categories,
     isError,
     isLoading
   } = useQuery({
-    queryKey: ['categories'],
+    queryKey: ['categories', i18n.language],
     queryFn: async () => await getAllCategories()
   })
   // const categories = [
