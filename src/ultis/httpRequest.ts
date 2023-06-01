@@ -20,7 +20,7 @@ class Api {
   private axiosInstance: AxiosInstance
   private language: string
   constructor() {
-    this.language = 'vi'
+    this.language = 'en'
     this.axiosInstance = axios.create({
       baseURL: ENV.BASE_API,
       headers: {
