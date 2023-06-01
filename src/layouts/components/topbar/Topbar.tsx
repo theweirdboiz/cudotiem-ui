@@ -12,6 +12,7 @@ import { removeCookie } from 'typescript-cookie'
 import { locales, languages } from '~/i18n/i18n'
 import { Link, useNavigate } from 'react-router-dom'
 import { Dropdown } from '~/components'
+import httpRequest from '~/ultis/httpRequest'
 
 function Topbar() {
   const { auth, setAuth } = useAth()
@@ -32,6 +33,7 @@ function Topbar() {
   }
   const handleChangeLanguage = (language: string) => {
     i18n.changeLanguage(language)
+    httpRequest.setLanguage(language)
   }
 
   return (
@@ -65,15 +67,13 @@ function Topbar() {
                 />
                 Trang chủ
               </Link>
-              {!auth?.roles.includes(Role.USER) && (
-                <Link
-                  className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 text-blue-500 border border-current font-bold'
-                  to='/manage/add-post'
-                >
-                  Đăng tin
-                </Link>
-              )}
-              {auth && (
+              <Link
+                className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 text-blue-500 border border-current font-bold'
+                to='/manage/add-post'
+              >
+                Đăng tin
+              </Link>
+              {!auth && (
                 <Link
                   to='/sign-in'
                   className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 relative group'
@@ -86,7 +86,7 @@ function Topbar() {
                   Đăng nhập
                 </Link>
               )}
-              {!auth && (
+              {auth && (
                 <div className='relative group'>
                   <Link
                     to='/me'
@@ -112,7 +112,6 @@ function Topbar() {
                   </div>
                 </div>
               )}
-
               <Dropdown classNames='w-[8rem]'>
                 <Dropdown.Select placeholder={`${currentLanguage}`} />
                 <Dropdown.List>
@@ -129,57 +128,8 @@ function Topbar() {
               </Dropdown>
             </div>
           </div>
-          {/* header bottom */}
-          {/* <div className='flex-center-between'>
-            <div className='flex items-start ml-[105px] mt-2 w-[872px]'>
-              <Link to='/thoi-trang/pants' className='mr-3 text-gray-400'>
-                Quần
-              </Link>
-              <Link to='/thoi-trang/pants' className='mr-3 text-gray-400'>
-                Quần
-              </Link>
-              <Link to='/thoi-trang/pants' className='mr-3 text-gray-400'>
-                Quần
-              </Link>
-            </div>
-            <div className='mt-2 flex-shrink-0 flex-grow-0 w-[348px] basis-[348px]'>
-              <div className='flex justify-end items-center cursor-pointer'>
-                <img
-                  src='https://salt.tikicdn.com/ts/upload/88/5c/9d/f5ee506836792eb7775e527ef8350a44.png'
-                  alt='location-icon'
-                  className='w-5 h-5 mr-1'
-                />
-                <h4 className='pr-1'>Giao đến:</h4>
-                <h4 className='underline font-medium'>TP.Thủ Đức, P.Linh Trung, Hồ Chí Minh</h4>
-              </div>
-            </div>
-          </div> */}
         </div>
       </header>
-      {/* <section className='box-center bg-orange-200 py-2 text-[14px]'>
-        <Link to='/khuyen-mai' className='flex-center'>
-          <picture>
-            <img
-              src='https://salt.tikicdn.com/ts/upload/5e/ec/fb/150f3c633781ed1da9921e45db90c62d.png'
-              alt='icon'
-              width={81}
-              height={12}
-            />
-          </picture>
-          <p className='pl-1'>
-            <strong>mọi đơn từ 149k. </strong>
-          </p>
-          <picture>
-            <img
-              src='https://salt.tikicdn.com/ts/upload/51/20/3f/1bb77cdb828972a5284a06dac79c0afc.png'
-              alt='icon'
-              width={7}
-              height={11}
-              className='ml-1'
-            />
-          </picture>
-        </Link>
-      </section> */}
     </>
   )
 }

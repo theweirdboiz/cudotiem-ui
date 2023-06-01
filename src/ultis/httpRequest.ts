@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { getCookie, setCookie } from 'typescript-cookie'
 import { ENV } from '~/config'
-import { useAth } from '~/contexts'
 import { Auth } from '~/types/auth.type'
 
 interface ApiResponse<T> {
@@ -19,7 +18,9 @@ interface ApiError extends AxiosError {
 
 class Api {
   private axiosInstance: AxiosInstance
+  private language: string
   constructor() {
+    this.language = 'vi'
     this.axiosInstance = axios.create({
       baseURL: ENV.BASE_API,
       headers: {
@@ -35,6 +36,7 @@ class Api {
         if (jwtToken) {
           config.headers['Authorization'] = `Bearer ${jwtToken.accessToken}`
         }
+        config.headers['Accept-Language'] = this.language
         return config
       },
       (error) => Promise.reject(error)
@@ -61,7 +63,10 @@ class Api {
       }
     )
   }
-
+  setLanguage(language: string) {
+    this.language = language
+    console.log(this.language)
+  }
   public async get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     const response = await this.axiosInstance.get<T>(url, config)
     return this.handleResponse(response)

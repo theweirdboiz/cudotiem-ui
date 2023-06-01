@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next'
 
 export const locales = {
   en: 'English',
-  vn: 'Tiếng Việt'
+  vi: 'Tiếng Việt'
 }
 
 export const languages = [
@@ -12,7 +12,7 @@ export const languages = [
     name: 'English'
   },
   {
-    key: 'vn',
+    key: 'vi',
     name: 'Tiếng Việt'
   }
 ]
@@ -30,7 +30,7 @@ const resources = {
 }
 i18n.use(initReactI18next).init({
   resources,
-  lng: 'vn',
+  lng: 'vi',
   fallbackLng: 'vi',
   interpolation: {
     escapeValue: false
