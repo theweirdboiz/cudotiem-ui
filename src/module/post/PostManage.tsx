@@ -140,7 +140,7 @@ const PostManage = () => {
               postsPrivatePaginated?.paginationPosts.map((post: Post) => (
                 <tr key={post.id} className='text-sm shadow-md'>
                   <td>{post.id}</td>
-                  <td>{post.categoryCode}</td>
+                  <td>{post?.categoryCode}</td>
                   <td>
                     <div className='flex items-center gap-x-2'>
                       <img src={post.thumbnail} className='w-10 h-10 rounded-md' alt='' />
@@ -150,7 +150,8 @@ const PostManage = () => {
                       </div>
                     </div>
                   </td>
-                  {auth?.roles[0] !== Role.USER && <td>{post.username}</td>}
+                  <td>{auth?.roles[0] !== Role.ADMIN && post.username}</td>
+                  <td>{formatMilisecondToDate(post.dateCreated)}</td>
                   <td>{formatMilisecondToDate(post.dateUpdated)}</td>
                   <td>{formatMilisecondToDate(post.datePosted)}</td>
                   <td>
