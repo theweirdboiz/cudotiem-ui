@@ -128,8 +128,9 @@ const PostManage = () => {
               <th>Danh mục</th>
               <th>Tin đăng</th>
               {auth?.roles[0] !== Role.USER && <th>Người đăng</th>}
+              <th>Ngày tạo</th>
               <th>Ngày cập nhật</th>
-              <th>Ngày đăng tin</th>
+              <th>Ngày đăng</th>
               <th>Trạng thái</th>
               <th>Options</th>
             </tr>

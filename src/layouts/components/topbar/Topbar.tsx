@@ -117,7 +117,6 @@ const Topbar = () => {
                   placeholder={
                     <React.Fragment>
                       {locales[i18n.language as keyof typeof locales].icon}
-                      {/* </div> */}
                       {i18n.language}
                     </React.Fragment>
                   }

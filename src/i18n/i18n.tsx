@@ -32,6 +32,8 @@ const resources = {
       'price-range': 'Choose a price range',
       apply: 'Apply',
       account: 'Account',
+      'account-info': 'Account information',
+      'post-manage': 'Post manage',
       language: 'Choose language'
     }
   },
@@ -48,6 +50,8 @@ const resources = {
       'price-range': 'Chọn khoảng giá',
       apply: 'Áp dụng',
       account: 'Tài khoản',
+      'account-info': 'Thông tin tài khoản',
+      'post-manage': 'Quản lý tin đăng',
       language: 'Chọn ngôn ngữ'
     }
   }
