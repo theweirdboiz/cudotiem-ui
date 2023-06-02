@@ -67,11 +67,16 @@ const PostUpdate = () => {
     document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
     const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
     setCategorySelected(category)
+    setThumbnail(
+      'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fimgs%2F1684909709789ch.jpg?alt=media&token=03865725-5054-4a0d-91a0-cb9537b1d0a7'
+    )
     setImageUrls(post?.postDetailResponse?.imageUrls || [])
     setContent(post?.postDetailResponse.content || '')
-    handleChangeThumbnail(post?.postDetailResponse?.imageUrls?.[0] || '')
-    handleChangeImageUrls(post?.postDetailResponse?.imageUrls?.filter((img) => img !== thumbnail) || [])
-    reset(post?.postDetailResponse)
+    // handleChangeThumbnail(
+    //   'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fimgs%2F1684909709789ch.jpg?alt=media&token=03865725-5054-4a0d-91a0-cb9537b1d0a7'
+    // )
+    // handleChangeImageUrls(post?.postDetailResponse?.imageUrls?.filter((img) => img !== thumbnail) || [])
+    // reset(post?.postDetailResponse)
   }, [isSuccess])
 
   const handleEditorChange = (content: string) => {
@@ -129,11 +134,12 @@ const PostUpdate = () => {
     setThumbnail(thumbnail)
   }
 
-  if (isLoading) return <Spinner />
+  // if (isLoading) return <Spinner />
+  // console.log(thumbnail)
 
   return (
     <>
-      {isSuccess && (
+      {!isSuccess && (
         <>
           <DashboardHeading>Cập nhật tin đăng</DashboardHeading>
           <form action='' onSubmit={handleSubmit(onSubmit)}>
@@ -204,7 +210,7 @@ const PostUpdate = () => {
             <div className='flex items-center gap-x-3'>
               <FormGroup>
                 <Label>Thumbnail</Label>
-                <Image to='post/thumbnail' handleChangeThumbnail={handleChangeThumbnail} />
+                <Image to='post/thumbnail' imgUrl={thumbnail} handleChangeThumbnail={handleChangeThumbnail} />
               </FormGroup>
               <FormGroup>
                 <Label>Các ảnh khác</Label>

@@ -9,6 +9,7 @@ import { IconEyeToggle, IconGarbage } from '../icon'
 interface ImageProps {
   to: string
   file?: File
+  imgUrl?: string
   handleDeleteImageUrl?: (imageUrl: string) => void
   handleAddImageUrl?: (imageUrl: string) => void
   handleChangeThumbnail?: (img: string) => void
@@ -17,12 +18,13 @@ interface ImageProps {
 const Image = ({
   to,
   file,
+  imgUrl = '',
   handleChangeThumbnail,
   handleDeleteImageUrl,
   handleAddImageUrl,
   handleDeleteFile
 }: ImageProps) => {
-  const { process, fileName, path, errorMsg, handleUploadImage, handleDeleteImage } = useFirebaseImage()
+  const { process, fileName, path, errorMsg, setImage, handleUploadImage, handleDeleteImage } = useFirebaseImage()
   const [preview, setPreview] = useState<boolean>(false)
   const handlePreviewImage = () => {
     setPreview(!preview)
@@ -34,19 +36,27 @@ const Image = ({
     file && handleDeleteFile && handleDeleteFile(file)
     handleDeleteImage(path)
     handleDeleteImageUrl && handleDeleteImageUrl(path)
-    handleChangeThumbnail && handleChangeThumbnail(path)
+    path && handleChangeThumbnail && handleChangeThumbnail(path)
   }
   const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     handleUploadImage(to, e.target.files?.[0])
   }
   useEffect(() => {
+    const image = {
+      errorMsg: '',
+      fileName: imgUrl,
+      path: imgUrl,
+      process: 100
+    }
+    setImage(image)
     file && handleUploadImage(to, file)
-  }, [])
+  }, [imgUrl, file])
 
   useEffect(() => {
     handleAddImageUrl && path && handleAddImageUrl(path)
-    handleChangeThumbnail && path && handleChangeThumbnail(path)
+    if (path) handleChangeThumbnail && handleChangeThumbnail(path)
   }, [path])
+
   return (
     <>
       <PreviewImageModal visible={preview} handleClose={handleClose} path={path} fileName={fileName} />

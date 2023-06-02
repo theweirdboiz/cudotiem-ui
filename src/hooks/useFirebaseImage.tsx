@@ -9,7 +9,6 @@ interface FirebaseImageProps {
   fileName: string
   errorMsg: string
 }
-
 const useFirebaseImage = () => {
   const [image, setImage] = useState<FirebaseImageProps>({
     errorMsg: '',
@@ -91,7 +90,9 @@ const useFirebaseImage = () => {
     process: image.process,
     fileName: image.fileName,
     errorMsg: image.errorMsg,
-    path: image.path
+    path: image.path,
+    image,
+    setImage
   }
 }
 export default useFirebaseImage
