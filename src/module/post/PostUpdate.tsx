@@ -67,9 +67,7 @@ const PostUpdate = () => {
     document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
     const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
     setCategorySelected(category)
-    setThumbnail(
-      'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fimgs%2F1684909709789ch.jpg?alt=media&token=03865725-5054-4a0d-91a0-cb9537b1d0a7'
-    )
+    setThumbnail(post?.postDetailResponse.imageUrls?.[0] || '')
     setImageUrls(post?.postDetailResponse?.imageUrls || [])
     setContent(post?.postDetailResponse.content || '')
     // handleChangeThumbnail(
