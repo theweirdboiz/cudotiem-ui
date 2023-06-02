@@ -14,7 +14,7 @@ export interface Post {
   dateUpdated?: number
   username?: string
   status?: PostStatus
-  // category?:
+  categoryName?: string
   categoryCode?: string
   imageUrls?: string[]
   content?: string

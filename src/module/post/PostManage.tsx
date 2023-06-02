@@ -20,11 +20,12 @@ const PostManage = () => {
   })
   const { formatDate, formatMilisecondToDate } = useFormatDate()
   // const { posts } = usePost()
-  const queryClient = new QueryClient()
+  // const queryClient = new QueryClient()
   const { auth } = useAth()
+
   const { data: postsPrivatePaginated, refetch } = useQuery({
     queryKey: ['posts-private', pagination],
-    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles[0] || undefined)
+    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles[0])
   })
   // const postsPrivatePaginated = {
   //   paginationPosts: [
@@ -140,7 +141,7 @@ const PostManage = () => {
               postsPrivatePaginated?.paginationPosts.map((post: Post) => (
                 <tr key={post.id} className='text-sm shadow-md'>
                   <td>{post.id}</td>
-                  <td>{post?.categoryCode}</td>
+                  <td>{post?.categoryName}</td>
                   <td>
                     <div className='flex items-center gap-x-2'>
                       <img src={post.thumbnail} className='w-10 h-10 rounded-md' alt='' />
