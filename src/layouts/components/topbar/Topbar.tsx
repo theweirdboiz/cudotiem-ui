@@ -13,6 +13,7 @@ import { removeCookie } from 'typescript-cookie'
 import { Link, useNavigate } from 'react-router-dom'
 import { languages, locales } from '~/i18n/i18n'
 import { Dropdown } from '~/components'
+import { toast } from 'react-toastify'
 const Topbar = () => {
   const { i18n, t } = useTranslation()
   const { auth, setAuth } = useAth()

@@ -33,7 +33,7 @@ const PostDetailPage = () => {
         </GallaryProvider>
         {/* infor */}
         <div className='flex-1'>
-          <h3 className='text-2xl py-3 px-2'>{postDetail?.postDetailResponse.title}</h3>
+          <h3 className='text-2xl py-3 px-2 capitalize'>{postDetail?.postDetailResponse.title}</h3>
           <div className='flex pr-6'>
             <PostMeta meta={postDetail} />
             <UserContact userContact={postDetail?.userDto} />

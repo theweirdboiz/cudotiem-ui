@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import Spinner from '../spinner/Spinner'
 import { ButtonProps } from './type'
+import { twMerge } from 'tailwind-merge'
 
 const Button = ({ type = 'button', children, className, onClick, ...props }: ButtonProps) => {
   const { isloading, to, height, style, disabled } = props
@@ -17,10 +18,13 @@ const Button = ({ type = 'button', children, className, onClick, ...props }: But
   }
   return (
     <button
-      style={style}
-      className={`${defaultClassName} ${className} ${
-        disabled ? 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700' : ''
-      } ${isloading ? 'bg-blue-100' : 'bg-white'}`}
+      className={twMerge(
+        `${defaultClassName}
+        }`,
+        className,
+        `${disabled && 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700'}`,
+        `${isloading ? 'bg-blue-100' : 'bg-white'}`
+      )}
       type={type}
       disabled={disabled}
       onClick={onClick}
