@@ -13,8 +13,8 @@ export const handlePostByStatus = async (id: number, status: PostStatus, roles?:
   if (response.status === 200) return response.data
 }
 
-export const getPostsPrivatePaginated = async (offset: number, size: number, role?: Role) => {
-  const check = role === Role.ADMIN ? 'admin' : role === Role.MODERATOR ? 'mod' : 'user'
+export const getPostsPrivatePaginated = async (offset: number, size: number, roles?: Role[]) => {
+  const check = roles?.includes(Role.ADMIN) ? 'admin' : roles?.includes(Role.MODERATOR) ? 'mod' : 'user'
   const response = await HttpRequest.get<PostPrivatePaginated>(`/${check}/post?offset=${offset}&size=${size}`)
   if (response.status === 200) return response.data
 }

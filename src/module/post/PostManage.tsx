@@ -25,7 +25,7 @@ const PostManage = () => {
 
   const { data: postsPrivatePaginated, refetch } = useQuery({
     queryKey: ['posts-private', pagination],
-    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles[0])
+    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles)
   })
   // const postsPrivatePaginated = {
   //   paginationPosts: [
