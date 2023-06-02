@@ -79,8 +79,8 @@ function App() {
             <Route path='/manage/user' element={<UserManage />} />
             <Route path='/manage/update-user' element={<UserUpdate />} />
             <Route path='/manage/add-user' element={<UserAddNew />} />
+          */}
             <Route path='/manage/update-post/:id' element={<PostUpdate />} />
-             */}
           </Route>
         </Route>
       </Routes>

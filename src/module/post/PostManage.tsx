@@ -147,13 +147,13 @@ const PostManage = () => {
                   </td>
                   <td>{post?.categoryName}</td>
                   <td>
-                    <div className='flex items-center gap-x-2'>
+                    <Link to={`/manage/update-post/${post.id}`} className='flex items-center gap-x-2'>
                       <img src={post.thumbnail} className='w-10 h-10 rounded-md' alt='' />
                       <div className=''>
                         <h3 className='font-semibold'>{post.title}</h3>
                         <time className='text-xs text-gray-400'>{formatMilisecondToDate(post.dateCreated)}</time>
                       </div>
-                    </div>
+                    </Link>
                   </td>
                   <td>{post.username}</td>
                   <td>{formatMilisecondToDate(post.dateCreated)}</td>
