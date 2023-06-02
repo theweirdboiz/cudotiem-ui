@@ -70,11 +70,7 @@ const PostUpdate = () => {
     setThumbnail(post?.postDetailResponse.imageUrls?.[0] || '')
     setImageUrls(post?.postDetailResponse?.imageUrls || [])
     setContent(post?.postDetailResponse.content || '')
-    // handleChangeThumbnail(
-    //   'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fimgs%2F1684909709789ch.jpg?alt=media&token=03865725-5054-4a0d-91a0-cb9537b1d0a7'
-    // )
-    // handleChangeImageUrls(post?.postDetailResponse?.imageUrls?.filter((img) => img !== thumbnail) || [])
-    // reset(post?.postDetailResponse)
+    reset(post?.postDetailResponse)
   }, [isSuccess])
 
   const handleEditorChange = (content: string) => {
@@ -132,12 +128,12 @@ const PostUpdate = () => {
     setThumbnail(thumbnail)
   }
 
-  // if (isLoading) return <Spinner />
+  if (isLoading) return <Spinner />
   // console.log(thumbnail)
 
   return (
     <>
-      {!isSuccess && (
+      {isSuccess && (
         <>
           <DashboardHeading>Cập nhật tin đăng</DashboardHeading>
           <form action='' onSubmit={handleSubmit(onSubmit)}>
