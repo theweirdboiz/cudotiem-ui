@@ -62,6 +62,8 @@ const PostUpdate = () => {
     queryFn: async () => await getPostById<PostDetail>(id as string)
   })
 
+  console.log(post?.postDetailResponse?.imageUrls?.[0])
+
   // update post
   useEffect(() => {
     document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
