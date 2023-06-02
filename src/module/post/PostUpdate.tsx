@@ -9,7 +9,7 @@ import { useAth, useCategory } from '~/contexts'
 import { toast } from 'react-toastify'
 import { Post, PostDetail, PostStatus } from '~/types/post.type'
 import { HttpRequest } from '~/ultis'
-import { FormGroup, Input, Label, Dropdown, Button, Radio } from '~/components'
+import { FormGroup, Input, Label, Dropdown, Button, Radio, Spinner } from '~/components'
 import { ENV } from '~/config/constant'
 import { Editor } from '@tinymce/tinymce-react'
 import { getPostById, updatePostById } from '~/services'
@@ -53,11 +53,14 @@ const PostUpdate = () => {
   const watchStatus = watch('status')
 
   // fetch post by slug/id
-  const { data: post } = useQuery({
+  const {
+    data: post,
+    isSuccess,
+    isLoading
+  } = useQuery({
     queryKey: ['post', id],
     queryFn: async () => await getPostById<PostDetail>(id as string)
   })
-  console.log('test ', post)
 
   // update post
   useEffect(() => {
@@ -68,7 +71,7 @@ const PostUpdate = () => {
     setThumbnail(post?.postDetailResponse?.imageUrls?.[0] || '')
     setImageUrls(post?.postDetailResponse?.imageUrls || [])
     setContent(post?.postDetailResponse.content || '')
-  }, [])
+  }, [isSuccess])
 
   const handleEditorChange = (content: string) => {
     setContent(content)
@@ -124,7 +127,9 @@ const PostUpdate = () => {
   const handleChangeThumbnail = (thumbnail: string) => {
     setThumbnail(thumbnail)
   }
-
+  {
+    if (isLoading) return <Spinner />
+  }
   return (
     <>
       <DashboardHeading>Cập nhật tin đăng</DashboardHeading>
