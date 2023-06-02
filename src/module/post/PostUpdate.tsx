@@ -68,9 +68,11 @@ const PostUpdate = () => {
     reset(post?.postDetailResponse)
     const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
     setCategorySelected(category)
-    setThumbnail(post?.postDetailResponse?.imageUrls?.[0] || '')
+
     setImageUrls(post?.postDetailResponse?.imageUrls || [])
     setContent(post?.postDetailResponse.content || '')
+    handleChangeThumbnail(post?.postDetailResponse?.imageUrls?.[0] || '')
+    handleChangeImageUrls(post?.postDetailResponse?.imageUrls?.filter((img) => img !== thumbnail) || [])
   }, [isSuccess])
 
   const handleEditorChange = (content: string) => {
@@ -127,9 +129,9 @@ const PostUpdate = () => {
   const handleChangeThumbnail = (thumbnail: string) => {
     setThumbnail(thumbnail)
   }
-  {
-    if (isLoading) return <Spinner />
-  }
+
+  if (isLoading) return <Spinner />
+
   return (
     <>
       <DashboardHeading>Cập nhật tin đăng</DashboardHeading>
