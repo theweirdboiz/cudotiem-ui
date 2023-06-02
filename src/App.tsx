@@ -80,9 +80,9 @@ function App() {
             <Route path='/manage/update-user' element={<UserUpdate />} />
             <Route path='/manage/add-user' element={<UserAddNew />} />
           */}
-            <Route path='/manage/update-post/:id' element={<PostUpdate />} />
           </Route>
         </Route>
+        <Route path='/manage/update-post/:id' element={<PostUpdate />} />
       </Routes>
     </Suspense>
   )

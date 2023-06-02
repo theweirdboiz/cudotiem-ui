@@ -57,11 +57,11 @@ const PostUpdate = () => {
     queryKey: ['post', id],
     queryFn: async () => await getPostById<PostDetail>(id as string)
   })
+  console.log('test ', post)
 
   // update post
   useEffect(() => {
     document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
-    console.log('test: ', post?.postDetailResponse)
     reset(post?.postDetailResponse)
     const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
     setCategorySelected(category)
