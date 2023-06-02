@@ -1,18 +1,16 @@
 import React from 'react'
 import { Button } from '~/components'
 import { IconHeart, IconSecurity } from '~/components/icon'
-import { Post } from '~/types/post.type'
+import { PostDetail } from '~/types/post.type'
 
-type Props = {
-  meta: Post | undefined
+type PostMetaProps = {
+  meta: PostDetail | undefined
 }
 
-const PostMeta = (props: Props) => {
-  const { meta } = props
-
+const PostMeta = ({ meta }: PostMetaProps) => {
   return (
     <div className='infor flex-1 py-3'>
-      <h4 className='text-red-400 font-semibold text-4xl mb-2'>{meta?.price} đ</h4>
+      <h4 className='text-red-400 font-semibold text-4xl mb-2'>{meta?.postDetailResponse.price} đ</h4>
       <Button type='button' height='h-8'>
         <IconHeart />
         Lưu tin

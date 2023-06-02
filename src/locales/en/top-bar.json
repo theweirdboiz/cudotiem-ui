@@ -1,0 +1,17 @@
+{
+  "top-bar": {
+    "home": "Home",
+    "search": {
+      "search": "Search",
+      "what-are-you-looking-for?": "What you are looking for?"
+    },
+    "account": {
+      "account": "Account",
+      "account-infor": "Account information",
+      "sign-in": "Sign in",
+      "sign-up": "Sign up",
+      "sign-out": "Sign out"
+    },
+    "post-news": "Post news"
+  }
+}

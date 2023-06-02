@@ -31,7 +31,7 @@ export const getPostBySlug = async (slug: string) => {
   if (response.status === 200) return response.data
 }
 export const getPostById = async <T>(id: number | string) => {
-  const response = await HttpRequest.get<T>('/posts/?id=' + id)
+  const response = await HttpRequest.get<T>('/post?id=' + id)
   if (response.status === 200) return response.data
 }
 

@@ -1,0 +1,17 @@
+{
+  "top-bar": {
+    "home": "Trang chủ",
+    "search": {
+      "search": "Search",
+      "what-are-you-looking-for?": "Bạn tìm gì hôm nay?"
+    },
+    "account": {
+      "account": "Tài khoản",
+      "account-infor": "Thông tin tài khoản",
+      "sign-in": "Đăng nhập",
+      "sign-up": "Đăng ký",
+      "sign-out": "Đăng xuất"
+    },
+    "post-news": "Đăng tin"
+  }
+}

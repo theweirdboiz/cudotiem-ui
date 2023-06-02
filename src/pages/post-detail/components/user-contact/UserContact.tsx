@@ -1,21 +1,24 @@
-import React from 'react'
 import { Button } from '~/components'
 import { IconPhone, IconStart } from '~/components/icon'
+import { PostDetail } from '~/types/post.type'
 
-const UserContact = () => {
+interface UserContactProps {
+  userContact: Pick<PostDetail, 'userDto'>['userDto'] | undefined
+}
+const UserContact = ({ userContact }: UserContactProps) => {
   return (
     <div className='contact mt-3 w-60 border border-gray-100 rounded-md'>
       <div className='border border-gray-100 rounded-md p-3'>
         <div className='flex-center gap-x-2 mb-3'>
-          <img src='https://source.unsplash.com/random' className='w-10 h-10 rounded-full' alt='' />
+          <img src={userContact?.avatar} className='w-10 h-10 rounded-full' alt='' />
           <div>
-            <h5 className='font-medium text-sm'>User02123</h5>
+            <h5 className='font-medium text-sm'>{userContact?.fullname}</h5>
             <h5 className='text-xs'>Người mới</h5>
           </div>
         </div>
         <h5 className='flex-center gap-x-2 text-blue-700 rounded-md px-3 py-1 font-semibold mb-3'>
           <IconPhone size='w-4 h-4' />
-          <span>09123213</span>
+          <span>{userContact?.fullname}</span>
         </h5>
         <div className='flex text-sm justify-evenly mb-3'>
           <div className='flex flex-col'>

@@ -17,6 +17,8 @@ export interface User {
   username: string
   email: string
   password: string
+  fullname?: string
+  phoneNumber?: string
   avatar?: string
   status?: Status
   roles?: Role[]

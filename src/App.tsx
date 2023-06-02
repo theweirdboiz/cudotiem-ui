@@ -49,8 +49,8 @@ function App() {
           <Route path='/' element={<HomePage />} />
         </Route>
         <Route element={<DefaultLayout />}>
-          <Route path='/chat/:id' element={<ChatPage />} />
-          <Route path='/:slug' element={<PostDetailPage />} />
+          {/* <Route path='/chat/:id' element={<ChatPage />} /> */}
+          <Route path='/:slug/:id' element={<PostDetailPage />} />
         </Route>
         <Route path='*' element={<Eror404Page />} />
         <Route path='/unauthorized' element={<UnauthorizedPage />} />

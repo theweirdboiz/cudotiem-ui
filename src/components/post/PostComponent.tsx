@@ -6,12 +6,11 @@ import useFormatDate from '~/hooks/useFormatDate'
 type Props = {
   post: Post
 }
-
 const PostComponent = ({ post }: Props) => {
   const { formatDate } = useFormatDate()
   return (
     <>
-      <Link to={`/${post.slug}`} className='rounded-md border border-gray-100 bg-white hover:shadow-lg'>
+      <Link to={`/${post.slug}/${post.id}`} className='rounded-md border border-gray-100 bg-white hover:shadow-lg'>
         <div className='w-40 h-40 mt-3 mx-auto'>
           <img src={post.thumbnail || uploadImage} alt='' className='' />
         </div>

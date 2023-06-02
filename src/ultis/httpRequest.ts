@@ -29,7 +29,6 @@ class Api {
       withCredentials: true
     })
     // request
-    // add token to request
     this.axiosInstance.interceptors.request.use(
       (config) => {
         const jwtToken: Auth = getCookie('cudotiem') && JSON.parse(getCookie('cudotiem') as string)
@@ -49,13 +48,10 @@ class Api {
           try {
             const response = await this.axiosInstance.get('/refreshToken')
             const newToken = response.data.token
-
             setCookie('cudotiem', newToken)
-
             const originalRequest = error.config
             return this.axiosInstance(originalRequest)
           } catch (err) {
-            // handle error
             return Promise.reject(error)
           }
         }

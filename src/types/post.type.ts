@@ -1,3 +1,5 @@
+import { User } from './user.type'
+
 export enum PostStatus {
   APPROVED = 'APPROVED',
   PENDING = 'PENDING',
@@ -7,27 +9,23 @@ export enum PostStatus {
 export interface Post {
   id: number
   title: string
-  price: number
-  thumbnail: string
-  datePosted?: number
-  dateCreated?: number
-  dateUpdated?: number
-  username?: string
-  status?: PostStatus
-  categoryName?: string
-  categoryCode?: string
-  imageUrls?: string[]
   content?: string
+  price: number
   slug?: string
+  username?: string
+  imageUrls?: string[]
+  thumbnail: string
+  dateCreated?: number
+  categoryName?: string
+  dateUpdated?: number
+  datePosted?: number
+  status?: PostStatus
+  categoryCode?: string
 }
 
 export interface PostDetail {
-  id: number
-  title: string
-  price: number
-  slug: string
-  thumbnail: string
-  postedDate: string
+  userDto: Pick<User, 'fullname' | 'phoneNumber' | 'avatar'>
+  postDetailResponse: Omit<Post, 'dateUpdated' | 'datePosted' | 'status' | 'categoryCode'>
 }
 export interface PostPagination {
   paginationPosts: Post[]

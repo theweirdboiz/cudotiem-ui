@@ -130,7 +130,7 @@ const PostManage = () => {
               <th>Id</th>
               <th>Danh mục</th>
               <th>Tin đăng</th>
-              {auth?.roles[0] !== Role.USER && <th>Người đăng</th>}
+              <th>Người đăng</th>
               <th>Ngày tạo</th>
               <th>Ngày cập nhật</th>
               <th>Ngày đăng</th>
@@ -153,7 +153,7 @@ const PostManage = () => {
                       </div>
                     </div>
                   </td>
-                  <td>{auth?.roles[0] !== Role.ADMIN && post.username}</td>
+                  <td>{post.username}</td>
                   <td>{formatMilisecondToDate(post.dateCreated)}</td>
                   <td>{formatMilisecondToDate(post.dateUpdated)}</td>
                   <td>{formatMilisecondToDate(post.datePosted)}</td>
