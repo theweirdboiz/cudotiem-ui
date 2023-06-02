@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { useAth, useCategory } from '~/contexts'
 import { toast } from 'react-toastify'
-import { Post, PostStatus } from '~/types/post.type'
+import { Post, PostDetail, PostStatus } from '~/types/post.type'
 import { HttpRequest } from '~/ultis'
 import { FormGroup, Input, Label, Dropdown, Button, Radio } from '~/components'
 import { ENV } from '~/config/constant'
@@ -55,18 +55,18 @@ const PostUpdate = () => {
   // fetch post by slug/id
   const { data: post } = useQuery({
     queryKey: ['post', id],
-    queryFn: async () => await getPostById<Post>(id as string)
+    queryFn: async () => await getPostById<PostDetail>(id as string)
   })
 
   // update post
   useEffect(() => {
     document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
-    reset(post)
-    const category = categories?.find((category) => category.code === post?.categoryCode)
+    reset(post?.postDetailResponse)
+    const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
     setCategorySelected(category)
-    setThumbnail(post?.thumbnail || '')
-    setImageUrls(post?.imageUrls || [])
-    setContent(post?.content || '')
+    setThumbnail(post?.postDetailResponse?.imageUrls?.[0] || '')
+    setImageUrls(post?.postDetailResponse?.imageUrls || [])
+    setContent(post?.postDetailResponse.content || '')
   }, [])
 
   const handleEditorChange = (content: string) => {
@@ -126,7 +126,7 @@ const PostUpdate = () => {
 
   return (
     <>
-      <DashboardHeading>Tạo tin đăng</DashboardHeading>
+      <DashboardHeading>Cập nhật tin đăng</DashboardHeading>
       <form action='' onSubmit={handleSubmit(onSubmit)}>
         <div className='grid grid-cols-2 gap-3'>
           <FormGroup>
