@@ -32,9 +32,9 @@ const schema = yup.object().shape({
 const PostUpdate = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { auth } = useAth()
   const { id } = useParams()
   const { categories } = useCategory()
-  const { auth } = useAth()
   const [thumbnail, setThumbnail] = useState<string>('')
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [content, setContent] = useState('')
@@ -61,6 +61,7 @@ const PostUpdate = () => {
   // update post
   useEffect(() => {
     document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
+    console.log('test: ', post?.postDetailResponse)
     reset(post?.postDetailResponse)
     const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
     setCategorySelected(category)
