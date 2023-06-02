@@ -62,19 +62,16 @@ const PostUpdate = () => {
     queryFn: async () => await getPostById<PostDetail>(id as string)
   })
 
-  console.log(post?.postDetailResponse?.imageUrls?.[0])
-
   // update post
   useEffect(() => {
     document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
-    reset(post?.postDetailResponse)
     const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
-    setCategorySelected(category)
-
-    setImageUrls(post?.postDetailResponse?.imageUrls || [])
-    setContent(post?.postDetailResponse.content || '')
-    handleChangeThumbnail(post?.postDetailResponse?.imageUrls?.[0] || '')
-    handleChangeImageUrls(post?.postDetailResponse?.imageUrls?.filter((img) => img !== thumbnail) || [])
+    isSuccess && setCategorySelected(category)
+    isSuccess && setImageUrls(post?.postDetailResponse?.imageUrls || [])
+    isSuccess && setContent(post?.postDetailResponse.content || '')
+    isSuccess && handleChangeThumbnail(post?.postDetailResponse?.imageUrls?.[0] || '')
+    isSuccess && handleChangeImageUrls(post?.postDetailResponse?.imageUrls?.filter((img) => img !== thumbnail) || [])
+    isSuccess && reset(post?.postDetailResponse)
   }, [isSuccess])
 
   const handleEditorChange = (content: string) => {
