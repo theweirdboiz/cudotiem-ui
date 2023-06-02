@@ -8,6 +8,7 @@ import { useAth } from '~/contexts'
 import { Role } from '~/types/role.type'
 import { twMerge } from 'tailwind-merge'
 import { LabelPostAction } from '~/components/label'
+import { useTranslation } from 'react-i18next'
 import useFormatDate from '~/hooks/useFormatDate'
 import { toast } from 'react-toastify'
 import { CreatePostMessage } from '~/ultis/message/post.message'
@@ -22,9 +23,10 @@ const PostManage = () => {
   // const { posts } = usePost()
   // const queryClient = new QueryClient()
   const { auth } = useAth()
+  const { i18n } = useTranslation()
 
   const { data: postsPrivatePaginated, refetch } = useQuery({
-    queryKey: ['posts-private', pagination],
+    queryKey: ['posts-private', pagination, i18n.language],
     queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles)
   })
   // const postsPrivatePaginated = {
