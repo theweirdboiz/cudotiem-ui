@@ -42,9 +42,11 @@ const UserContact = ({ userContact }: UserContactProps) => {
             <span>Theo dõi</span>
           </div>
         </div>
-        <div className='flex-center justify-between gap-x-3 text-blue-700'>
+        <div className='flex-center justify-between gap-x-1 text-blue-700'>
           <Button className='w-[70px] py-2 px-1'>Xem info</Button>
-          <Button to='/chat/abc-xyz py-2 px-1'>Chat với người bán</Button>
+          <Button to='/chat/abc-xyz' className='py-2 px-1'>
+            Chat với người bán
+          </Button>
         </div>
       </div>
     </div>

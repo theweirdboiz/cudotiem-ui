@@ -22,7 +22,7 @@ const Button = ({ type = 'button', children, className, onClick, ...props }: But
         `${defaultClassName}
         }`,
         className,
-        `${disabled && 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700'}`,
+        `${disabled ? 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-700' : ''}`,
         `${isloading ? 'bg-blue-100' : 'bg-white'}`
       )}
       type={type}

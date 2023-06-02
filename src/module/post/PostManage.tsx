@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 import useFormatDate from '~/hooks/useFormatDate'
 import { toast } from 'react-toastify'
 import { CreatePostMessage } from '~/ultis/message/post.message'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const PostManage = () => {
   const [pagination, setPagination] = useState({
@@ -142,7 +142,9 @@ const PostManage = () => {
             {postsPrivatePaginated ? (
               postsPrivatePaginated?.paginationPosts.map((post: Post) => (
                 <tr key={post.id} className='text-sm shadow-md'>
-                  <td>{post.id}</td>
+                  <td>
+                    <Link to={`/${post.slug}/${post.id}`}>{post.id}</Link>
+                  </td>
                   <td>{post?.categoryName}</td>
                   <td>
                     <div className='flex items-center gap-x-2'>
