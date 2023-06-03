@@ -1,6 +1,6 @@
 import { Role } from './role.type'
 
 export interface Auth {
-  roles: Role[]
+  role: Role
   accessToken: string
 }

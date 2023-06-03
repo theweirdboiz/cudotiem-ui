@@ -7,14 +7,14 @@ export const getAllPosts = async (offset: number, size: number) => {
   if (response.status === 200) return response.data
 }
 // admin
-export const handlePostByStatus = async <T>(id: number, status: PostStatus, role: Role) => {
+export const handlePostByStatus = async <T>(id: number, status: PostStatus, role?: Role) => {
   const check = role === Role.USER ? 'user' : 'admin'
   const response = await HttpRequest.put<T>(`/${check}/post/${id}?status=${status}`)
   if (response.status === 200) return response.data
 }
 
-export const getPostsPrivatePaginated = async (offset: number, size: number, roles?: Role[]) => {
-  const check = roles?.includes(Role.ADMIN) ? 'admin' : roles?.includes(Role.MODERATOR) ? 'mod' : 'user'
+export const getPostsPrivatePaginated = async (offset: number, size: number, role?: Role) => {
+  const check = role === Role.ADMIN ? 'admin' : role == Role.MODERATOR ? 'mod' : 'user'
   const response = await HttpRequest.get<PostPrivatePaginated>(`/${check}/post?offset=${offset}&size=${size}`)
   if (response.status === 200) return response.data
 }

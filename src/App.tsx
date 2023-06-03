@@ -62,15 +62,15 @@ function App() {
         <Route path='*' element={<Eror404Page />} />
         <Route path='/unauthorized' element={<UnauthorizedPage />} />
 
-        <Route element={<RequiredAuth allowedRoles={[Role.USER]} />}>
-          <Route element={<DashboardLayout />}>
-            <Route path='/manage/update-post/:id' element={<PostUpdate />} />
-            <Route path='/manage/add-post' element={<PostAddNew />} />
-          </Route>
+        <Route element={<DashboardLayout />}>
+          <Route path='/manage/update-post/:id' element={<PostUpdate />} />
+          <Route path='/manage/add-post' element={<PostAddNew />} />
+          <Route path='/manage/post' element={<PostManage />} />
+          <Route element={<RequiredAuth allowedRoles={[Role.USER]} />}></Route>
         </Route>
         <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}>
           <Route element={<DashboardLayout />}>
-            <Route path='/manage/post' element={<PostManage />} />
+            {/* <Route path='/manage/post' element={<PostManage />} /> */}
             {/* <Route path='/manage/post' element={<PostManage />} /> */}
             {/* <Route path='/manage/category' element={<CategoryManage />} />
             <Route path='/manage/update-category' element={<CategoryUpdate />} />

@@ -74,7 +74,8 @@ const SignInModal = () => {
         exact: true
       })
       navigate(`${from || '/'}`)
-      setAuth(jwtToken)
+      const role = jwtToken.roles[0]
+      setAuth({ ...jwtToken, role })
       setCookie('cudotiem', JSON.stringify(jwtToken))
       toast.success(SignInMessage.SUCCESS)
     },

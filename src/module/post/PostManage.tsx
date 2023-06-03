@@ -7,7 +7,7 @@ import { getPostsPrivatePaginated, handlePostByStatus } from '~/services'
 import { useAth } from '~/contexts'
 import { Role } from '~/types/role.type'
 import { twMerge } from 'tailwind-merge'
-import { LabelPostAction } from '~/components/label'
+import { LabelPostAction, LabelPostStatus } from '~/components/label'
 import { useTranslation } from 'react-i18next'
 import useFormatDate from '~/hooks/useFormatDate'
 import { Link, useNavigate } from 'react-router-dom'
@@ -22,14 +22,9 @@ const PostManage = () => {
   // const queryClient = new QueryClient()
   const { auth } = useAth()
   const { i18n } = useTranslation()
-  const role = auth?.roles.includes(Role.ADMIN)
-    ? Role.ADMIN
-    : auth?.roles.includes(Role.MODERATOR)
-    ? Role.MODERATOR
-    : Role.USER
-  const { data: postsPrivatePaginated, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['posts-private', pagination, i18n.language],
-    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles)
+    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.role)
   })
   const tableTabs = [
     {
@@ -78,51 +73,51 @@ const PostManage = () => {
       field: ''
     }
   ]
-  // const postsPrivatePaginated = {
-  //   paginationPosts: [
-  //     {
-  //       id: 8,
-  //       title: 'new post',
-  //       price: 100.0,
-  //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhm34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
-  //       datePosted: 253402275599000,
-  //       dateCreated: 1684910788513,
-  //       dateUpdated: 1684910788513,
-  //       username: 'kienthuc',
-  //       status: PostStatus.HIDDEN,
-  //       categoryName: 'quần áo'
-  //     },
-  //     {
-  //       id: 10,
-  //       title: 'new post',
-  //       price: 100.0,
-  //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhmsvsv34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
-  //       datePosted: 253402275599000,
-  //       dateCreated: 1684910788513,
-  //       dateUpdated: 1684910788513,
-  //       username: 'kienthuc',
-  //       status: PostStatus.CREATE_REJECTED,
-  //       categoryName: 'quần áo'
-  //     },
-  //     {
-  //       id: 11,
-  //       title: 'bai viet moi',
-  //       price: 234523.0,
-  //       thumbnail:
-  //         'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fthumbnail%2F1684925640846118183102_4355227071217499_45429216837241885_n.png?alt=media&token=6678bc7e-fdc1-415e-931b-19252b5aa92c',
-  //       datePosted: 253402275599000,
-  //       dateCreated: 1684910788513,
-  //       dateUpdated: 1684910788513,
-  //       username: 'kienthuc',
-  //       status: PostStatus.CREATE_PENDING,
-  //       categoryName: 'giày dép'
-  //     }
-  //   ],
-  //   totalPage: 3
-  // }
+  const postsPrivatePaginated = {
+    paginationPosts: [
+      // {
+      //   id: 8,
+      //   title: 'new post',
+      //   price: 100.0,
+      //   thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhm34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
+      //   datePosted: 253402275599000,
+      //   dateCreated: 1684910788513,
+      //   dateUpdated: 1684910788513,
+      //   username: 'kienthuc',
+      //   status: PostStatus.CREATE_PENDING,
+      //   categoryName: 'quần áo'
+      // }
+      // {
+      //   id: 10,
+      //   title: 'new post',
+      //   price: 100.0,
+      //   thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhmsvsv34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
+      //   datePosted: 253402275599000,
+      //   dateCreated: 1684910788513,
+      //   dateUpdated: 1684910788513,
+      //   username: 'kienthuc',
+      //   status: PostStatus.CREATE_REJECTED,
+      //   categoryName: 'quần áo'
+      // }
+      {
+        id: 11,
+        title: 'bai viet moi',
+        price: 234523.0,
+        thumbnail:
+          'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fthumbnail%2F1684925640846118183102_4355227071217499_45429216837241885_n.png?alt=media&token=6678bc7e-fdc1-415e-931b-19252b5aa92c',
+        datePosted: 253402275599000,
+        dateCreated: 1684910788513,
+        dateUpdated: 1684910788513,
+        username: 'kienthuc',
+        status: PostStatus.HIDDEN,
+        categoryName: 'giày dép'
+      }
+    ],
+    totalPage: 3
+  }
   const statusColor = useMemo(() => {
     const getStatusColor = (status: PostStatus | undefined) => {
-      let styleClassnames = ''
+      let styleClassnames
       switch (status) {
         case PostStatus.APPROVED:
           styleClassnames = 'text-red-500'
@@ -140,47 +135,82 @@ const PostManage = () => {
           styleClassnames = 'text-red-500'
           break
         default:
-          return 'text-gray-500'
+          styleClassnames = 'text-gray-500'
       }
     }
     return getStatusColor
   }, [])
 
   const handlePostMutation = useMutation({
-    mutationFn: (data: any) => handlePostByStatus(data.id, data.status, role),
+    mutationFn: (data: any) => handlePostByStatus(data.id, data.status, auth?.role),
     onSuccess: () => refetch()
   })
-  // const userHandlePostMutation = useMutation({
-  //   mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
-  //   onSuccess: () => refetch()
-  // })
+
   const handleClickOnPage = (page: number) => {
     setPagination((prev) => ({ ...prev, offset: page }))
   }
+  const handleActionByAdmin = (id: number, status: PostStatus) => {
+    handlePostMutation.mutate({ id, status })
+  }
+  const handleActionByUser = (id: number, status: PostStatus) => {
+    handlePostMutation.mutate({ id, status })
+  }
   // admin
-  const handleAction = (id: number, status?: PostStatus) => {
-    let statusReq
+  const createActionsByAdmin = (id: number, status?: PostStatus) => {
+    let statusReq: PostStatus[] = []
     switch (status) {
-      case PostStatus.APPROVED:
-        statusReq = PostStatus.HIDDEN
-        break
       case PostStatus.CREATE_PENDING:
-        statusReq = PostStatus.CREATE_REJECTED
+        statusReq.push(PostStatus.CREATE_REJECTED, PostStatus.APPROVED)
         break
       case PostStatus.UPDATE_PENDING:
-        statusReq = PostStatus.UPDATE_REJECTED
-        break
-      case PostStatus.CREATE_REJECTED:
-        statusReq = PostStatus.CREATE_PENDING
-        break
-      case PostStatus.UPDATE_REJECTED:
-        statusReq = PostStatus.UPDATE_PENDING
+        statusReq.push(PostStatus.UPDATE_REJECTED, PostStatus.APPROVED)
         break
       default:
+        statusReq
         break
     }
-    handlePostMutation.mutate({ id, status: statusReq })
+    return (
+      <>
+        {statusReq.map((status, index) => (
+          <Button className={`${statusColor(status)} mb-1`} onClick={() => handleActionByAdmin(id, status)}>
+            <LabelPostAction key={index} status={status} />
+          </Button>
+        ))}
+      </>
+    )
   }
+
+  const createActionsByUser = (id: number, status?: PostStatus) => {
+    let statusReq: PostStatus[] = []
+    switch (status) {
+      case PostStatus.CREATE_PENDING:
+        statusReq.push(PostStatus.CREATE_REJECTED, PostStatus.HIDDEN)
+        break
+      case PostStatus.CREATE_REJECTED:
+        statusReq.push(PostStatus.CREATE_PENDING, PostStatus.HIDDEN)
+        break
+      case PostStatus.UPDATE_PENDING:
+        statusReq.push(PostStatus.UPDATE_REJECTED, PostStatus.HIDDEN)
+        break
+      case PostStatus.UPDATE_REJECTED:
+        statusReq.push(PostStatus.UPDATE_PENDING, PostStatus.HIDDEN)
+        break
+      case PostStatus.APPROVED:
+        statusReq.push(PostStatus.HIDDEN)
+        break
+    }
+
+    return (
+      <>
+        {statusReq.map((status, index) => (
+          <Button className={`${statusColor(status)} mb-1`} onClick={() => handleActionByUser(id, status)}>
+            <LabelPostAction key={index} status={status} />
+          </Button>
+        ))}
+      </>
+    )
+  }
+
   return (
     <>
       <DashboardHeading>Quản lý tin đăng</DashboardHeading>
@@ -238,13 +268,10 @@ const PostManage = () => {
                   </td>
 
                   <td>
-                    <Button
-                      disabled={post.status === PostStatus.HIDDEN}
-                      className={`w-30 mx-auto py-2 ${statusColor(post.status)}`}
-                      onClick={() => handleAction(post.id, post.status)}
-                    >
-                      <LabelPostAction status={post.status} role={role} />
-                    </Button>
+                    {auth?.role === Role.ADMIN || auth?.role === Role.MODERATOR
+                      ? createActionsByAdmin(post.id, post.status)
+                      : createActionsByUser(post.id, post.status)}
+                    {/* {createActionsByAdmin(post.id, post.status)} */}
                   </td>
                 </tr>
               ))
