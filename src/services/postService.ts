@@ -7,8 +7,8 @@ export const getAllPosts = async (offset: number, size: number) => {
   if (response.status === 200) return response.data
 }
 // admin
-export const handlePostByStatus = async <T>(id: number, status: PostStatus, roles?: Role[]) => {
-  const check = roles?.includes(Role.USER) ? 'user' : roles?.includes(Role.MODERATOR) ? 'mod' : 'admin'
+export const handlePostByStatus = async <T>(id: number, status: PostStatus, role: Role) => {
+  const check = role.toLowerCase()
   const response = await HttpRequest.put<T>(`/${check}/post/${id}?status=${status}`)
   if (response.status === 200) return response.data
 }
@@ -40,13 +40,15 @@ export const getPostByCategory = async (category: string) => {
   if (response.status === 200) return response.data
 }
 
-export const createPost = async <T>(post: T) => {
-  const response = await HttpRequest.post<T>(`/post`, post)
+export const createPost = async <T>(post: T, role: Role) => {
+  const check = role.toLowerCase()
+  const response = await HttpRequest.post<T>(`/${check}/post`, post)
   if (response.status === 200) return response.data
 }
 
-export const updatePostById = async <T>(id: number | string, data: T) => {
-  const response = await HttpRequest.put<T>(`/posts/${id}`, data)
+export const updatePostById = async <T>(id: number | string, data: T, role: Role) => {
+  const check = role.toLowerCase()
+  const response = await HttpRequest.put<T>(`/${check}/post/${id}`, data)
   if (response.status === 200) return response.data
 }
 

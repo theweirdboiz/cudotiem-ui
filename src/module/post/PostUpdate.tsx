@@ -92,7 +92,7 @@ const PostUpdate = () => {
   //   return response.data.data.url
   // }
   const updatePostMutation = useMutation({
-    mutationFn: (post: Post) => updatePostById<Post>(id as string, post),
+    mutationFn: (post: Post) => updatePostById<Post>(id as string, post, Role.USER),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['posts'],

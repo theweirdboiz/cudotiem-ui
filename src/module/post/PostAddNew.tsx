@@ -52,7 +52,7 @@ const PostAdd = () => {
   const watchStatus = watch('status')
 
   const createPostMutation = useMutation({
-    mutationFn: (body: Post) => createPost<Post>(body),
+    mutationFn: (body: Post) => createPost<Post>(body, Role.USER),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ['posts'],

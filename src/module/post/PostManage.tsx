@@ -141,8 +141,13 @@ const PostManage = () => {
     }
     return getStatusColor
   }, [])
+  const role = auth?.roles.includes(Role.ADMIN)
+    ? Role.ADMIN
+    : auth?.roles.includes(Role.MODERATOR)
+    ? Role.MODERATOR
+    : Role.USER
   const handlePostMutation = useMutation({
-    mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
+    mutationFn: (data: any) => handlePostByStatus(data.id, data.status, role),
     onSuccess: () => refetch()
   })
   // const userHandlePostMutation = useMutation({
