@@ -27,7 +27,7 @@ const PostManage = () => {
     : auth?.roles.includes(Role.MODERATOR)
     ? Role.MODERATOR
     : Role.USER
-  const { data, refetch } = useQuery({
+  const { data: postsPrivatePaginated, refetch } = useQuery({
     queryKey: ['posts-private', pagination, i18n.language],
     queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles)
   })
@@ -78,48 +78,48 @@ const PostManage = () => {
       field: ''
     }
   ]
-  const postsPrivatePaginated = {
-    paginationPosts: [
-      {
-        id: 8,
-        title: 'new post',
-        price: 100.0,
-        thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhm34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
-        datePosted: 253402275599000,
-        dateCreated: 1684910788513,
-        dateUpdated: 1684910788513,
-        username: 'kienthuc',
-        status: PostStatus.HIDDEN,
-        categoryName: 'quần áo'
-      },
-      {
-        id: 10,
-        title: 'new post',
-        price: 100.0,
-        thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhmsvsv34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
-        datePosted: 253402275599000,
-        dateCreated: 1684910788513,
-        dateUpdated: 1684910788513,
-        username: 'kienthuc',
-        status: PostStatus.CREATE_REJECTED,
-        categoryName: 'quần áo'
-      },
-      {
-        id: 11,
-        title: 'bai viet moi',
-        price: 234523.0,
-        thumbnail:
-          'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fthumbnail%2F1684925640846118183102_4355227071217499_45429216837241885_n.png?alt=media&token=6678bc7e-fdc1-415e-931b-19252b5aa92c',
-        datePosted: 253402275599000,
-        dateCreated: 1684910788513,
-        dateUpdated: 1684910788513,
-        username: 'kienthuc',
-        status: PostStatus.CREATE_PENDING,
-        categoryName: 'giày dép'
-      }
-    ],
-    totalPage: 3
-  }
+  // const postsPrivatePaginated = {
+  //   paginationPosts: [
+  //     {
+  //       id: 8,
+  //       title: 'new post',
+  //       price: 100.0,
+  //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhm34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
+  //       datePosted: 253402275599000,
+  //       dateCreated: 1684910788513,
+  //       dateUpdated: 1684910788513,
+  //       username: 'kienthuc',
+  //       status: PostStatus.HIDDEN,
+  //       categoryName: 'quần áo'
+  //     },
+  //     {
+  //       id: 10,
+  //       title: 'new post',
+  //       price: 100.0,
+  //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhmsvsv34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
+  //       datePosted: 253402275599000,
+  //       dateCreated: 1684910788513,
+  //       dateUpdated: 1684910788513,
+  //       username: 'kienthuc',
+  //       status: PostStatus.CREATE_REJECTED,
+  //       categoryName: 'quần áo'
+  //     },
+  //     {
+  //       id: 11,
+  //       title: 'bai viet moi',
+  //       price: 234523.0,
+  //       thumbnail:
+  //         'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fthumbnail%2F1684925640846118183102_4355227071217499_45429216837241885_n.png?alt=media&token=6678bc7e-fdc1-415e-931b-19252b5aa92c',
+  //       datePosted: 253402275599000,
+  //       dateCreated: 1684910788513,
+  //       dateUpdated: 1684910788513,
+  //       username: 'kienthuc',
+  //       status: PostStatus.CREATE_PENDING,
+  //       categoryName: 'giày dép'
+  //     }
+  //   ],
+  //   totalPage: 3
+  // }
   const statusColor = useMemo(() => {
     const getStatusColor = (status: PostStatus | undefined) => {
       let styleClassnames = ''
