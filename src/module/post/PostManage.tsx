@@ -239,7 +239,7 @@ const PostManage = () => {
                   {auth?.roles.includes(Role.ADMIN) && (
                     <td>
                       <Button
-                        disabled={PostStatus.HIDDEN}
+                        disabled={post.status === PostStatus.HIDDEN}
                         className={`w-30 py-2 mx-auto ${statusColor(post.status)}`}
                         onClick={() => handleAction(post.id, post.status)}
                       >
