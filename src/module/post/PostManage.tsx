@@ -29,7 +29,7 @@ const PostManage = () => {
     : Role.USER
   const { data, refetch } = useQuery({
     queryKey: ['posts-private', pagination, i18n.language],
-    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, role)
+    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles)
   })
   const tableTabs = [
     {
