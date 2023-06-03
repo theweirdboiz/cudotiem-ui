@@ -66,8 +66,8 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path='/manage/update-post/:id' element={<PostUpdate />} />
           </Route>
-          <Route path='/manage/add-post' element={<PostAddNew />} />
         </Route>
+        <Route path='/manage/add-post' element={<PostAddNew />} />
         <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}>
           <Route element={<DashboardLayout />}>
             <Route path='/manage/post' element={<PostManage />} />
