@@ -123,7 +123,8 @@ const PostAdd = () => {
   const createImageFactory = (file: File | undefined) => {
     // const file = e.target.files?.[0]
     const name = file && file.name
-    const storePath = `images/posts/${Date.now()}${name}` as string
+    const storePath =
+      `https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images/posts/${Date.now()}${name}` as string
     const tempPath = URL.createObjectURL(file as any)
     return { name, storePath, e: file, tempPath } as ImageProps
   }

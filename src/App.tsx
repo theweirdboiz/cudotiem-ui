@@ -24,9 +24,9 @@ const UserAddNew = lazy(() => import('./module/user/UserAddNew'))
 const PostUpdate = lazy(() => import('./module/post/PostUpdate'))
 const PostManage = lazy(() => import('./module/post/PostManage'))
 const PostAddNew = lazy(() => import('./module/post/PostAddNew'))
-const CategoryUpdate = lazy(() => import('./module/category/CategoryUpdate'))
-const CategoryManage = lazy(() => import('./module/category/CategoryManage'))
-const CategoryAddNew = lazy(() => import('./module/category/CategoryAddNew'))
+// const CategoryUpdate = lazy(() => import('./module/category/CategoryUpdate'))
+// const CategoryManage = lazy(() => import('./module/category/CategoryManage'))
+// const CategoryAddNew = lazy(() => import('./module/category/CategoryAddNew'))
 
 // layout
 const AuthLayout = lazy(() => import('./layouts/auth/AuthLayout'))
@@ -69,8 +69,9 @@ function App() {
           </Route>
         </Route>
         <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}>
-          <Route path='/manage/post' element={<PostManage />} />
-          <Route element={<DashboardLayout />}></Route>
+          <Route element={<DashboardLayout />}>
+            <Route path='/manage/post' element={<PostManage />} />
+          </Route>
         </Route>
       </Routes>
     </Suspense>

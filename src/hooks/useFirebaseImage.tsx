@@ -92,10 +92,9 @@ const useFirebaseImage = () => {
           setImage((prev) => ({ ...prev, process: 0, errorMsg: 'Tải ảnh lên không thành công' }))
         },
         async () => {
-          await getDownloadURL(uploadTask.snapshot.ref)
-          // .then((downloadUrl) => {
-          //  image.
-          // })
+          await getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+            return downloadUrl
+          })
         }
       )
     }

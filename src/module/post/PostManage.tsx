@@ -162,6 +162,9 @@ const PostManage = () => {
       case PostStatus.CREATE_PENDING:
         statusReq.push(PostStatus.CREATE_REJECTED, PostStatus.APPROVED)
         break
+      case PostStatus.APPROVED:
+        statusReq.push(PostStatus.HIDDEN)
+        break
       case PostStatus.UPDATE_PENDING:
         statusReq.push(PostStatus.UPDATE_REJECTED, PostStatus.APPROVED)
         break
