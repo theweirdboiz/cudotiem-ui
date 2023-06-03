@@ -154,7 +154,7 @@ const PostAdd = () => {
               <span></span>
             </Dropdown>
           </FormGroup>
-          {auth?.roles.includes(Role.ADMIN || Role.MODERATOR) && (
+          {/* {auth?.roles.includes(Role.ADMIN || Role.MODERATOR) && (
             <FormGroup>
               <Label>Trạng thái</Label>
               <div className='flex gap-x-6'>
@@ -187,7 +187,7 @@ const PostAdd = () => {
                 </Radio>
               </div>
             </FormGroup>
-          )}
+          )} */}
           <FormGroup>
             <Label className={`${errors.title && 'text-red-400'}`}>Giá bán</Label>
             <Input
