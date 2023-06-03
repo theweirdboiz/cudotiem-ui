@@ -62,28 +62,14 @@ function App() {
         <Route path='*' element={<Eror404Page />} />
         <Route path='/unauthorized' element={<UnauthorizedPage />} />
 
-        {/* <Route element={<DefaultLayout />}>
-          <Route
-            path='/:category/:id'
-            element={
-              <DefaultLayout>
-                <PostDetailPage />
-              </DefaultLayout>
-            }
-          />
-          <Route path='/:category' element={<PostByCategoryPage />} />
-          <Route path='/me/profile' element={<ProfilePage />} />
-        </Route> */}
-        {/* <Route path='/manage/category' element={<CategoryManage />} /> */}
-
-        <Route element={<DashboardLayout />}>
-          <Route element={<RequiredAuth allowedRoles={[Role.USER]} />}>
+        <Route element={<RequiredAuth allowedRoles={[Role.USER]} />}>
+          <Route element={<DashboardLayout />}>
             <Route path='/manage/update-post/:id' element={<PostUpdate />} />
           </Route>
+          <Route path='/manage/add-post' element={<PostAddNew />} />
         </Route>
         <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}>
           <Route element={<DashboardLayout />}>
-            <Route path='/manage/add-post' element={<PostAddNew />} />
             <Route path='/manage/post' element={<PostManage />} />
             {/* <Route path='/manage/post' element={<PostManage />} /> */}
             {/* <Route path='/manage/category' element={<CategoryManage />} />
