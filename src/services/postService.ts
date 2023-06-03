@@ -8,7 +8,7 @@ export const getAllPosts = async (offset: number, size: number) => {
 }
 // admin
 export const handlePostByStatus = async <T>(id: number, status: PostStatus, role: Role) => {
-  const check = role === Role.USER && 'user'
+  const check = role === Role.USER ? 'user' : 'admin'
   const response = await HttpRequest.put<T>(`/${check}/post/${id}?status=${status}`)
   if (response.status === 200) return response.data
 }

@@ -236,28 +236,16 @@ const PostManage = () => {
                   <td>
                     <LabelStatus status={post.status} />
                   </td>
-                  {auth?.roles.includes(Role.ADMIN) && (
-                    <td>
-                      <Button
-                        disabled={post.status === PostStatus.HIDDEN}
-                        className={`w-30 py-2 mx-auto ${statusColor(post.status)}`}
-                        onClick={() => handleAction(post.id, post.status)}
-                      >
-                        <LabelPostAction status={post.status} />
-                      </Button>
-                    </td>
-                  )}
-                  {auth?.roles.includes(Role.USER) && (
-                    <td>
-                      <Button
-                        disabled={PostStatus.HIDDEN || PostStatus.APPROVED}
-                        className={`w-30 mx-auto py-2 ${statusColor(post.status)}`}
-                        onClick={() => handleAction(post.id, post.status)}
-                      >
-                        <LabelPostAction status={post.status} />
-                      </Button>
-                    </td>
-                  )}
+
+                  <td>
+                    <Button
+                      disabled={post.status === PostStatus.HIDDEN}
+                      className={`w-30 mx-auto py-2 ${statusColor(post.status)}`}
+                      onClick={() => handleAction(post.id, post.status)}
+                    >
+                      <LabelPostAction status={post.status} role={role} />
+                    </Button>
+                  </td>
                 </tr>
               ))
             ) : (

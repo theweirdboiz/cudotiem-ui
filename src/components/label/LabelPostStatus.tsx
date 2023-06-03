@@ -10,7 +10,7 @@ const LabelPostStatus = (props: Props) => {
   switch (status) {
     case PostStatus.APPROVED:
       styleClassnames = 'text-green-500'
-      text = 'Đã duyệt'
+      text = 'Tin đã duyệt'
       break
     case PostStatus.UPDATE_PENDING:
       styleClassnames = 'text-yellow-500'
@@ -18,14 +18,14 @@ const LabelPostStatus = (props: Props) => {
       break
     case PostStatus.CREATE_PENDING:
       styleClassnames = 'text-yellow-500'
-      text = 'Đang chờ duyệt'
+      text = 'Tin đang chờ duyệt'
       break
     case PostStatus.UPDATE_REJECTED:
       styleClassnames = 'text-red-500'
-      text = 'Từ chối cập nhật'
+      text = 'Tin bị từ chối cập nhật'
       break
     case PostStatus.CREATE_REJECTED:
-      text = 'Từ chối duyệt'
+      text = 'Tin bị từ chối duyệt'
       styleClassnames = 'text-red-500'
       break
     default:
