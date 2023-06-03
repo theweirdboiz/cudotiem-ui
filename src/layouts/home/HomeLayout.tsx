@@ -2,6 +2,7 @@ import Sidebar from './components/Sidebar'
 import PageWrapper from '~/layouts/components/wrapper/PageWrapper'
 import Topbar from '../components/topbar/Topbar'
 import { Outlet } from 'react-router-dom'
+import Footer from './components/Footer'
 const HomeLayout = () => {
   return (
     <>
@@ -14,6 +15,7 @@ const HomeLayout = () => {
           </div>
         </div>
       </PageWrapper>
+      <Footer />
     </>
   )
 }

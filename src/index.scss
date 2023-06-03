@@ -43,10 +43,10 @@ video {
     white-space: nowrap;
   }
   th {
-    @apply px-4 py-3 font-medium text-left;
+    @apply px-1 py-3 font-medium;
   }
   td {
-    padding: 15px 30px;
+    padding: 16px 10px;
   }
   .wrapper {
     @apply max-w-[1280px] px-12 mx-auto;

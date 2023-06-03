@@ -1,7 +1,10 @@
 import { use } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { IconVietNamFlag, IconEnglishFlag } from '~/components'
-
+import HOME_EN from '~/locales/en/home.json'
+import HOME_VI from '~/locales/vi/home.json'
+import TOPBAR_EN from '~/locales/en/top-bar.json'
+import TOPBAR_VI from '~/locales/vi/top-bar.json'
 export const locales = {
   en: {
     name: 'English',
@@ -18,48 +21,23 @@ export const languages = [
     key: 'en'
   }
 ]
-const resources = {
+export const resources = {
   en: {
-    translation: {
-      home: 'Home',
-      categories: 'Categories',
-      search: 'Search',
-      'post-news': 'Post news',
-      'sign-in': 'Sign in',
-      'sign-up': 'Sign up',
-      'sign-out': 'Sign-out',
-      price: 'Price',
-      'price-range': 'Choose a price range',
-      apply: 'Apply',
-      account: 'Account',
-      'account-info': 'Account information',
-      'post-manage': 'Post manage',
-      language: 'Choose language'
-    }
+    home: HOME_EN,
+    'top-bar': TOPBAR_EN
   },
   vi: {
-    translation: {
-      home: 'Trang chủ',
-      categories: 'Danh mục',
-      search: 'Tìm kiếm',
-      'post-news': 'Đăng tin',
-      'sign-in': 'Đăng nhập',
-      'sign-up': 'Đăng ký',
-      'sign-out': 'Đăng xuất',
-      price: 'Giá',
-      'price-range': 'Chọn khoảng giá',
-      apply: 'Áp dụng',
-      account: 'Tài khoản',
-      'account-info': 'Thông tin tài khoản',
-      'post-manage': 'Quản lý tin đăng',
-      language: 'Chọn ngôn ngữ'
-    }
+    home: HOME_VI,
+    'top-bar': TOPBAR_VI
   }
 }
+export const defaultNS = 'home'
 use(initReactI18next).init({
   resources,
   // lng: 'en',
+  ns: ['home', 'top-bar'],
   fallbackLng: 'en',
+  defaultNS,
   interpolation: {
     escapeValue: false
   }

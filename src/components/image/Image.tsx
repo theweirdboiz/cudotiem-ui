@@ -1,119 +1,70 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import uploadImage from '~/assets/img-upload.png'
-import Spinner from '../spinner/Spinner'
 import PreviewImageModal from '../modal/PreviewImageModal'
 import { ChangeEvent, useEffect, useState } from 'react'
-import { useFirebaseImage } from '~/hooks'
 import { twMerge } from 'tailwind-merge'
 import { IconEyeToggle, IconGarbage } from '../icon'
 interface ImageProps {
-  to: string
-  file?: File
-  imgUrl?: string
-  handleDeleteImageUrl?: (imageUrl: string) => void
-  handleAddImageUrl?: (imageUrl: string) => void
-  handleChangeThumbnail?: (img: string) => void
-  handleDeleteFile?: (file: File) => void
+  [key: string]: any
+  onInvoke?: (tempPath: string) => void
 }
-const Image = ({
-  to,
-  file,
-  imgUrl = '',
-  handleChangeThumbnail,
-  handleDeleteImageUrl,
-  handleAddImageUrl,
-  handleDeleteFile
-}: ImageProps) => {
-  const { process, fileName, path, errorMsg, setImage, handleUploadImage, handleDeleteImage } = useFirebaseImage()
+const Image = ({ onChange, image, onInvoke, multiple = false, children }: ImageProps) => {
   const [preview, setPreview] = useState<boolean>(false)
+  const [htmlFor, setHtmlFor] = useState<boolean>(true)
+
+  const id = multiple ? 'post_imgs' : 'post_thumbnail'
+
   const handlePreviewImage = () => {
     setPreview(!preview)
+    setHtmlFor(false)
   }
   const handleClose = () => {
     setPreview(false)
+    setHtmlFor(true)
   }
-  const handleDelete = (path: string) => {
-    file && handleDeleteFile && handleDeleteFile(file)
-    handleDeleteImage(path)
-    handleDeleteImageUrl && handleDeleteImageUrl(path)
-    path && handleChangeThumbnail && handleChangeThumbnail(path)
+  const handleInvokeImage = () => {
+    onInvoke && onInvoke(image?.tempPath)
+    // setHtmlFor(true)
   }
-  const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
-    handleUploadImage(to, e.target.files?.[0])
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    handleInvokeImage()
+    onChange(e)
+    multiple ? setHtmlFor(true) : setHtmlFor(false)
   }
   useEffect(() => {
-    const image = {
-      errorMsg: '',
-      fileName: imgUrl,
-      path: imgUrl,
-      process: 100
-    }
-    setImage(image)
-    file && handleUploadImage(to, file)
-  }, [imgUrl, file])
-
-  useEffect(() => {
-    handleAddImageUrl && path && handleAddImageUrl(path)
-    if (path) handleChangeThumbnail && handleChangeThumbnail(path)
-  }, [path])
-
+    setHtmlFor(true)
+  }, [])
   return (
     <>
-      <PreviewImageModal visible={preview} handleClose={handleClose} path={path} fileName={fileName} />
+      <PreviewImageModal visible={preview} handleClose={handleClose} path={image?.tempPath} fileName={image?.name} />
       <label
-        htmlFor={`${!path && 'post_thumbnail'}`}
+        htmlFor={htmlFor ? id : ''}
         className={twMerge(
           'relative pb-[50%] pl-[50%] w-1 overflow-hidden border border-dashed border-blue-300 cursor-pointer rounded-lg transition-all duration-300 group',
           'hover:bg-gray-200'
         )}
       >
-        {/* iddle */}
-        <img
-          src={uploadImage}
-          alt='upload-img'
-          className={twMerge(
-            'absolute rounded-md object-cover left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-2/3  transition-all duration-300 visible opacity-100',
-            `${process !== 0 && 'invisible opacity-0'}`
-          )}
-        />
-        {/* pending */}
-        <div
-          className={twMerge(
-            'absolute inset-0 box-center invisible opacity-0',
-            `${process > 0 && process < 100 && 'visible opacity-100'}`
-          )}
-        >
-          <Spinner />
-        </div>
         {/* success*/}
         <img
-          src={path}
+          src={image?.tempPath || uploadImage}
           alt='upload-img'
           className={twMerge(
-            'absolute rounded-md object-cover left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 invisible opacity-0 transition-all duration-300',
-            `${path && process === 100 && 'w-full h-full visible opacity-100'}`
+            'absolute rounded-md object-cover left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full visible opacity-100 transition-all duration-300'
           )}
         />
         <div
           className={twMerge(
             'absolute inset-0 transition-all duration-300 bg-gray-300 opacity-0 invisible box-center gap-x-3',
-            `${path && 'group-hover:visible group-hover:opacity-80 z-50'}`
+            `${image?.tempPath && 'group-hover:visible group-hover:opacity-80 z-50'}`
           )}
         >
           <IconEyeToggle toggle onClick={handlePreviewImage} />
-          <IconGarbage strokeWidth={1.5} onClick={() => handleDelete(path)} />
+          <IconGarbage strokeWidth={1.5} onClick={handleInvokeImage} />
         </div>
       </label>
-      <span className='font-medium text-xs text-primary'>{`${
-        errorMsg
-          ? errorMsg
-          : process === 100
-          ? 'Tải lên thành công'
-          : process > 0 && process < 100
-          ? 'Đang tải lên'
-          : 'Chọn một ảnh'
-      }`}</span>
-      <input id='post_thumbnail' type='file' className='hidden' onChange={handleChangeFile} />
+      <span className='font-medium text-xs text-primary'>{children}</span>
+      <input id={id} type='file' multiple={!!multiple} className='hidden' onChange={handleOnChange} />
+      {multiple}
     </>
   )
 }

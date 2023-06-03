@@ -2,8 +2,11 @@ import { User } from './user.type'
 
 export enum PostStatus {
   APPROVED = 'APPROVED',
-  PENDING = 'PENDING',
-  REJECTED = 'REJECTED'
+  CREATE_PENDING = 'CREATE_PENDING',
+  CREATE_REJECTED = 'CREATE_REJECTED',
+  UPDATE_PENDING = 'UPDATE_PENDING',
+  UPDATE_REJECTED = 'UPDATE_REJECTED',
+  HIDDEN = 'HIDDEN'
 }
 
 export interface Post {
@@ -14,7 +17,7 @@ export interface Post {
   slug?: string
   username?: string
   imageUrls?: string[]
-  thumbnail: string
+  thumbnail?: string
   dateCreated?: number
   categoryName?: string
   dateUpdated?: number

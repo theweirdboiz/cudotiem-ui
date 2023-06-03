@@ -6,7 +6,7 @@ import { Button } from '~/components'
 import { useTranslation } from 'react-i18next'
 const Sidebar: React.FC = (): JSX.Element => {
   const { auth } = useAth()
-  const { t } = useTranslation()
+  const { t } = useTranslation(['home'])
 
   // const isError = false
   // const isLoading = false
@@ -46,7 +46,7 @@ const Sidebar: React.FC = (): JSX.Element => {
         })}
       </div> */}
       <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
-        <h4 className='font-medium px-3'>{t('categories')}</h4>
+        <h4 className='font-medium px-3'>{t('home:aside.categories')}</h4>
         {categories?.map((item: Category) => {
           return (
             <Link
@@ -79,17 +79,15 @@ const Sidebar: React.FC = (): JSX.Element => {
         <RateStarts amount={3} />
       </div> */}
       <div className='flex flex-col mb-4 px-4 py-3 rounded-lg bg-white'>
-        <h4 className='font-medium px-3'>{t('price')}</h4>
+        <h4 className='font-medium px-3'>{t('home:aside.price')}</h4>
         <div className='px-3'>
-          <span>{t('price-range')}</span>
+          <span>{t('home:aside.price-range')}</span>
           <div className='flex items-center  gap-x-2 my-3 text-xs'>
             <input name='from' className='border max-w-[40%] rounded p-1.5' defaultValue={0} />
             <span>-</span>
             <input name='to' className='border max-w-[40%] rounded p-1.5' defaultValue={0} />
           </div>
-          <Button style={{ width: '100%', padding: '4px 0' }} type='submit'>
-            {t('apply')}
-          </Button>
+          <Button type='submit'>{t('home:aside.apply')}</Button>
         </div>
       </div>
     </aside>

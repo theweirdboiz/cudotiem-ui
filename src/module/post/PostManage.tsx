@@ -1,5 +1,5 @@
 import DashboardHeading from '~/layouts/dashboard/components/DashboardHeading'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Post, PostStatus } from '~/types/post.type'
 import { Button, LabelStatus, Table } from '~/components'
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
@@ -10,8 +10,6 @@ import { twMerge } from 'tailwind-merge'
 import { LabelPostAction } from '~/components/label'
 import { useTranslation } from 'react-i18next'
 import useFormatDate from '~/hooks/useFormatDate'
-import { toast } from 'react-toastify'
-import { CreatePostMessage } from '~/ultis/message/post.message'
 import { Link, useNavigate } from 'react-router-dom'
 
 const PostManage = () => {
@@ -25,75 +23,159 @@ const PostManage = () => {
   const { auth } = useAth()
   const { i18n } = useTranslation()
 
-  const { data: postsPrivatePaginated, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['posts-private', pagination, i18n.language],
     queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.roles)
   })
-  // const postsPrivatePaginated = {
-  //   paginationPosts: [
-  //     {
-  //       id: 8,
-  //       title: 'new post',
-  //       price: 100.0,
-  //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhm34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
-  //       datePosted: 253402275599000,
-  //       dateCreated: 1684910788513,
-  //       dateUpdated: 1684910788513,
-  //       username: 'kienthuc',
-  //       status: PostStatus.APPROVED,
-  //       category: 'quần áo'
-  //     },
-  //     {
-  //       id: 10,
-  //       title: 'new post',
-  //       price: 100.0,
-  //       thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhmsvsv34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
-  //       datePosted: 253402275599000,
-  //       dateCreated: 1684910788513,
-  //       dateUpdated: 1684910788513,
-  //       username: 'kienthuc',
-  //       status: PostStatus.REJECTED,
-  //       category: 'quần áo'
-  //     },
-  //     {
-  //       id: 11,
-  //       title: 'bai viet moi',
-  //       price: 234523.0,
-  //       thumbnail:
-  //         'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fthumbnail%2F1684925640846118183102_4355227071217499_45429216837241885_n.png?alt=media&token=6678bc7e-fdc1-415e-931b-19252b5aa92c',
-  //       datePosted: 253402275599000,
-  //       dateCreated: 1684910788513,
-  //       dateUpdated: 1684910788513,
-  //       username: 'kienthuc',
-  //       status: PostStatus.PENDING,
-  //       category: 'giày dép'
-  //     }
-  //   ],
-  //   totalPage: 3
-  // }
+  const tableTabs = [
+    {
+      id: 1,
+      title: 'Id',
+      field: ''
+    },
+    {
+      id: 2,
+      title: 'Danh mục',
+      field: ''
+    },
+    {
+      id: 3,
+      title: 'Tin đăng',
+      field: ''
+    },
+    {
+      id: 4,
+      title: 'Người tạo',
+      field: ''
+    },
+    {
+      id: 5,
+      title: 'Ngày tạo',
+      field: ''
+    },
+    {
+      id: 6,
+      title: 'Ngày cập nhật',
+      field: ''
+    },
+    {
+      id: 7,
+      title: 'Ngày đăng',
+      field: ''
+    },
+    {
+      id: 8,
+      title: 'Trạng thái',
+      field: ''
+    },
+    {
+      id: 9,
+      title: 'Options',
+      field: ''
+    }
+  ]
+  const postsPrivatePaginated = {
+    paginationPosts: [
+      {
+        id: 8,
+        title: 'new post',
+        price: 100.0,
+        thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhm34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
+        datePosted: 253402275599000,
+        dateCreated: 1684910788513,
+        dateUpdated: 1684910788513,
+        username: 'kienthuc',
+        status: PostStatus.HIDDEN,
+        categoryName: 'quần áo'
+      },
+      {
+        id: 10,
+        title: 'new post',
+        price: 100.0,
+        thumbnail: 'https://th.bing.com/th/id/OIP.sS3-ZzRwhmsvsv34KP5m6ZKp5QAAAA?pid=ImgDet&rs=1',
+        datePosted: 253402275599000,
+        dateCreated: 1684910788513,
+        dateUpdated: 1684910788513,
+        username: 'kienthuc',
+        status: PostStatus.CREATE_REJECTED,
+        categoryName: 'quần áo'
+      },
+      {
+        id: 11,
+        title: 'bai viet moi',
+        price: 234523.0,
+        thumbnail:
+          'https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images%2Fpost%2Fthumbnail%2F1684925640846118183102_4355227071217499_45429216837241885_n.png?alt=media&token=6678bc7e-fdc1-415e-931b-19252b5aa92c',
+        datePosted: 253402275599000,
+        dateCreated: 1684910788513,
+        dateUpdated: 1684910788513,
+        username: 'kienthuc',
+        status: PostStatus.CREATE_PENDING,
+        categoryName: 'giày dép'
+      }
+    ],
+    totalPage: 3
+  }
+  const statusColor = useMemo(() => {
+    const getStatusColor = (status: PostStatus | undefined) => {
+      let styleClassnames = ''
+      switch (status) {
+        case PostStatus.APPROVED:
+          styleClassnames = 'text-red-500'
+          break
+        case PostStatus.UPDATE_PENDING:
+          styleClassnames = 'text-yellow-500'
+          break
+        case PostStatus.CREATE_PENDING:
+          styleClassnames = 'text-yellow-500'
+          break
+        case PostStatus.UPDATE_REJECTED:
+          styleClassnames = 'text-green-500'
+          break
+        case PostStatus.CREATE_REJECTED:
+          styleClassnames = 'text-red-500'
+          break
+        default:
+          return 'text-gray-500'
+      }
+    }
+    return getStatusColor
+  }, [])
   const handlePostMutation = useMutation({
     mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
     onSuccess: () => refetch()
   })
-  const userHandlePostMutation = useMutation({
-    mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
-    onSuccess: () => refetch()
-  })
+  // const userHandlePostMutation = useMutation({
+  //   mutationFn: (data: any) => handlePostByStatus(data.id, data.status),
+  //   onSuccess: () => refetch()
+  // })
   const handleClickOnPage = (page: number) => {
     setPagination((prev) => ({ ...prev, offset: page }))
   }
   // admin
   const handleAction = (id: number, status?: PostStatus) => {
-    const requestStatus = status === PostStatus.APPROVED ? PostStatus.REJECTED : PostStatus.APPROVED
-
-    requestStatus && handlePostMutation.mutate({ id, status: requestStatus })
+    let statusReq
+    switch (status) {
+      case PostStatus.APPROVED:
+        statusReq = PostStatus.HIDDEN
+        break
+      case PostStatus.CREATE_PENDING:
+        statusReq = PostStatus.CREATE_REJECTED
+        break
+      case PostStatus.UPDATE_PENDING:
+        statusReq = PostStatus.UPDATE_REJECTED
+        break
+      case PostStatus.CREATE_REJECTED:
+        statusReq = PostStatus.CREATE_PENDING
+        break
+      case PostStatus.UPDATE_REJECTED:
+        statusReq = PostStatus.UPDATE_PENDING
+        break
+      default:
+        break
+    }
+    handlePostMutation.mutate({ id, status: statusReq })
   }
-  const handleUserAction = (id: number, status?: PostStatus) => {
-    const requestStatus = status === PostStatus.APPROVED ? PostStatus.REJECTED : PostStatus.APPROVED
-
-    // requestStatus && handlePostMutation.mutate({ id, status: requestStatus })
-  }
-
   return (
     <>
       <DashboardHeading>Quản lý tin đăng</DashboardHeading>
@@ -104,12 +186,7 @@ const PostManage = () => {
             alt='icon-search'
             className='w-5 h-5 ml-4'
           />
-          <input
-            type='text'
-            placeholder='Bạn tìm gì hôm nay'
-            className='px-2 outline-none border-none flex-1'
-            // onChange={handleSearch}
-          />
+          <input type='text' placeholder='Bạn tìm gì hôm nay' className='px-2 outline-none border-none flex-1' />
           <button
             className='flex-center justify-center w-24 h-9 bg-transparent text-blue-600 p-1  relative after:content-[]  after:absolute after:border-l after:border-l-gray-200 after:left-0 after:top-2 after:h-5 hover:bg-blue-100 rounded-r-lg
     '
@@ -118,7 +195,7 @@ const PostManage = () => {
           </button>
         </div>
         <div className='flex-center justify-end my-5'>
-          <Button to='/manage/add-post' classnames='text-blue-500 hover:bg-blue-100' height='h-10'>
+          <Button to='/manage/add-post' classnames='text-blue-500 hover:bg-blue-100'>
             Tạo tin mới
           </Button>
         </div>
@@ -126,52 +203,52 @@ const PostManage = () => {
       <>
         <Table>
           <thead className='text-sm'>
-            <tr>
-              <th>Id</th>
-              <th>Danh mục</th>
-              <th>Tin đăng</th>
-              <th>Người đăng</th>
-              <th>Ngày tạo</th>
-              <th>Ngày cập nhật</th>
-              <th>Ngày đăng</th>
-              <th>Trạng thái</th>
-              <th>Options</th>
-            </tr>
+            {tableTabs.map((tableTab) => (
+              <th key={tableTab.id}>{tableTab.title}</th>
+            ))}
           </thead>
           <tbody>
             {postsPrivatePaginated ? (
               postsPrivatePaginated?.paginationPosts.map((post: Post) => (
                 <tr key={post.id} className='text-sm shadow-md'>
-                  <td>
-                    <Link to={`/${post.slug}/${post.id}`}>{post.id}</Link>
+                  <td className='p-1'>
+                    <Link to={`/${post.slug}/${post.id}`}>#{post.id}</Link>
                   </td>
-                  <td>{post?.categoryName}</td>
+                  <td className='p-1 capitalize'>{post?.categoryName}</td>
                   <td>
                     <Link to={`/manage/update-post/${post.id}`} className='flex items-center gap-x-2'>
                       <img src={post.thumbnail} className='w-10 h-10 rounded-md' alt='' />
                       <div className=''>
-                        <h3 className='font-semibold'>{post.title}</h3>
+                        <h3 className='font-semibold line-clamp-1'>{post.title}</h3>
                         <time className='text-xs text-gray-400'>{formatMilisecondToDate(post.dateCreated)}</time>
                       </div>
                     </Link>
                   </td>
-                  <td>{post.username}</td>
+                  <td className=''>{post.username}</td>
                   <td>{formatMilisecondToDate(post.dateCreated)}</td>
                   <td>{formatMilisecondToDate(post.dateUpdated)}</td>
                   <td>{formatMilisecondToDate(post.datePosted)}</td>
                   <td>
                     <LabelStatus status={post.status} />
                   </td>
-                  {auth?.roles[0] !== Role.USER && (
+                  {auth?.roles.includes(Role.ADMIN) && (
                     <td>
-                      <Button className='w-20 py-2' onClick={() => handleAction(post.id, post.status)}>
+                      <Button
+                        disabled={PostStatus.HIDDEN}
+                        className={`w-30 py-2 mx-auto ${statusColor(post.status)}`}
+                        onClick={() => handleAction(post.id, post.status)}
+                      >
                         <LabelPostAction status={post.status} />
                       </Button>
                     </td>
                   )}
-                  {auth?.roles[0] === Role.USER && (
+                  {auth?.roles.includes(Role.USER) && (
                     <td>
-                      <Button className='w-20 py-2' onClick={() => handleAction(post.id, post.status)}>
+                      <Button
+                        disabled={PostStatus.HIDDEN || PostStatus.APPROVED}
+                        className={`w-30 mx-auto py-2 ${statusColor(post.status)}`}
+                        onClick={() => handleAction(post.id, post.status)}
+                      >
                         <LabelPostAction status={post.status} />
                       </Button>
                     </td>

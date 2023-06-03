@@ -144,16 +144,7 @@ const SignInModal = () => {
             Forgot password
           </Link>
         </div>
-        <Button
-          style={{
-            width: '100%',
-            margin: '5px auto'
-          }}
-          height='h-10'
-          type='submit'
-          isloading={signInMutation.isLoading}
-          disabled={!isValid}
-        >
+        <Button className='h-10' type='submit' loading={signInMutation.isLoading} disabled={!isValid}>
           Submit
         </Button>
         <div className='text-center'>

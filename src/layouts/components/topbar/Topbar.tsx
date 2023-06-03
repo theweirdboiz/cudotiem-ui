@@ -13,9 +13,8 @@ import { removeCookie } from 'typescript-cookie'
 import { Link, useNavigate } from 'react-router-dom'
 import { languages, locales } from '~/i18n/i18n'
 import { Dropdown } from '~/components'
-import { toast } from 'react-toastify'
 const Topbar = () => {
-  const { i18n, t } = useTranslation()
+  const { i18n, t } = useTranslation(['top-bar'])
   const { auth, setAuth } = useAth()
   const navigate = useNavigate()
 
@@ -40,9 +39,9 @@ const Topbar = () => {
       <header className='py-2 text-[14px] relative z-[999] bg-white'>
         <div className='wrapper'>
           {/* header top */}
-          <div className='flex-center'>
+          <div className='flex-center justify-between'>
             {/* left */}
-            <div className='flex-center flex-1'>
+            <div className='flex-center justify-between w-1/2'>
               <div className='flex-center justify-center  mr-12'>
                 <Link to='/' className='block w-14 h-10'>
                   <img
@@ -52,9 +51,7 @@ const Topbar = () => {
                 </Link>
               </div>
               {/* search */}
-              <div className='flex-1 max-w-[75%]'>
-                <Search />
-              </div>
+              <Search />
             </div>
             {/* right */}
             <div className='flex-center gap-x-3 ml-12 text-gray-500 font-normal'>
@@ -64,13 +61,13 @@ const Topbar = () => {
                   alt=''
                   className='w-6 h-6 mr-1'
                 />
-                {t('home')}
+                {t('top-bar:top-bar.home')}
               </Link>
               <Link
                 className='flex-center px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-200 text-blue-500 border border-current font-bold'
                 to='/manage/add-post'
               >
-                {t('post-news')}
+                {t('top-bar:top-bar.post-news')}
               </Link>
               {!auth && (
                 <Link
@@ -82,7 +79,7 @@ const Topbar = () => {
                     alt=''
                     className='w-6 h-6 mr-1'
                   />
-                  {t('sign-in')}
+                  {t('top-bar:top-bar.account.sign-in')}
                 </Link>
               )}
               {auth && (
@@ -96,17 +93,17 @@ const Topbar = () => {
                       alt=''
                       className='w-6 h-6 mr-1'
                     />
-                    {t('account')}
+                    {t('top-bar:top-bar.account.account')}
                   </Link>
                   <div className='absolute hidden w-60 z-10 py-2.5 shadow-lg left-0 top-[36px] rounded-lg bg-white -translate-x-1/2 border border-gray-200 text-gray-700 group-hover:block'>
                     <Link to='/my-profile' className='block py-2 px-4 hover:bg-gray-200'>
-                      {t('account-info')}
+                      {t('top-bar:top-bar.account.account-infor')}
                     </Link>
                     <Link to='/manage/post' className='block py-2 px-4 hover:bg-gray-200'>
-                      {t('post-manage')}
+                      {t('top-bar:top-bar.post-manage')}
                     </Link>
                     <Link to='/' className='block py-2 px-4 hover:bg-gray-200' onClick={handleSignOut}>
-                      {t('sign-out')}
+                      {t('top-bar:top-bar.account.sign-out')}
                     </Link>
                   </div>
                 </div>

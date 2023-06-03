@@ -4,11 +4,10 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useAth, useCategory } from '~/contexts'
 import { toast } from 'react-toastify'
 import { Post, PostStatus } from '~/types/post.type'
-import { HttpRequest } from '~/ultis'
 import { FormGroup, Input, Label, Dropdown, Button, Radio } from '~/components'
 import { ENV } from '~/config/constant'
 import { Editor } from '@tinymce/tinymce-react'
@@ -17,7 +16,8 @@ import { Category } from '~/types/category.type'
 import { Role } from '~/types/role.type'
 import { useNavigate } from 'react-router-dom'
 import { CreatePostMessage } from '~/ultis/message/post.message'
-import ImageUpload from '~/components/image/ImageUpload'
+import { useFirebaseImage } from '~/hooks'
+import { ImageProps } from '~/types/img.type'
 
 /* Schema for validate */
 const schema = yup.object().shape({
@@ -30,11 +30,13 @@ const schema = yup.object().shape({
 })
 
 const PostAdd = () => {
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { categories } = useCategory()
   const { auth } = useAth()
-  const [thumbnail, setThumbnail] = useState<string>('')
-  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const { handleUploadImage, process, errorMsg } = useFirebaseImage()
+  const [thumbnail, setThumbnail] = useState<ImageProps>()
+  const [imageUrls, setImageUrls] = useState<ImageProps[]>([])
   const [content, setContent] = useState('')
   const [categorySelected, setCategorySelected] = useState<Category | undefined>(undefined)
   const {
@@ -48,14 +50,19 @@ const PostAdd = () => {
   })
 
   const watchStatus = watch('status')
-  const queryClient = useQueryClient()
+
   const createPostMutation = useMutation({
     mutationFn: (body: Post) => createPost<Post>(body),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ['posts'],
         exact: true
       })
+      // upload image to firestore
+      handleUploadImage(thumbnail as ImageProps)
+      for (const img of imageUrls) {
+        handleUploadImage(img)
+      }
       toast.success(CreatePostMessage.SUCCESS)
       navigate('/manage/post')
     },
@@ -64,36 +71,28 @@ const PostAdd = () => {
     }
   })
 
-  useEffect(() => {
-    document.title = 'Cụ Đồ Tiễm - Thêm tin đăng'
-  }, [])
-
   const handleEditorChange = (content: string) => {
     setContent(content)
   }
 
-  const handleChangeImageUrls = (imageUrls: string[]) => {
-    setImageUrls(imageUrls)
-  }
-
-  const handleImageUpload = async (blobInfo: any) => {
-    const formData = new FormData()
-    formData.append('image', blobInfo.blob())
-    const response = await HttpRequest.post<any>(
-      `${import.meta.env.VITE_IMGBB_URL}?key=${import.meta.env.VITE_IMGBB_KEY}`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    )
-    return response.data.data.url
-  }
+  // const handleImageUpload = async (blobInfo: any) => {
+  //   const formData = new FormData()
+  //   formData.append('image', blobInfo.blob())
+  //   const response = await HttpRequest.post<any>(
+  //     `${import.meta.env.VITE_IMGBB_URL}?key=${import.meta.env.VITE_IMGBB_KEY}`,
+  //     formData,
+  //     {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     }
+  //   )
+  //   return response.data.data.url
+  // }
 
   // handle event
   const onSubmit = async (body: Post) => {
-    body.imageUrls = [thumbnail, ...imageUrls]
+    body.imageUrls = [thumbnail?.storePath as string, ...imageUrls.map((img) => img.storePath)]
     body.content = content
     body.categoryCode = categorySelected?.code
     createPostMutation.mutate(body)
@@ -101,10 +100,36 @@ const PostAdd = () => {
   const handleClickOption = (item: Category) => {
     setCategorySelected(item)
   }
-
-  const handleChangeThumbnail = (thumbnail: string) => {
-    setThumbnail(thumbnail)
+  const handleSelectThumbnail = (e: ChangeEvent<HTMLInputElement>) => {
+    setThumbnail(createImageFactory(e.target.files?.[0]))
   }
+  const handleSelectImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    let newImageUrls: ImageProps[] = []
+    if (files) {
+      for (const file of files) {
+        newImageUrls.push(createImageFactory(file))
+      }
+      setImageUrls((prev) => [...prev, ...newImageUrls])
+    }
+  }
+  const handleInvokeThumbnail = (tempPath: string) => {
+    URL.revokeObjectURL(tempPath)
+    setThumbnail((prev) => ({ ...prev, tempPath: '' } as ImageProps))
+  }
+  const handleInvokeImage = (tempPath: string) => {
+    setImageUrls((prev) => prev.filter((img) => img.tempPath !== tempPath))
+  }
+  const createImageFactory = (file: File | undefined) => {
+    // const file = e.target.files?.[0]
+    const name = file && file.name
+    const storePath = `images/posts/${Date.now()}${name}` as string
+    const tempPath = URL.createObjectURL(file as any)
+    return { name, storePath, e: file, tempPath } as ImageProps
+  }
+  useEffect(() => {
+    document.title = 'Cụ Đồ Tiễm - Thêm tin đăng'
+  }, [])
 
   return (
     <>
@@ -174,16 +199,26 @@ const PostAdd = () => {
             ></Input>
           </FormGroup>
         </div>
-        <div className='flex items-center gap-x-3'>
+        <div className='grid grid-cols-2 gap-3'>
           <FormGroup>
             <Label>Thumbnail</Label>
-            <Image to='post/thumbnail' handleChangeThumbnail={handleChangeThumbnail} />
+            <Image image={thumbnail} onChange={handleSelectThumbnail} onInvoke={handleInvokeThumbnail}>
+              Chọn một ảnh
+            </Image>
           </FormGroup>
           <FormGroup>
             <Label>Các ảnh khác</Label>
-            <div className='grid grid-cols-5'></div>
-            <ImageUpload to='post/imgs' multiple handleChangeImageUrls={handleChangeImageUrls} imageUrls={imageUrls} />
+            <Image multiple={true} onChange={handleSelectImage}>
+              Chọn một hoặc nhiều ảnh
+            </Image>
           </FormGroup>
+        </div>
+        <div className='grid grid-cols-5 gap-3 mb-5'>
+          {imageUrls.map((img) => (
+            <React.Fragment key={img.tempPath}>
+              <Image multiple image={img} onChange={handleSelectImage} onInvoke={handleInvokeImage} />
+            </React.Fragment>
+          ))}
         </div>
         <FormGroup>
           <Label>Nội dung</Label>
@@ -214,8 +249,8 @@ const PostAdd = () => {
                   'wordcount'
                 ],
                 toolbar:
-                  'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-                images_upload_handler: handleImageUpload
+                  'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image'
+                // images_upload_handler: handleImageUpload
               }}
               onEditorChange={handleEditorChange}
             />

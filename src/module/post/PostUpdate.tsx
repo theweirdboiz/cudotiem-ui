@@ -4,7 +4,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useAth, useCategory } from '~/contexts'
 import { toast } from 'react-toastify'
 import { Post, PostDetail, PostStatus } from '~/types/post.type'
@@ -18,6 +18,8 @@ import { Role } from '~/types/role.type'
 import { useNavigate, useParams } from 'react-router-dom'
 import { UpdatePostMessage } from '~/ultis/message/post.message'
 import ImageUpload from '~/components/image/ImageUpload'
+import { ImageProps } from '~/types/img.type'
+import { useFirebaseImage } from '~/hooks'
 
 /* Schema for validate */
 const schema = yup.object().shape({
@@ -35,8 +37,8 @@ const PostUpdate = () => {
   const { auth } = useAth()
   const { id } = useParams()
   const { categories } = useCategory()
-  const [thumbnail, setThumbnail] = useState<string>('')
-  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [thumbnail, setThumbnail] = useState<ImageProps>()
+  const [imageUrls, setImageUrls] = useState<ImageProps[]>([])
   const [content, setContent] = useState('')
   const [categorySelected, setCategorySelected] = useState<Category | undefined>(undefined)
   const {
@@ -49,7 +51,7 @@ const PostUpdate = () => {
     mode: 'all',
     resolver: yupResolver(schema)
   })
-
+  const { handleUploadImage, process, errorMsg } = useFirebaseImage()
   const watchStatus = watch('status')
 
   // fetch post by slug/id
@@ -59,42 +61,36 @@ const PostUpdate = () => {
     isLoading
   } = useQuery({
     queryKey: ['post', id],
-    queryFn: async () => await getPostById<PostDetail>(id as string)
+    queryFn: async () => await getPostById<PostDetail>(id as string),
+    onSuccess: (data) => {
+      document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
+      const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
+      setCategorySelected(category)
+      setThumbnail((prev) => ({ ...prev, storePath: post?.postDetailResponse?.imageUrls?.[0] } as ImageProps))
+      setImageUrls((prev) => prev.filter((img) => img.storePath !== thumbnail?.storePath))
+      setContent(post?.postDetailResponse.content || '')
+      reset(post?.postDetailResponse)
+    }
   })
-
-  // update post
-  useEffect(() => {
-    document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
-    const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
-    setCategorySelected(category)
-    setThumbnail(post?.postDetailResponse.imageUrls?.[0] || '')
-    setImageUrls(post?.postDetailResponse?.imageUrls || [])
-    setContent(post?.postDetailResponse.content || '')
-    reset(post?.postDetailResponse)
-  }, [isSuccess])
 
   const handleEditorChange = (content: string) => {
     setContent(content)
   }
 
-  const handleChangeImageUrls = (imageUrls: string[]) => {
-    setImageUrls(imageUrls)
-  }
-
-  const handleImageUpload = async (blobInfo: any) => {
-    const formData = new FormData()
-    formData.append('image', blobInfo.blob())
-    const response = await HttpRequest.post<any>(
-      `${import.meta.env.VITE_IMGBB_URL}?key=${import.meta.env.VITE_IMGBB_KEY}`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    )
-    return response.data.data.url
-  }
+  // const handleImageUpload = async (blobInfo: any) => {
+  //   const formData = new FormData()
+  //   formData.append('image', blobInfo.blob())
+  //   const response = await HttpRequest.post<any>(
+  //     `${import.meta.env.VITE_IMGBB_URL}?key=${import.meta.env.VITE_IMGBB_KEY}`,
+  //     formData,
+  //     {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     }
+  //   )
+  //   return response.data.data.url
+  // }
   const updatePostMutation = useMutation({
     mutationFn: (post: Post) => updatePostById<Post>(id as string, post),
     onSuccess: () => {
@@ -106,6 +102,10 @@ const PostUpdate = () => {
         queryKey: ['post', id],
         exact: true
       })
+      handleUploadImage(thumbnail as ImageProps)
+      for (const img of imageUrls) {
+        handleUploadImage(img)
+      }
       toast.success(UpdatePostMessage.SUCCESS)
       navigate('/manage/post')
     },
@@ -115,7 +115,7 @@ const PostUpdate = () => {
   })
   // handle event
   const onSubmit = async (body: Post) => {
-    body.imageUrls = [thumbnail, ...imageUrls]
+    body.imageUrls = [thumbnail?.storePath as string, ...imageUrls.map((img) => img.storePath)]
     body.content = content
     body.categoryCode = categorySelected?.code
     updatePostMutation.mutate(body)
@@ -124,10 +124,33 @@ const PostUpdate = () => {
     setCategorySelected(item)
   }
 
-  const handleChangeThumbnail = (thumbnail: string) => {
-    setThumbnail(thumbnail)
+  const handleSelectThumbnail = (e: ChangeEvent<HTMLInputElement>) => {
+    setThumbnail(createImageFactory(e.target.files?.[0]))
   }
-
+  const handleSelectImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    let newImageUrls: ImageProps[] = []
+    if (files) {
+      for (const file of files) {
+        newImageUrls.push(createImageFactory(file))
+      }
+      setImageUrls((prev) => [...prev, ...newImageUrls])
+    }
+  }
+  const handleInvokeThumbnail = (tempPath: string) => {
+    URL.revokeObjectURL(tempPath)
+    setThumbnail((prev) => ({ ...prev, tempPath: '' } as ImageProps))
+  }
+  const handleInvokeImage = (tempPath: string) => {
+    setImageUrls((prev) => prev.filter((img) => img.tempPath !== tempPath))
+  }
+  const createImageFactory = (file: File | undefined) => {
+    // const file = e.target.files?.[0]
+    const name = file && file.name
+    const storePath = `images/posts/${Date.now()}${name}` as string
+    const tempPath = URL.createObjectURL(file as any)
+    return { name, storePath, e: file, tempPath } as ImageProps
+  }
   if (isLoading) return <Spinner />
   // console.log(thumbnail)
 
@@ -156,7 +179,7 @@ const PostUpdate = () => {
                   <span></span>
                 </Dropdown>
               </FormGroup>
-              {auth?.roles.includes(Role.ADMIN || Role.MODERATOR) && (
+              {/* {auth?.roles.includes(Role.ADMIN || Role.MODERATOR) && (
                 <FormGroup>
                   <Label>Trạng thái</Label>
                   <div className='flex gap-x-6'>
@@ -189,7 +212,7 @@ const PostUpdate = () => {
                     </Radio>
                   </div>
                 </FormGroup>
-              )}
+              )} */}
               <FormGroup>
                 <Label className={`${errors.title && 'text-red-400'}`}>Giá bán</Label>
                 <Input
@@ -201,21 +224,26 @@ const PostUpdate = () => {
                 ></Input>
               </FormGroup>
             </div>
-            <div className='flex items-center gap-x-3'>
+            <div className='grid grid-cols-2 gap-3'>
               <FormGroup>
                 <Label>Thumbnail</Label>
-                <Image to='post/thumbnail' imgUrl={thumbnail} handleChangeThumbnail={handleChangeThumbnail} />
+                <Image image={thumbnail} onChange={handleSelectThumbnail} onInvoke={handleInvokeThumbnail}>
+                  Chọn một ảnh
+                </Image>
               </FormGroup>
               <FormGroup>
                 <Label>Các ảnh khác</Label>
-                <div className='grid grid-cols-5'></div>
-                <ImageUpload
-                  to='post/imgs'
-                  multiple
-                  handleChangeImageUrls={handleChangeImageUrls}
-                  imageUrls={imageUrls}
-                />
+                <Image multiple={true} onChange={handleSelectImage}>
+                  Chọn một hoặc nhiều ảnh
+                </Image>
               </FormGroup>
+            </div>
+            <div className='grid grid-cols-5 gap-3 mb-5'>
+              {imageUrls.map((img) => (
+                <React.Fragment key={img.tempPath}>
+                  <Image multiple image={img} onChange={handleSelectImage} onInvoke={handleInvokeImage} />
+                </React.Fragment>
+              ))}
             </div>
             <FormGroup>
               <Label>Nội dung</Label>
@@ -246,8 +274,8 @@ const PostUpdate = () => {
                       'wordcount'
                     ],
                     toolbar:
-                      'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-                    images_upload_handler: handleImageUpload
+                      'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image'
+                    // images_upload_handler: handleImageUpload
                   }}
                   onEditorChange={handleEditorChange}
                 />
@@ -256,7 +284,7 @@ const PostUpdate = () => {
             <Button
               className='w-full max-w-[50%] mx-auto h-10'
               type='submit'
-              // isloading={createPostMutation.isLoading}
+              loading={updatePostMutation.isLoading}
               disabled={!isValid}
             >
               Cập nhật tin đăng

@@ -4,5 +4,10 @@ module.exports = {
   theme: {
     extend: {}
   },
-  plugins: [require('tailwind-scrollbar-hide'), require('@tailwindcss/aspect-ratio')]
+  plugins: [
+    require('tailwind-scrollbar-hide'),
+    require('@tailwindcss/aspect-ratio'),
+    require('daisyui'),
+    require('@tailwindcss/line-clamp')
+  ]
 }

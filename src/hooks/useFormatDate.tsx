@@ -16,8 +16,10 @@ const useFormatDate = () => {
     return hourElapsed
   }
   const formatMilisecondToDate = (milliseconds: number | undefined) => {
+    if (milliseconds && milliseconds > Date.now()) {
+      return 'Trống'
+    }
     const date: Date = new Date(milliseconds || 0)
-
     const day: number = date.getDate()
     const month: number = date.getMonth()
     const year: number = date.getFullYear()

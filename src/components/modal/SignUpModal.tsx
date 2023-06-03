@@ -95,17 +95,7 @@ const SignUpModal = () => {
             <IconEyeToggle toggle={showPassword} onClick={handleToggle}></IconEyeToggle>
           </Input>
         </FormGroup>
-
-        <Button
-          style={{
-            width: '100%',
-            margin: '10px auto'
-          }}
-          height='h-10'
-          type='submit'
-          isloading={signUpMutation.isLoading}
-          disabled={!isValid}
-        >
+        <Button className='h-10' type='submit' loading={signUpMutation.isLoading} disabled={!isValid}>
           Submit
         </Button>
       </form>
