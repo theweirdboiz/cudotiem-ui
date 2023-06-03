@@ -38,7 +38,7 @@ const LabelPostStatus = (props: Props) => {
         break
     }
   }
-  if (auth?.role !== Role.USER) {
+  if (auth?.role === Role.USER) {
     switch (status) {
       case PostStatus.APPROVED:
         styleClassnames = 'text-green-500'

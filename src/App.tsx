@@ -69,9 +69,8 @@ function App() {
           </Route>
         </Route>
         <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}>
-          <Route element={<DashboardLayout />}>
-            <Route path='/manage/post' element={<PostManage />} />
-          </Route>
+          <Route path='/manage/post' element={<PostManage />} />
+          <Route element={<DashboardLayout />}></Route>
         </Route>
       </Routes>
     </Suspense>

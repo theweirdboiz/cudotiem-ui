@@ -109,7 +109,7 @@ const PostManage = () => {
   //       dateCreated: 1684910788513,
   //       dateUpdated: 1684910788513,
   //       username: 'kienthuc',
-  //       status: PostStatus.HIDDEN,
+  //       status: PostStatus.APPROVED,
   //       categoryName: 'giày dép'
   //     }
   //   ],
