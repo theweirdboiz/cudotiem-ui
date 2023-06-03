@@ -262,7 +262,7 @@ const PostAdd = () => {
           isloading={createPostMutation.isLoading}
           disabled={!isValid}
         >
-          {auth?.roles.includes(Role.ADMIN) ? 'Đăng bài' : 'Gửi yêu cầu đăng bài'}
+          Gửi yêu cầu đăng bài
         </Button>
       </form>
     </>
