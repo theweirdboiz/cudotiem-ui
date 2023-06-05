@@ -7,7 +7,7 @@ type Props = {
   post: Post
 }
 const PostComponent = ({ post }: Props) => {
-  const { formatDate } = useFormatDate()
+  const { formatMilisecondToDate } = useFormatDate()
   return (
     <>
       <Link to={`/${post.slug}/${post.id}`} className='rounded-md border border-gray-100 bg-white hover:shadow-lg'>
@@ -20,7 +20,7 @@ const PostComponent = ({ post }: Props) => {
             {post.price}
             <span className='underline'>đ</span>
           </h4>
-          <span className='text-xs'>{formatDate(post.datePosted)}</span>
+          <span className='text-xs'>{formatMilisecondToDate(post.datePosted)}</span>
         </div>
       </Link>
     </>

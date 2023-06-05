@@ -61,7 +61,7 @@ const PostManage = () => {
   })
   const [status, setStatus] = useState<PostStatus | null | undefined>(null)
 
-  const { formatDate, formatMilisecondToDate } = useFormatDate()
+  const { formatMilisecondToDate } = useFormatDate()
   // const { posts } = usePost()
   const queryClient = new QueryClient()
   const { auth } = useAth()

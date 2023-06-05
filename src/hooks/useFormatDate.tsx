@@ -26,12 +26,14 @@ const useFormatDate = () => {
 
     return `${day}/${month}/${year}`
   }
-  const formatDate = (miliseconds: number | undefined) => {
+  const formatDate = (miliseconds: number) => {
     if (miliseconds && calculateHourElapsed(miliseconds) > 24) {
       return calculateDayElapsed(miliseconds) + ' ngày trước'
+    } else if (miliseconds && calculateDayElapsed(miliseconds) === 0) {
+      return formatMilisecondToDate(miliseconds)
+    } else {
+      return calculateDayElapsed(miliseconds) + ' ngày trước'
     }
-    return miliseconds && calculateHourElapsed(miliseconds) + ' giờ trước'
-    // miliseconds && calculateDayElapsed(miliseconds) > 1 && calculateDayElapsed(miliseconds)
   }
   return {
     formatDate,
