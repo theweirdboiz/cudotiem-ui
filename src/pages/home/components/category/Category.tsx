@@ -1,4 +1,5 @@
 import { ReactNode, useState } from 'react'
+import { Spinner } from '~/components'
 import { useCategory } from '~/contexts'
 import { Category } from '~/types/category.type'
 
@@ -9,26 +10,27 @@ interface CategoryItemProps {
 }
 
 const Category = () => {
-  // const { categories, isError, isLoading } = useCategory()
+  const { categories, isLoading } = useCategory()
   const [categoryItemActive, setCategoryItemActive] = useState<number>(1)
   const handleClickCategoryItem = (id: number) => {
     setCategoryItemActive(id)
   }
 
-  const categories: Category[] = [
-    {
-      id: 1,
-      name: 'quần áo',
-      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp',
-      code: ''
-    },
-    {
-      id: 2,
-      name: 'Giày dép',
-      icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp',
-      code: ''
-    }
-  ]
+  // const categories: Category[] = [
+  //   {
+  //     id: 1,
+  //     name: 'quần áo',
+  //     icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp',
+  //     code: ''
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Giày dép',
+  //     icon: 'https://salt.tikicdn.com/cache/100x100/ts/category/00/5d/97/384ca1a678c4ee93a0886a204f47645d.png.webp',
+  //     code: ''
+  //   }
+  // ]
+  if (isLoading) return <Spinner full />
   return (
     <CategoryList>
       {categories?.map((item: Category) => (

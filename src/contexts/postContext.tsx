@@ -27,35 +27,35 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     offset: 1,
     size: 10
   })
-  // const {
-  //   // data: posts,
-  //   isError,
-  //   isLoading
-  // } = useQuery({
-  //   queryKey: ['posts', pagination],
-  //   queryFn: async () => await getAllPosts(pagination.offset, pagination.size)
-  // })
-  const isError = false
-  const isLoading = false
+  const {
+    data: posts,
+    isError,
+    isLoading
+  } = useQuery({
+    queryKey: ['posts', pagination],
+    queryFn: async () => await getAllPosts(pagination.offset, pagination.size)
+  })
+  // const isError = false
+  // const isLoading = false
 
   const handleLoadMore = () => {
     const newSize = pagination.size + 5
     setPagination({ ...pagination, size: newSize })
   }
-  const posts: PostPagination = {
-    paginationPosts: [
-      {
-        id: 1,
-        title: '123',
-        price: 123123,
-        slug: '123-123',
-        thumbnail: '',
-        datePosted: 123123
-      }
-    ],
+  // const posts: PostPagination = {
+  //   paginationPosts: [
+  //     {
+  //       id: 1,
+  //       title: '123',
+  //       price: 123123,
+  //       slug: '123-123',
+  //       thumbnail: '',
+  //       datePosted: 123123
+  //     }
+  //   ],
 
-    totalPage: 3
-  }
+  //   totalPage: 3
+  // }
   const value = {
     posts,
     isError,
