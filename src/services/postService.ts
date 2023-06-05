@@ -2,6 +2,10 @@ import { Post, PostPagination, PostPrivatePaginated, PostStatus } from '~/types/
 import { Role } from '~/types/role.type'
 import { HttpRequest } from '~/ultis'
 
+export const getAllStatus = async <T>() => {
+  const response = await HttpRequest.get<T>('/post/status')
+  if (response.status === 200) return response.data
+}
 export const getAllPosts = async (offset: number, size: number) => {
   const response = await HttpRequest.get<PostPagination>(`/post?offset=${offset}&size=${size}`)
   if (response.status === 200) return response.data
@@ -13,9 +17,15 @@ export const handlePostByStatus = async <T>(id: number, status: PostStatus, role
   if (response.status === 200) return response.data
 }
 
-export const getPostsPrivatePaginated = async (offset: number, size: number, role?: Role) => {
-  const check = role === Role.ADMIN ? 'admin' : role == Role.MODERATOR ? 'mod' : 'user'
-  const response = await HttpRequest.get<PostPrivatePaginated>(`/${check}/post?offset=${offset}&size=${size}`)
+export const getPostsPrivatePaginated = async <T>(status?: PostStatus, offset?: number, size?: number, role?: Role) => {
+  let requestApi = `/post?offset=${offset}&size=${size}`
+  if (role) {
+    const check = role === Role.ADMIN ? 'admin' : role == Role.MODERATOR ? 'mod' : 'user'
+    requestApi = `/${check}${requestApi}`
+  }
+  if (status) requestApi = `${requestApi}&status=${status}`
+
+  const response = await HttpRequest.get<T>(requestApi)
   if (response.status === 200) return response.data
 }
 export const getPostsPaginatedByUsername = async (offset: number, size: number) => {

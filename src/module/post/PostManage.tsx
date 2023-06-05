@@ -1,9 +1,9 @@
 import DashboardHeading from '~/layouts/dashboard/components/DashboardHeading'
 import { useMemo, useState } from 'react'
-import { Post, PostStatus } from '~/types/post.type'
+import { Post, PostPrivatePaginated, PostStatus } from '~/types/post.type'
 import { Button, LabelStatus, Table } from '~/components'
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
-import { getPostsPrivatePaginated, handlePostByStatus } from '~/services'
+import { getAllStatus, getPostsPrivatePaginated, handlePostByStatus } from '~/services'
 import { useAth } from '~/contexts'
 import { Role } from '~/types/role.type'
 import { twMerge } from 'tailwind-merge'
@@ -12,20 +12,82 @@ import { useTranslation } from 'react-i18next'
 import useFormatDate from '~/hooks/useFormatDate'
 import { Link, useNavigate } from 'react-router-dom'
 
+interface TabStatusProps {
+  status?: PostStatus
+  onClick: any
+  isActived?: boolean
+}
+const TabStatus = ({ status, onClick, isActived = false }: TabStatusProps) => {
+  let statusText
+  switch (status) {
+    case PostStatus.APPROVED:
+      statusText = 'Approved'
+      break
+    case PostStatus.CREATE_PENDING:
+      statusText = 'Create pending'
+      break
+    case PostStatus.CREATE_REJECTED:
+      statusText = 'Create rejected'
+      break
+    case PostStatus.UPDATE_PENDING:
+      statusText = 'Update pending'
+      break
+    case PostStatus.UPDATE_REJECTED:
+      statusText = 'Update rejected'
+      break
+    case PostStatus.HIDDEN:
+      statusText = 'Hidden'
+      break
+    default:
+      statusText = 'All'
+      break
+  }
+  return (
+    <button
+      className={twMerge(
+        `text-gray-500 font-semibold p-2 border cursor-pointer text-sm transition-all hover:text-blue-500`,
+        `${isActived && 'text-blue-500 border-b-current'}`
+      )}
+      onClick={onClick}
+    >
+      {statusText}
+    </button>
+  )
+}
 const PostManage = () => {
   const [pagination, setPagination] = useState({
     offset: 1,
     size: 5
   })
+  const [status, setStatus] = useState<PostStatus | null | undefined>(null)
+
   const { formatDate, formatMilisecondToDate } = useFormatDate()
   // const { posts } = usePost()
   // const queryClient = new QueryClient()
   const { auth } = useAth()
   const { i18n } = useTranslation()
   const { data: postsPrivatePaginated, refetch } = useQuery({
-    queryKey: ['posts-private', pagination, i18n.language],
-    queryFn: async () => await getPostsPrivatePaginated(pagination.offset, pagination.size, auth?.role)
+    queryKey: ['posts-private', status, pagination, i18n.language],
+    queryFn: async () =>
+      await getPostsPrivatePaginated<PostPrivatePaginated>(
+        status as PostStatus,
+        pagination.offset,
+        pagination.size,
+        auth?.role
+      )
   })
+  // const { data: allStatus } = useQuery({
+  //   queryKey: ['all-status'],
+  //   queryFn: async () => await getAllStatus<string[]>()
+  // })
+  const allStatus: PostStatus[] = [
+    PostStatus.APPROVED,
+    PostStatus.CREATE_PENDING,
+    PostStatus.CREATE_REJECTED,
+    PostStatus.UPDATE_PENDING,
+    PostStatus.UPDATE_REJECTED,
+    PostStatus.HIDDEN
+  ]
   const tableTabs = [
     {
       id: 1,
@@ -239,15 +301,23 @@ const PostManage = () => {
         </div>
       </div>
       <>
+        <div className='grid grid-cols-7 mt-5'>
+          <TabStatus onClick={() => setStatus(null)} isActived={status === null} />
+          {allStatus?.map((s) => (
+            <TabStatus key={s} onClick={() => setStatus(s)} status={s} isActived={s === status} />
+          ))}
+        </div>
         <Table>
           <thead className='text-sm'>
-            {tableTabs.map((tableTab) => (
-              <th key={tableTab.id}>{tableTab.title}</th>
-            ))}
+            <tr>
+              {tableTabs.map((tableTab) => (
+                <th key={tableTab.id}>{tableTab.title}</th>
+              ))}
+            </tr>
           </thead>
-          <tbody>
-            {postsPrivatePaginated ? (
-              postsPrivatePaginated?.paginationPosts.map((post: Post) => (
+          {postsPrivatePaginated ? (
+            <tbody>
+              {postsPrivatePaginated?.paginationPosts.map((post: Post) => (
                 <tr key={post.id} className='text-sm shadow-md'>
                   <td className='p-1'>
                     <Link to={`/${post.slug}/${post.id}`}>#{post.id}</Link>
@@ -277,11 +347,15 @@ const PostManage = () => {
                     {/* {createActionsByAdmin(post.id, post.status)} */}
                   </td>
                 </tr>
-              ))
-            ) : (
-              <p className='w-full text-center'>Trống</p>
-            )}
-          </tbody>
+              ))}
+            </tbody>
+          ) : (
+            <tbody className='w-full text-center'>
+              <tr>
+                <td>Trống</td>
+              </tr>
+            </tbody>
+          )}
         </Table>
         <div className='flex gap-x-2 justify-center'>
           {postsPrivatePaginated?.totalPage &&

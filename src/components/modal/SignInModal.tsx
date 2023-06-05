@@ -19,6 +19,7 @@ import { setCookie } from 'typescript-cookie'
 import { useEffect, useState } from 'react'
 import { SignInMessage } from '~/ultis/message/auth.message'
 import { SignInRequest } from '~/types/signin.type'
+import { Role } from '~/types/role.type'
 
 // const schema = yup.object().shape({
 //   password: yup.string().required('This field is required').min(8, 'Password must be 8 character')
@@ -74,7 +75,11 @@ const SignInModal = () => {
         exact: true
       })
       navigate(`${from || '/'}`)
-      const role = jwtToken.roles[0]
+      const role = jwtToken.roles.includes(Role.ADMIN)
+        ? Role.ADMIN
+        : jwtToken.roles.includes(Role.MODERATOR)
+        ? Role.MODERATOR
+        : Role.USER
       setAuth({ ...jwtToken, role })
       setCookie('cudotiem', JSON.stringify(jwtToken))
       toast.success(SignInMessage.SUCCESS)

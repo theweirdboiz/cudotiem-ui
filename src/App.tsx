@@ -68,11 +68,10 @@ function App() {
             <Route path='/manage/add-post' element={<PostAddNew />} />
           </Route>
         </Route>
-        <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}>
-          <Route element={<DashboardLayout />}>
-            <Route path='/manage/post' element={<PostManage />} />
-          </Route>
+        <Route element={<DashboardLayout />}>
+          <Route path='/manage/post' element={<PostManage />} />
         </Route>
+        <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}></Route>
       </Routes>
     </Suspense>
   )

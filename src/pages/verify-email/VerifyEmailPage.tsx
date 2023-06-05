@@ -5,7 +5,6 @@ const VerifyEmailPage = () => {
   const location = useLocation()
 
   const message = location?.state.message
-  console.log(message)
 
   return !message ? (
     <Navigate to={'/error'} replace></Navigate>

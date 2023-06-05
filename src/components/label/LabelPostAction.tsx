@@ -43,6 +43,10 @@ const LabelPostStatus = (props: Props) => {
         styleClassnames = 'text-green-500'
         text = 'Duyệt'
         break
+      case PostStatus.HIDDEN:
+        styleClassnames = 'text-gray-500'
+        text = 'Ẩn tin'
+        break
       case PostStatus.UPDATE_PENDING:
       case PostStatus.CREATE_PENDING:
       case PostStatus.UPDATE_REJECTED:

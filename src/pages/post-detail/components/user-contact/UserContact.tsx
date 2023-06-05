@@ -21,11 +21,11 @@ const UserContact = ({ userContact }: UserContactProps) => {
             <h5 className='text-xs'>Người mới</h5>
           </div>
         </div>
-        <h5 className='flex-center gap-x-2 text-blue-700 rounded-md px-3 py-1 font-semibold mb-3'>
+        <h5 className='flex-center gap-x-2 text-blue-700 rounded-md px-3 py-1 font-semibold my-10'>
           <IconPhone size='w-4 h-4' />
           <span>{userContact?.phoneNumber}</span>
         </h5>
-        <div className='flex text-sm justify-evenly mb-3'>
+        {/* <div className='flex text-sm justify-evenly mb-3'>
           <div className='flex flex-col'>
             <h5 className='flex-center gap-x-1 font-medium'>
               <span>4.5 / 5</span>
@@ -41,9 +41,9 @@ const UserContact = ({ userContact }: UserContactProps) => {
             </h5>
             <span>Theo dõi</span>
           </div>
-        </div>
-        <div className='flex-center justify-between gap-x-1 text-blue-700'>
-          <Button className='w-[70px] py-2 px-1'>Xem info</Button>
+        </div> */}
+        <div className='flex-center justify-between gap-x-1 text-blue-700 mt-10'>
+          <Button className='w-[100px] py-2 px-1'>Xem info</Button>
           <Button to='/chat/abc-xyz' className='py-2 px-1'>
             Chat với người bán
           </Button>
