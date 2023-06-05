@@ -1,7 +1,7 @@
 import DashboardHeading from '~/layouts/dashboard/components/DashboardHeading'
 import { useMemo, useState } from 'react'
 import { Post, PostPrivatePaginated, PostStatus } from '~/types/post.type'
-import { Button, LabelStatus, Table } from '~/components'
+import { Button, LabelStatus, Spinner, Table } from '~/components'
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { getAllStatus, getPostsPrivatePaginated, handlePostByStatus } from '~/services'
 import { useAth } from '~/contexts'
@@ -63,10 +63,10 @@ const PostManage = () => {
 
   const { formatDate, formatMilisecondToDate } = useFormatDate()
   // const { posts } = usePost()
-  // const queryClient = new QueryClient()
+  const queryClient = new QueryClient()
   const { auth } = useAth()
   const { i18n } = useTranslation()
-  const { data: postsPrivatePaginated, refetch } = useQuery({
+  const { data: postsPrivatePaginated, isLoading } = useQuery({
     queryKey: ['posts-private', status, pagination, i18n.language],
     queryFn: async () =>
       await getPostsPrivatePaginated<PostPrivatePaginated>(
@@ -205,7 +205,7 @@ const PostManage = () => {
 
   const handlePostMutation = useMutation({
     mutationFn: (data: any) => handlePostByStatus(data.id, data.status, auth?.role),
-    onSuccess: () => refetch()
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts-private'] })
   })
 
   const handleClickOnPage = (page: number) => {
@@ -275,6 +275,12 @@ const PostManage = () => {
       </>
     )
   }
+  if (isLoading)
+    return (
+      <div className='fixed inset-0 box-center z-[999]'>
+        <Spinner />
+      </div>
+    )
 
   return (
     <>
