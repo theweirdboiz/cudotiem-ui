@@ -1,8 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react'
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react'
 import { getAllPosts } from '~/services'
 import { PostPagination, Post, PostPrivatePaginated } from '~/types/post.type'
-import { useCategory } from './categoryContext'
 
 interface PostContextProps {
   posts: PostPagination | undefined
@@ -29,8 +28,7 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     offset: 1,
     size: 10
   })
-  const { categories } = useCategory()
-  const [categoryCode, setCategoryCode] = useState<string | undefined>(categories?.[0].code)
+  const [categoryCode, setCategoryCode] = useState<string | undefined>('')
   const {
     data: posts,
     isError,
@@ -39,8 +37,6 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     queryKey: ['posts', categoryCode, pagination],
     queryFn: async () => await getAllPosts<PostPagination>(pagination.offset, pagination.size, categoryCode)
   })
-  // const isError = false
-  // const isLoading = false
 
   const handleLoadMore = () => {
     const newSize = pagination.size + 5
