@@ -5,16 +5,16 @@ import { Category } from '~/types/category.type'
 
 interface CategoryItemProps {
   item: Category
-  handleClickCategoryItem: (id: number) => void
-  categoryItemActive: number
+  handleChangeCategory: (categoryCode: string) => void
+  categoryItemActive?: string
+}
+interface CategoryProps {
+  handleChangeCategory: (categoryCode: string) => void
 }
 
-const Category = () => {
+const Category = ({ handleChangeCategory }: CategoryProps) => {
   const { categories, isLoading } = useCategory()
-  const [categoryItemActive, setCategoryItemActive] = useState<number>(1)
-  const handleClickCategoryItem = (id: number) => {
-    setCategoryItemActive(id)
-  }
+  // const [categoryItemActive, setCategoryItemActive] = useState<string | undefined>(categories?.[0].code)
 
   // const categories: Category[] = [
   //   {
@@ -37,8 +37,8 @@ const Category = () => {
         <CategoryItem
           key={item.id}
           item={item}
-          handleClickCategoryItem={handleClickCategoryItem}
-          categoryItemActive={categoryItemActive}
+          handleChangeCategory={handleChangeCategory}
+          // categoryItemActive={categoryItemActive}
         />
       ))}
     </CategoryList>
@@ -49,14 +49,14 @@ const CategoryList = ({ children }: { children: ReactNode }) => {
   return <div className='grid grid-cols-6 mb-2 '>{children}</div>
 }
 
-const CategoryItem = ({ handleClickCategoryItem, item, categoryItemActive }: CategoryItemProps) => {
+const CategoryItem = ({ handleChangeCategory, item, categoryItemActive }: CategoryItemProps) => {
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
       className={`box-center flex-col ${
-        item.id === categoryItemActive ? 'border-b-blue-500 text-blue-500 bg-blue-100' : ''
+        item.code === categoryItemActive ? 'border-b-blue-500 text-blue-500 bg-blue-100' : ''
       } border-b hover:bg-gray-200 cursor-pointer py-2 px-1 transition-all duration-200 ease-in`}
-      onClick={() => handleClickCategoryItem(item.id as number)}
+      onClick={() => handleChangeCategory(item.code)}
     >
       <img src={item.icon} alt='' width={40} height={40} className='transition-all duration-300 ease-linear' />
       <span className='mt-1 text-xs capitalize'>{item.name}</span>

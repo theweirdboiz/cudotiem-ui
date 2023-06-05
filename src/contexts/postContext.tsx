@@ -1,7 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react'
 import { getAllPosts } from '~/services'
-import { PostPagination, Post } from '~/types/post.type'
+import { PostPagination, Post, PostPrivatePaginated } from '~/types/post.type'
+import { useCategory } from './categoryContext'
 
 interface PostContextProps {
   posts: PostPagination | undefined
@@ -13,6 +14,7 @@ interface PostContextProps {
   isError: boolean
   isLoading: boolean
   setPagination: Dispatch<SetStateAction<any>>
+  handleChangeCategory: (categoryCode: string) => void
 }
 
 interface PaginationProps {
@@ -27,13 +29,15 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     offset: 1,
     size: 10
   })
+  const { categories } = useCategory()
+  const [categoryCode, setCategoryCode] = useState<string | undefined>(categories?.[0].code)
   const {
     data: posts,
     isError,
     isLoading
   } = useQuery({
-    queryKey: ['posts', pagination],
-    queryFn: async () => await getAllPosts(pagination.offset, pagination.size)
+    queryKey: ['posts', categoryCode, pagination],
+    queryFn: async () => await getAllPosts<PostPagination>(pagination.offset, pagination.size, categoryCode)
   })
   // const isError = false
   // const isLoading = false
@@ -41,6 +45,9 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
   const handleLoadMore = () => {
     const newSize = pagination.size + 5
     setPagination({ ...pagination, size: newSize })
+  }
+  const handleChangeCategory = (categoryCode: string) => {
+    setCategoryCode(categoryCode)
   }
   // const posts: PostPagination = {
   //   paginationPosts: [
@@ -62,7 +69,8 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
     isLoading,
     pagination,
     setPagination,
-    handleLoadMore
+    handleLoadMore,
+    handleChangeCategory
   }
 
   return <PostContext.Provider value={value}>{children}</PostContext.Provider>

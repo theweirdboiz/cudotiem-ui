@@ -6,8 +6,8 @@ export const getAllStatus = async <T>() => {
   const response = await HttpRequest.get<T>('/post/status')
   if (response.status === 200) return response.data
 }
-export const getAllPosts = async (offset: number, size: number) => {
-  const response = await HttpRequest.get<PostPagination>(`/post?offset=${offset}&size=${size}`)
+export const getAllPosts = async <T>(offset: number, size: number, categoryCode?: string) => {
+  const response = await HttpRequest.get<T>(`/post?offset=${offset}&size=${size}&categoryCode=?${categoryCode}`)
   if (response.status === 200) return response.data
 }
 // admin

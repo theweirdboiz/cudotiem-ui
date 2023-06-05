@@ -3,10 +3,9 @@ import { PostComponent } from '~/components'
 import { usePost } from '~/contexts'
 import { Post } from '~/types/post.type'
 import { Category } from './components'
-import { Role } from '~/types/role.type'
 
 const HomePage = () => {
-  const { posts, isError, isLoading, handleLoadMore } = usePost()
+  const { posts, isError, isLoading, handleLoadMore, handleChangeCategory } = usePost()
   // const isLoading = false
   // const isError = false
   // const handleLoadMore = () => {
@@ -95,7 +94,7 @@ const HomePage = () => {
     <section className='rounded-md mb-5'>
       <div className='bg-white rounded-md'>
         <h3 className='text-base font-bold p-3'>Gợi ý hôm nay</h3>
-        <Category />
+        <Category handleChangeCategory={handleChangeCategory} />
       </div>
       <div className='grid grid-cols-5 gap-2'>
         {posts?.paginationPosts?.map((post: Post) => (
