@@ -7,9 +7,9 @@ export const getAllStatus = async <T>() => {
   if (response.status === 200) return response.data
 }
 export const getAllPosts = async <T>(offset: number, size: number, categoryCode?: string) => {
-  let requestAPI = `/post?offset=${offset}&${size}`
+  let requestAPI = `/post?offset=${offset}&size=${size}`
   if (categoryCode) {
-    requestAPI = `${requestAPI}?categoryCode=${categoryCode}`
+    requestAPI = `${requestAPI}&categoryCode=${categoryCode}`
   }
   const response = await HttpRequest.get<T>(requestAPI)
   if (response.status === 200) return response.data
