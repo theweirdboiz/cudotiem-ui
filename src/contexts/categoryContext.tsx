@@ -20,7 +20,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     isLoading
   } = useQuery({
     queryKey: ['categories', i18n.language],
-    queryFn: async () => await getAllCategories()
+    queryFn: async () => await getAllCategories<Category[]>()
   })
   // const categories = [
   //   {

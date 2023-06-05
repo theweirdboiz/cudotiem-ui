@@ -76,18 +76,18 @@ const PostManage = () => {
         auth?.role
       )
   })
-  // const { data: allStatus } = useQuery({
-  //   queryKey: ['all-status'],
-  //   queryFn: async () => await getAllStatus<string[]>()
-  // })
-  const allStatus: PostStatus[] = [
-    PostStatus.APPROVED,
-    PostStatus.CREATE_PENDING,
-    PostStatus.CREATE_REJECTED,
-    PostStatus.UPDATE_PENDING,
-    PostStatus.UPDATE_REJECTED,
-    PostStatus.HIDDEN
-  ]
+  const { data: allStatus } = useQuery({
+    queryKey: ['all-status'],
+    queryFn: async () => await getAllStatus<PostStatus[]>()
+  })
+  // const allStatus: PostStatus[] = [
+  //   PostStatus.APPROVED,
+  //   PostStatus.CREATE_PENDING,
+  //   PostStatus.CREATE_REJECTED,
+  //   PostStatus.UPDATE_PENDING,
+  //   PostStatus.UPDATE_REJECTED,
+  //   PostStatus.HIDDEN
+  // ]
   const tableTabs = [
     {
       id: 1,
