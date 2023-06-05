@@ -205,7 +205,7 @@ const PostManage = () => {
 
   const handlePostMutation = useMutation({
     mutationFn: (data: any) => handlePostByStatus(data.id, data.status, auth?.role),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts-private'] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts-private', status, pagination, i18n.language] })
   })
 
   const handleClickOnPage = (page: number) => {
