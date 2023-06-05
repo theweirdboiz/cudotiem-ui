@@ -79,7 +79,9 @@ const SignInModal = () => {
         ? Role.ADMIN
         : jwtToken.roles.includes(Role.MODERATOR)
         ? Role.MODERATOR
-        : Role.USER
+        : jwtToken.roles.includes(Role.USER)
+        ? Role.USER
+        : undefined
       setAuth({ ...jwtToken, role })
       setCookie('cudotiem', JSON.stringify(jwtToken))
       toast.success(SignInMessage.SUCCESS)

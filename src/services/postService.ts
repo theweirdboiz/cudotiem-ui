@@ -20,8 +20,8 @@ export const handlePostByStatus = async <T>(id: number, status: PostStatus, role
 export const getPostsPrivatePaginated = async <T>(status?: PostStatus, offset?: number, size?: number, role?: Role) => {
   let requestApi = `/post?offset=${offset}&size=${size}`
   if (role) {
-    const check = role === Role.ADMIN ? 'admin' : role == Role.MODERATOR ? 'mod' : 'user'
-    requestApi = `/${check}${requestApi}`
+    const check = role === Role.ADMIN ? '/admin' : role == Role.MODERATOR ? '/mod' : role === Role.USER ? '/user' : ''
+    requestApi = `${check}${requestApi}`
   }
   if (status) requestApi = `${requestApi}&status=${status}`
 
