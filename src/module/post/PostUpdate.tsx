@@ -64,12 +64,12 @@ const PostUpdate = () => {
     queryFn: async () => await getPostById<PostDetail>(id as string),
     onSuccess: (data) => {
       document.title = 'Cụ Đồ Tiễm - Cập nhật tin đăng'
-      const category = categories?.find((category) => category.name === post?.postDetailResponse.categoryName)
+      const category = categories?.find((category) => category.name === data?.postDetailResponse.categoryName)
       setCategorySelected(category)
-      setThumbnail((prev) => ({ ...prev, storePath: post?.postDetailResponse?.imageUrls?.[0] } as ImageProps))
+      setThumbnail((prev) => ({ ...prev, storePath: data?.postDetailResponse?.imageUrls?.[0] } as ImageProps))
       setImageUrls((prev) => prev.filter((img) => img.storePath !== thumbnail?.storePath))
-      setContent(post?.postDetailResponse.content || '')
-      reset(post?.postDetailResponse)
+      setContent(data?.postDetailResponse.content || '')
+      reset(data?.postDetailResponse)
     }
   })
 
