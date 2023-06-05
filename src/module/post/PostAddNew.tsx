@@ -53,20 +53,15 @@ const PostAdd = () => {
 
   const createPostMutation = useMutation({
     mutationFn: (body: Post) => createPost<Post>(body, Role.USER),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({
         queryKey: ['posts'],
         exact: true
       })
-      // upload image to firestore
-      handleUploadImage(thumbnail as ImageProps)
-      for (const img of imageUrls) {
-        handleUploadImage(img)
-      }
       toast.success(CreatePostMessage.SUCCESS)
       navigate('/manage/post')
     },
-    onError: (err) => {
+    onError: async (err) => {
       toast.error(CreatePostMessage.FAILED)
     }
   })
@@ -92,9 +87,15 @@ const PostAdd = () => {
 
   // handle event
   const onSubmit = async (body: Post) => {
-    body.imageUrls = [thumbnail?.storePath as string, ...imageUrls.map((img) => img.storePath)]
     body.content = content
     body.categoryCode = categorySelected?.code
+    // upload image to firestore
+    const promises = []
+    for (const img of imageUrls) {
+      promises.push(handleUploadImage(img))
+    }
+    const result: string[] = (await Promise.all([handleUploadImage(thumbnail as ImageProps), ...promises])) as string[]
+    body.imageUrls = result
     createPostMutation.mutate(body)
   }
   const handleClickOption = (item: Category) => {
@@ -121,10 +122,9 @@ const PostAdd = () => {
     setImageUrls((prev) => prev.filter((img) => img.tempPath !== tempPath))
   }
   const createImageFactory = (file: File | undefined) => {
-    // const file = e.target.files?.[0]
     const name = file && file.name
     const storePath =
-      `https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images/posts/${Date.now()}${name}` as string
+      `https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images/posts/${Date.now()}` as string
     const tempPath = URL.createObjectURL(file as any)
     return { name, storePath, e: file, tempPath } as ImageProps
   }

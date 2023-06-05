@@ -64,39 +64,55 @@ const useFirebaseImage = () => {
   //     }
   //   )
   // }
+  // const handleUploadImage = async (image: ImageProps) => {
+  //   if (image) {
+  //     const file = image.e
+  //     const imageRef = ref(storage, image.storePath)
+  //     setImage((prev) => ({ ...prev, fileName: file.name }))
+  //     const uploadTask = uploadBytesResumable(imageRef, file)
+  //     uploadTask.on(
+  //       'state_changed',
+  //       (snapshot) => {
+  //         const progressPercent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+  //         setImage((prev) => ({ ...prev, process: progressPercent }))
+  //       },
+  //       (err) => {
+  //         setImage((prev) => ({ ...prev, process: 0, errorMsg: 'Tải ảnh lên không thành công' }))
+  //       },
+  //       async () => {
+  //         const result = await getDownloadURL(uploadTask.snapshot.ref)
+  //         return result
+  //       }
+  //     )
+  //   }
+  // }
   const handleUploadImage = async (image: ImageProps) => {
     if (image) {
       const file = image.e
       const imageRef = ref(storage, image.storePath)
       setImage((prev) => ({ ...prev, fileName: file.name }))
       const uploadTask = uploadBytesResumable(imageRef, file)
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progressPercent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          setImage((prev) => ({ ...prev, process: progressPercent }))
-          // console.log('upload is ' + progressPercent + '% done')
-          // switch (snapshot.state) {
-          //   case 'paused':
-          //     console.log('upload is paused')
-          //     break
-          //   case 'running':
-          //     console.log('upload is running')
-          //     break
-          //   default:
-          //     console.log('nothing at all')
-          //     break
-          // }
-        },
-        (err) => {
-          setImage((prev) => ({ ...prev, process: 0, errorMsg: 'Tải ảnh lên không thành công' }))
-        },
-        async () => {
-          await getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-            return downloadUrl
-          })
-        }
-      )
+
+      const result = await new Promise<string>((resolve, reject) => {
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progressPercent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            setImage((prev) => ({ ...prev, process: progressPercent }))
+          },
+          (err) => {
+            setImage((prev) => ({ ...prev, process: 0, errorMsg: 'Tải ảnh lên không thành công' }))
+            reject(err)
+          },
+          async () => {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
+            resolve(downloadURL)
+          }
+        )
+      })
+
+      return result // Access the resolved value outside the uploadTask.on() method
+      // Further code execution with the obtained result
     }
   }
 

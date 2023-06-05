@@ -102,10 +102,6 @@ const PostUpdate = () => {
         queryKey: ['post', id],
         exact: true
       })
-      handleUploadImage(thumbnail as ImageProps)
-      for (const img of imageUrls) {
-        handleUploadImage(img)
-      }
       toast.success(UpdatePostMessage.SUCCESS)
       navigate('/manage/post')
     },
@@ -115,9 +111,15 @@ const PostUpdate = () => {
   })
   // handle event
   const onSubmit = async (body: Post) => {
-    body.imageUrls = [thumbnail?.storePath as string, ...imageUrls.map((img) => img.storePath)]
     body.content = content
     body.categoryCode = categorySelected?.code
+    const promises = []
+    for (const img of imageUrls) {
+      promises.push(handleUploadImage(img))
+    }
+    const result: string[] = (await Promise.all([handleUploadImage(thumbnail as ImageProps), ...promises])) as string[]
+    body.imageUrls = result
+
     updatePostMutation.mutate(body)
   }
   const handleClickOption = (item: Category) => {
