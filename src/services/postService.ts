@@ -7,7 +7,11 @@ export const getAllStatus = async <T>() => {
   if (response.status === 200) return response.data
 }
 export const getAllPosts = async <T>(offset: number, size: number, categoryCode?: string) => {
-  const response = await HttpRequest.get<T>(`/post?offset=${offset}&size=${size}&categoryCode=?${categoryCode}`)
+  let requestAPI = `/post?offset=${offset}&${size}`
+  if (categoryCode) {
+    requestAPI = `${requestAPI}?categoryCode=${categoryCode}`
+  }
+  const response = await HttpRequest.get<T>(requestAPI)
   if (response.status === 200) return response.data
 }
 // admin
