@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom'
 import { CreatePostMessage } from '~/ultis/message/post.message'
 import { useFirebaseImage } from '~/hooks'
 import { ImageProps } from '~/types/img.type'
+import useCreateImageFirebase from '~/hooks/useCreateImageFirebase'
 
 /* Schema for validate */
 const schema = yup.object().shape({
@@ -48,6 +49,7 @@ const PostAdd = () => {
     mode: 'all',
     resolver: yupResolver(schema)
   })
+  const { createImageFactory } = useCreateImageFirebase()
 
   // const watchStatus = watch('status')
 
@@ -119,13 +121,12 @@ const PostAdd = () => {
   const handleInvokeImage = (tempPath: string) => {
     setImageUrls((prev) => prev.filter((img) => img.tempPath !== tempPath))
   }
-  const createImageFactory = (file: File | undefined) => {
-    const name = file && file.name
-    const storePath =
-      `https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images/posts/${Date.now()}` as string
-    const tempPath = URL.createObjectURL(file as any)
-    return { name, storePath, e: file, tempPath } as ImageProps
-  }
+  // const createImageFactory = (file: File | undefined) => {
+  //   const name = file && file.name
+  //   const storePath = `images/posts/${Date.now()}` as string
+  //   const tempPath = URL.createObjectURL(file as any)
+  //   return { name, storePath, e: file, tempPath } as ImageProps
+  // }
   useEffect(() => {
     document.title = 'Cụ Đồ Tiễm - Thêm tin đăng'
   }, [])

@@ -61,7 +61,7 @@ function App() {
         </Route>
         <Route path='*' element={<Eror404Page />} />
         <Route path='/unauthorized' element={<UnauthorizedPage />} />
-
+        {/* <Route path='/manage/add-post' element={<PostAddNew />} /> */}
         {/* just user */}
         <Route element={<RequiredAuth allowedRoles={[Role.USER]} />}>
           <Route element={<DashboardLayout />}>

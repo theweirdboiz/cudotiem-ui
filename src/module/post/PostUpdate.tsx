@@ -20,6 +20,7 @@ import { UpdatePostMessage } from '~/ultis/message/post.message'
 import ImageUpload from '~/components/image/ImageUpload'
 import { ImageProps } from '~/types/img.type'
 import { useFirebaseImage } from '~/hooks'
+import useCreateImageFirebase from '~/hooks/useCreateImageFirebase'
 
 /* Schema for validate */
 const schema = yup.object().shape({
@@ -41,6 +42,8 @@ const PostUpdate = () => {
   const [imageUrls, setImageUrls] = useState<ImageProps[]>([])
   const [content, setContent] = useState('')
   const [categorySelected, setCategorySelected] = useState<Category | undefined>(undefined)
+  const { createImageFactory } = useCreateImageFirebase()
+
   const {
     control,
     handleSubmit,
@@ -142,14 +145,14 @@ const PostUpdate = () => {
   const handleInvokeImage = (tempPath: string) => {
     setImageUrls((prev) => prev.filter((img) => img.tempPath !== tempPath))
   }
-  const createImageFactory = (file: File | undefined) => {
-    // const file = e.target.files?.[0]
-    const name = file && file.name
-    const storePath =
-      `https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images/posts/${Date.now()}${name}` as string
-    const tempPath = URL.createObjectURL(file as any)
-    return { name, storePath, e: file, tempPath } as ImageProps
-  }
+  // const createImageFactory = (file: File | undefined) => {
+  //   // const file = e.target.files?.[0]
+  //   const name = file && file.name
+  //   const storePath =
+  //     `https://firebasestorage.googleapis.com/v0/b/cudotiem.appspot.com/o/images/posts/${Date.now()}${name}` as string
+  //   const tempPath = URL.createObjectURL(file as any)
+  //   return { name, storePath, e: file, tempPath } as ImageProps
+  // }
   if (isLoading) return <Spinner />
   // console.log(thumbnail)
 

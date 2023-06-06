@@ -125,7 +125,7 @@ const useFirebaseImage = () => {
       if (image) {
         const file = image.e
         const imageRef = ref(storage, image.storePath)
-        setImage((prev) => ({ ...prev, fileName: file.name }))
+        // setImage((prev) => ({ ...prev, fileName: file.name }))
         const uploadTask = uploadBytesResumable(imageRef, file)
         const downloadURLPromise = uploadTask.then((snapshot) => getDownloadURL(snapshot.ref) as Promise<string>)
         result.push(downloadURLPromise as any)
