@@ -59,7 +59,9 @@ const CategoryItem = ({ handleChangeCategory, item, categoryItemActive }: Catego
       } border-b hover:bg-gray-200 cursor-pointer py-2 px-1 transition-all duration-200 ease-in`}
       onClick={() => handleChangeCategory(item?.code as string)}
     >
-      <img src={item?.icon} alt='' width={40} height={40} className='transition-all duration-300 ease-linear' />
+      {item?.icon && (
+        <img src={item?.icon} alt='' width={40} height={40} className='transition-all duration-300 ease-linear' />
+      )}
       <span className='mt-1 text-xs capitalize'>{item?.name}</span>
     </div>
   )
