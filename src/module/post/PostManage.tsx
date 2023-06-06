@@ -177,6 +177,7 @@ const PostManage = () => {
   //   ],
   //   totalPage: 3
   // }
+  const navigate = useNavigate()
   const statusColor = useMemo(() => {
     const getStatusColor = (status: PostStatus | undefined) => {
       let styleClassnames
@@ -205,7 +206,10 @@ const PostManage = () => {
 
   const handlePostMutation = useMutation({
     mutationFn: (data: any) => handlePostByStatus(data.id, data.status, auth?.role),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts-private', status, pagination, i18n.language] })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts-private', status, pagination, i18n.language] })
+      navigate('/manage/post')
+    }
   })
 
   const handleClickOnPage = (page: number) => {
