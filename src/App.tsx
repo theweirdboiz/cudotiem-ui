@@ -61,11 +61,13 @@ function App() {
         </Route>
         <Route path='*' element={<Eror404Page />} />
         <Route path='/unauthorized' element={<UnauthorizedPage />} />
+
+        {/* just user */}
         <Route element={<RequiredAuth allowedRoles={[Role.USER]} />}>
           <Route element={<DashboardLayout />}>
             <Route path='/manage/update-post/:id' element={<PostUpdate />} />
+            <Route path='/manage/add-post' element={<PostAddNew />} />
           </Route>
-          <Route path='/manage/add-post' element={<PostAddNew />} />
         </Route>
         <Route element={<RequiredAuth allowedRoles={[Role.ADMIN, Role.MODERATOR, Role.USER]} />}>
           <Route element={<DashboardLayout />}>

@@ -34,7 +34,7 @@ const PostAdd = () => {
   const navigate = useNavigate()
   const { categories } = useCategory()
   const { auth } = useAth()
-  const { handleUploadImage, process, errorMsg } = useFirebaseImage()
+  const { handleUploadImage, process, errorMsg, handleDeleteImage } = useFirebaseImage()
   const [thumbnail, setThumbnail] = useState<ImageProps>()
   const [imageUrls, setImageUrls] = useState<ImageProps[]>([])
   const [content, setContent] = useState('')
@@ -49,7 +49,7 @@ const PostAdd = () => {
     resolver: yupResolver(schema)
   })
 
-  const watchStatus = watch('status')
+  // const watchStatus = watch('status')
 
   const createPostMutation = useMutation({
     mutationFn: (body: Post) => createPost<Post>(body, Role.USER),
@@ -61,7 +61,8 @@ const PostAdd = () => {
       toast.success(CreatePostMessage.SUCCESS)
       navigate('/manage/post')
     },
-    onError: async (err) => {
+    onError: (err) => {
+      handleDeleteImage([thumbnail as ImageProps, ...imageUrls])
       toast.error(CreatePostMessage.FAILED)
     }
   })
@@ -90,12 +91,9 @@ const PostAdd = () => {
     body.content = content
     body.categoryCode = categorySelected?.code
     // upload image to firestore
-    const promises = []
-    for (const img of imageUrls) {
-      promises.push(handleUploadImage(img))
-    }
-    const result: string[] = (await Promise.all([handleUploadImage(thumbnail as ImageProps), ...promises])) as string[]
+    const result = await handleUploadImage([thumbnail as ImageProps, ...imageUrls])
     body.imageUrls = result
+
     createPostMutation.mutate(body)
   }
   const handleClickOption = (item: Category) => {
@@ -260,7 +258,7 @@ const PostAdd = () => {
         <Button
           className='w-full max-w-[50%] mx-auto h-10'
           type='submit'
-          isloading={createPostMutation.isLoading}
+          loading={createPostMutation.isLoading}
           disabled={!isValid}
         >
           Gửi yêu cầu đăng bài

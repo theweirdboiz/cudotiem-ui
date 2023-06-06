@@ -51,7 +51,7 @@ const PostUpdate = () => {
     mode: 'all',
     resolver: yupResolver(schema)
   })
-  const { handleUploadImage, process, errorMsg } = useFirebaseImage()
+  const { handleUploadImage, handleDeleteImage, process, errorMsg } = useFirebaseImage()
   const watchStatus = watch('status')
 
   // fetch post by slug/id
@@ -106,6 +106,7 @@ const PostUpdate = () => {
       navigate('/manage/post')
     },
     onError: (err) => {
+      handleDeleteImage([thumbnail as ImageProps, ...imageUrls])
       toast.error(UpdatePostMessage.FAILED)
     }
   })
@@ -113,13 +114,8 @@ const PostUpdate = () => {
   const onSubmit = async (body: Post) => {
     body.content = content
     body.categoryCode = categorySelected?.code
-    const promises = []
-    for (const img of imageUrls) {
-      promises.push(handleUploadImage(img))
-    }
-    const result: string[] = (await Promise.all([handleUploadImage(thumbnail as ImageProps), ...promises])) as string[]
+    const result = await handleUploadImage([thumbnail as ImageProps, ...imageUrls])
     body.imageUrls = result
-
     updatePostMutation.mutate(body)
   }
   const handleClickOption = (item: Category) => {
